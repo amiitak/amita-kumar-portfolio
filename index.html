@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Amita Kumar — AI Product Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F4EF;
+      --bg-section: #EDE8DF;
+      --ink: #1C1917;
+      --ink-mid: #44403C;
+      --ink-light: #78716C;
+      --accent: #C0533A;
+      --accent-hover: #A8432A;
+      --accent-pale: #F5EAE7;
+      --accent-border: #E8C5BC;
+      --hero-bg: #181412;
+      --white: #FFFFFF;
+      --border: #D6CFC6;
+      --card-bg: #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.1rem 4rem;
+      background: rgba(24, 20, 18, 0.96);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-logo {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      background: var(--hero-bg);
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      padding-top: 4rem;
+    }
+
+    .hero-left {
+      padding: 7rem 4rem 7rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(192,83,58,0.12);
+      border: 1px solid rgba(192,83,58,0.3);
+      color: #E8917A;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      margin-bottom: 2rem;
+      width: fit-content;
+    }
+    .hero-tag::before { content:''; width:6px; height:6px; background:var(--accent); border-radius:50%; }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 5.5vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .hero-name span { color: var(--accent); font-style: italic; }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      color: rgba(255,255,255,0.45);
+      font-weight: 300;
+      margin-bottom: 2rem;
+    }
+
+    .hero-pitch {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.68);
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 480px;
+      margin-bottom: 3rem;
+    }
+    .hero-pitch strong { color: #fff; font-weight: 500; }
+
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.8rem 1.75rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.65);
+      padding: 0.8rem 1.75rem;
+      font-size: 0.82rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* HERO PHOTO */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 4rem 5rem 2rem;
+    }
+
+    .hero-photo-wrap {
+      position: relative;
+      width: 320px;
+      height: 380px;
+    }
+
+    .hero-photo-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 12px -12px -12px 12px;
+      border: 1.5px solid rgba(192,83,58,0.35);
+      z-index: 0;
+    }
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      position: relative;
+      z-index: 1;
+      display: block;
+      filter: grayscale(15%);
+    }
+
+    /* SHARED */
+    .section { padding: 6rem 5rem; }
+    .section-alt { background: var(--bg-section); }
+
+    .section-header { margin-bottom: 3.5rem; }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    .section-desc {
+      font-size: 0.95rem;
+      color: var(--ink-light);
+      max-width: 540px;
+      line-height: 1.75;
+    }
+
+    /* IMPACT */
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .impact-card {
+      background: var(--card-bg);
+      padding: 2.25rem 2rem;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .impact-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .impact-card:hover { background: var(--accent-pale); }
+    .impact-card:hover::after { transform: scaleX(1); }
+
+    .impact-co {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .impact-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .impact-desc {
+      font-size: 0.84rem;
+      color: var(--ink-mid);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* PROJECTS */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .project-card {
+      background: var(--card-bg);
+      padding: 2.5rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .project-card:hover { background: var(--accent-pale); }
+
+    .project-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--bg-section);
+      line-height: 1;
+      position: absolute;
+      top: 1.75rem; right: 2rem;
+      transition: color 0.2s;
+    }
+    .project-card:hover .project-num { color: var(--accent-border); }
+
+    .project-tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-pale);
+      border: 1px solid var(--accent-border);
+      padding: 0.25rem 0.6rem;
+    }
+
+    .project-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+      padding-right: 3.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.875rem;
+      color: var(--ink-mid);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      font-weight: 300;
+    }
+
+    .tech-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+
+    .tech-pill {
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      border: 1px solid var(--border);
+      padding: 0.22rem 0.6rem;
+    }
+
+    .project-link {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .project-link::after { content: '→'; transition: transform 0.2s; }
+    .project-card:hover .project-link::after { transform: translateX(4px); }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-body {
+      font-size: 0.97rem;
+      color: var(--ink-mid);
+      line-height: 1.85;
+      font-weight: 300;
+      margin-bottom: 1.25rem;
+    }
+
+    .philosophy-block {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 1.75rem 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .philosophy-block h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .philosophy-block p {
+      font-size: 0.84rem;
+      color: var(--ink-mid);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .skills-block { background: var(--card-bg); padding: 2rem; }
+
+    .skills-block-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .skill-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .skill-list li {
+      font-size: 0.85rem;
+      color: var(--ink-mid);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .skill-list li::before { content: '·'; color: var(--accent); font-size: 1.2rem; line-height: 0; }
+
+    /* TIMELINE */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .timeline-item {
+      background: var(--card-bg);
+      padding: 1.75rem 2rem;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 2rem;
+      align-items: start;
+      transition: background 0.2s;
+    }
+    .timeline-item:hover { background: var(--accent-pale); }
+
+    .tl-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding-top: 0.2rem;
+      line-height: 1.5;
+    }
+
+    .tl-role { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.2rem; }
+    .tl-company { font-size: 0.82rem; color: var(--ink-light); font-weight: 300; }
+
+    /* CONTACT */
+    .contact-section {
+      background: var(--hero-bg);
+      color: #fff;
+      text-align: center;
+      padding: 7rem 5rem;
+    }
+
+    .contact-section .eyebrow { color: #E8917A; margin-bottom: 0.75rem; }
+
+    .contact-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+    }
+    .contact-heading em { font-style: italic; color: var(--accent); }
+
+    .contact-sub {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.4);
+      max-width: 440px;
+      margin: 0 auto 3rem;
+      line-height: 1.75;
+    }
+
+    .contact-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    .footer-bar {
+      margin-top: 5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ANIMATIONS */
+    .fade-up { opacity: 1; transform: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 960px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 7rem 2rem 3rem; }
+      .hero-right { padding: 2rem; justify-content: flex-start; }
+      .hero-photo-wrap { width: 240px; height: 280px; }
+      .section { padding: 4rem 2rem; }
+      .impact-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.25rem; }
+      .contact-section { padding: 5rem 2rem; }
+      .footer-bar { flex-direction: column; gap: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="#home" class="nav-logo">Amita Kumar</a>
+    <ul class="nav-links">
+      <li><a href="#impact">Work</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-left">
+      <div class="hero-tag">AI Product Manager · Los Angeles</div>
+      <h1 class="hero-name">Amita<br><span>Kumar</span></h1>
+      <p class="hero-sub">AI Product Manager</p>
+      <p class="hero-pitch">
+        AI-native PM with strong product intuition, evaluation expertise, and hands-on prototyping experience using LLMs, agents, and workflow orchestration tools.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View My Work</a>
+        <a href="https://linkedin.com/in/amita-kumar" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-photo-wrap">
+        <img src="amita-photo.jpg" alt="Amita Kumar" class="hero-photo" />
+      </div>
+    </div>
+  </section>
+
+  <!-- CAREER IMPACT -->
+  <section class="section" id="impact">
+    <div class="section-header fade-up">
+      <div class="eyebrow">Career Impact</div>
+      <h2 class="section-title">Delivering measurable results across <em>industries.</em></h2>
+      <p class="section-desc">A track record across five companies and four industries, with real numbers at every stage.</p>
+    </div>
+    <div class="impact-grid">
+      <div class="impact-card fade-up">
+        <div class="impact-co">Mediaocean · 2025–Present</div>
+        <div class="impact-num">2×</div>
+        <p class="impact-desc">Faster buyer/seller resolution via Automatic Makegoods. AI evaluates missed impressions and auto-accepts or declines, cutting manual reconciliation by 60% and improving decision accuracy.</p>
+      </div>
+      <div class="impact-card fade-up">
+        <div class="impact-co">Mediaocean · 2025–Present</div>
+        <div class="impact-num">30%</div>
+        <p class="impact-desc">Faster spec development by incorporating AI and automation tools into product workflows, increasing delivery velocity 15% across squads.</p>
+      </div>
+      <div class="impact-card fade-up">
+        <div class="impact-co">VGW · 2023–2025</div>
+        <div class="impact-num">20%</div>
+        <p class="impact-desc">Reduction in customer churn through behavioral-based purchase controls, informed by cross-sectional data analysis and voice-of-customer research across millions of users.</p>
+      </div>
+      <div class="impact-card fade-up">
+        <div class="impact-co">VGW · 2023–2025</div>
+        <div class="impact-num">+12%</div>
+        <p class="impact-desc">Revenue increase via AI-driven player segmentation and offer optimization, built in collaboration with data science and marketing leadership.</p>
+      </div>
+      <div class="impact-card fade-up">
+        <div class="impact-co">Swoop · 2021–2023</div>
+        <div class="impact-num">800%</div>
+        <p class="impact-desc">User growth scaling a two-sided B2B2C marketplace from early traction in under a year, owning the roadmap end to end while improving marketplace liquidity and match quality.</p>
+      </div>
+      <div class="impact-card fade-up">
+        <div class="impact-co">MightyHive · 2018–2021</div>
+        <div class="impact-num">80%</div>
+        <p class="impact-desc">Reduction in manual campaign creation work via a SaaS automation product, plus a 22% increase in signups through UX overhaul and data-informed onboarding redesign.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="section section-alt" id="projects">
+    <div class="section-header fade-up">
+      <div class="eyebrow">Featured Case Studies</div>
+      <h2 class="section-title">AI Projects</h2>
+      <p class="section-desc">Explore my work building AI-powered products and intelligent automation systems.</p>
+    </div>
+    <div class="projects-grid">
+      <a class="project-card fade-up" href="nutricoach.html">
+        <span class="project-num">01</span>
+        <div class="project-tag-row"><span class="tag">Working Prototype</span><span class="tag">Productivity</span></div>
+        <h3 class="project-title">AI Eval Suite for PM Interviews</h3>
+        <p class="project-desc">Not just a chatbot that asks questions. A scoring engine that evaluates PM interview answers against structured rubrics (CIRCLES, RICE, stakeholder framing), then surfaces a session debrief with strengths, gaps, and coached rewrites.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">Claude API</span><span class="tech-pill">Evals</span><span class="tech-pill">Express.js</span><span class="tech-pill">Scoring Rubrics</span>
+        </div>
+        <span class="project-link">View Case Study</span>
+      </a>
+      <a class="project-card fade-up" href="#" style="transition-delay:0.08s">
+        <span class="project-num">02</span>
+        <div class="project-tag-row"><span class="tag">Working Prototype</span><span class="tag">Health Tech</span></div>
+        <h3 class="project-title">NutriCoach AI</h3>
+        <p class="project-desc">Snap a photo of yourself, share your goals and lifestyle, and get a personalized nutrition and training plan built around you as a whole person. Computer vision meets behavioral context for health recommendations that actually fit your life.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">Claude Vision API</span><span class="tech-pill">Computer Vision</span><span class="tech-pill">B2C</span><span class="tech-pill">Personalization</span>
+        </div>
+        <span class="project-link">View Case Study</span>
+      </a>
+      <a class="project-card fade-up" href="#" style="transition-delay:0.04s">
+        <span class="project-num">03</span>
+        <div class="project-tag-row"><span class="tag">PRD + Prototype</span><span class="tag">Ad Tech</span></div>
+        <h3 class="project-title">Agentic Campaign Manager</h3>
+        <p class="project-desc">An AI agent that automates the full campaign setup and optimization loop, from brief to trafficking, with human-in-the-loop approval gates. Built on deep programmatic advertising domain expertise with a working prototype and full product spec.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">Agentic AI</span><span class="tech-pill">n8n</span><span class="tech-pill">B2B SaaS</span><span class="tech-pill">Ad Tech</span>
+        </div>
+        <span class="project-link">View Case Study</span>
+      </a>
+      <a class="project-card fade-up" href="#" style="transition-delay:0.12s">
+        <span class="project-num">04</span>
+        <div class="project-tag-row"><span class="tag">Concept PRD</span><span class="tag">Mental Health</span></div>
+        <h3 class="project-title">Precision Psychiatry PM</h3>
+        <p class="project-desc">A visionary PM concept using neuroimaging data and ML to match patients with depression and anxiety to targeted treatment pathways, moving mental healthcare from trial-and-error toward precision medicine. Full PRD with ethical framework and go-to-market.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">AI/ML</span><span class="tech-pill">Health Tech</span><span class="tech-pill">Ethical AI</span><span class="tech-pill">FDA Reg</span>
+        </div>
+        <span class="project-link">View Case Study</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="about">
+    <div class="about-grid">
+      <div class="fade-up">
+        <div class="eyebrow">About Me</div>
+        <h2 class="section-title">My <em>Background</em></h2>
+        <p class="about-body">I'm Amita Kumar, a Product Manager with 6+ years building products across Ad Tech, Gaming, and SaaS. I've consistently shipped features that drive measurable impact, from AI-driven player segmentation that lifted revenue 12% to automated reconciliation systems that cut manual work by 60%.</p>
+        <p class="about-body">What sets me apart is that I don't just manage AI features. I build prototypes myself using Claude, n8n, and Cursor to validate concepts before committing engineering resources. This hands-on approach means I move faster, write better specs, and have more credible conversations with technical teams.</p>
+        <p class="about-body">My focus areas include intelligent automation, workflow optimization, and AI-assisted decision systems, built with clear success metrics and real user impact.</p>
+      </div>
+
+      <div class="fade-up" style="transition-delay:0.1s">
+        <div class="eyebrow" style="margin-bottom:1.5rem">Product Philosophy</div>
+        <div class="philosophy-block">
+          <h4>Evaluation-First Development</h4>
+          <p>Define the rubric before you ship the feature. Without clear evals, you're flying blind. I build scoring frameworks first, then iterate until the product consistently meets them.</p>
+        </div>
+        <div class="philosophy-block">
+          <h4>Agentic Workflows Over One-Shot Prompts</h4>
+          <p>The best AI products orchestrate multiple specialized agents, not single LLM calls. I design systems where agents handle research, synthesis, and validation in coordinated loops.</p>
+        </div>
+        <div class="philosophy-block">
+          <h4>User Impact Over Technical Novelty</h4>
+          <p>AI should solve real problems, not showcase capabilities. I prioritize features that demonstrably reduce friction or enable new possibilities, measured through clear metrics.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS + TIMELINE -->
+  <section class="section section-alt" id="skills">
+    <div class="section-header fade-up">
+      <div class="eyebrow">Skills & Expertise</div>
+      <h2 class="section-title">The full <em>toolkit.</em></h2>
+    </div>
+    <div class="skills-grid fade-up">
+      <div class="skills-block">
+        <div class="skills-block-title">AI & Technical</div>
+        <ul class="skill-list">
+          <li>Claude Code & Cursor</li>
+          <li>Prompt Engineering & Evals</li>
+          <li>Agentic Workflow Design</li>
+          <li>n8n, Bolt, Lovable</li>
+          <li>SQL & Data Analysis</li>
+          <li>Mixpanel, Metabase, GA</li>
+        </ul>
+      </div>
+      <div class="skills-block">
+        <div class="skills-block-title">PM Craft</div>
+        <ul class="skill-list">
+          <li>PRD Writing & Scoping</li>
+          <li>Product Discovery</li>
+          <li>A/B Testing & Experimentation</li>
+          <li>User Research & Synthesis</li>
+          <li>Roadmapping & OKRs</li>
+          <li>Agile / Scrum / Kanban</li>
+        </ul>
+      </div>
+      <div class="skills-block">
+        <div class="skills-block-title">Domain Expertise</div>
+        <ul class="skill-list">
+          <li>Programmatic Ads & CTV</li>
+          <li>Identity Resolution & Post-Cookie</li>
+          <li>Two-Sided Marketplaces</li>
+          <li>Responsible Gaming & Compliance</li>
+          <li>B2B SaaS & B2B2C Platforms</li>
+          <li>AI/ML Product Integration</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem">
+      <div class="eyebrow fade-up" style="margin-bottom:1.25rem">Career Timeline</div>
+      <div class="timeline fade-up">
+        <div class="timeline-item">
+          <div class="tl-date">Jan 2025 – Present</div>
+          <div><div class="tl-role">Product Manager</div><div class="tl-company">Mediaocean · Ad Tech · Los Angeles</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Oct 2023 – Jan 2025</div>
+          <div><div class="tl-role">Product Manager</div><div class="tl-company">VGW (Virtual Gaming World) · Gaming · Los Angeles</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">May 2021 – Sept 2023</div>
+          <div><div class="tl-role">Product Manager</div><div class="tl-company">Swoop · Transportation Tech · Los Angeles</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Sept 2018 – Apr 2021</div>
+          <div><div class="tl-role">Account Manager → Associate PM</div><div class="tl-company">MightyHive · Ad Tech · New York</div></div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Oct 2017 – Sept 2018</div>
+          <div><div class="tl-role">Data Analyst</div><div class="tl-company">KPMG · Financial Services · Santa Clara</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="eyebrow">Let's Talk</div>
+    <h2 class="contact-heading">Ready to build<br><em>something great?</em></h2>
+    
+    <div class="contact-row">
+      <a href="/cdn-cgi/l/email-protection#1a7b77736e7b712b2b2a2d5a7d777b737634797577" class="btn-primary">✉ Email Me</a>
+      <a href="https://linkedin.com/in/amita-kumar" target="_blank" class="btn-ghost">LinkedIn ↗</a>
+      <a href="#" class="btn-ghost">Download Resume ↓</a>
+    </div>
+    <div class="footer-bar">
+      <span>Amita Kumar · AI Product Manager</span>
+      <span>© 2026 · Built with intention</span>
+    </div>
+  </section>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    const sections = document.querySelectorAll('section[id]');
+    const navAs = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 1
