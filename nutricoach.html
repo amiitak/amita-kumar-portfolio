@@ -530,6 +530,13 @@
     .result-section { display: none; }
     .result-section.active { display: block; }
 
+    .result-prose h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--green-deep); margin: 1.5rem 0 0.5rem; }
+    .result-prose h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: var(--green-deep); margin: 1.25rem 0 0.4rem; }
+    .result-prose h4 { font-size: 0.9rem; font-weight: 600; color: var(--green-mid); margin: 1rem 0 0.3rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .result-prose p { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.75; margin-bottom: 0.6rem; }
+    .result-prose strong { font-weight: 600; color: var(--ink); }
+    .result-prose ul { margin: 0.5rem 0 0.75rem 1.25rem; }
+    .result-prose li { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0.25rem; }
     .result-prose {
       font-size: 0.88rem;
       color: var(--ink-mid);
@@ -948,6 +955,35 @@
       return selected.join(', ') || 'Not specified';
     }
 
+    function renderMarkdown(text) {
+      return text
+        .replace(/### (.*?)(
+|$)/g, '<h4>$1</h4>')
+        .replace(/## (.*?)(
+|$)/g, '<h3>$1</h3>')
+        .replace(/# (.*?)(
+|$)/g, '<h2>$1</h2>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/^- (.*)/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>(
+|$))+/g, '<ul>$&</ul>')
+        .replace(/
+
+/g, '</p><p>')
+        .replace(/^(?!<[hul])/gm, '')
+        .split('
+').map(line => {
+          if (!line.startsWith('<')) return line ? '<p>' + line + '</p>' : '';
+          return line;
+        }).join('');
+    }
+
+    function setResult(id, text) {
+      const el = document.getElementById(id);
+      el.innerHTML = renderMarkdown(text);
+    }
+
     function switchTab(tab) {
       document.querySelectorAll('.result-section').forEach(s => s.classList.remove('active'));
       document.querySelectorAll('.results-tab').forEach(t => t.classList.remove('active'));
@@ -1050,10 +1086,10 @@ Create a organized weekly grocery list based on the meal plan. Group by category
         const macroMatch = fullText.match(/SECTION 3[\s\S]*?(?=SECTION 4|$)/i);
         const groceryMatch = fullText.match(/SECTION 4[\s\S]*/i);
 
-        document.getElementById('result-meal').textContent = mealMatch ? mealMatch[0].replace(/SECTION 1[^\n]*/i, '').trim() : fullText;
-        document.getElementById('result-workout').textContent = workoutMatch ? workoutMatch[0].replace(/SECTION 2[^\n]*/i, '').trim() : 'See full plan above.';
-        document.getElementById('result-macros').textContent = macroMatch ? macroMatch[0].replace(/SECTION 3[^\n]*/i, '').trim() : 'See full plan above.';
-        document.getElementById('result-grocery').textContent = groceryMatch ? groceryMatch[0].replace(/SECTION 4[^\n]*/i, '').trim() : 'See full plan above.';
+        setResult('result-meal', mealMatch ? mealMatch[0].replace(/SECTION 1[^\n]*/i, '').trim() : fullText);
+        setResult('result-workout', workoutMatch ? workoutMatch[0].replace(/SECTION 2[^\n]*/i, '').trim() : 'See full plan above.');
+        setResult('result-macros', macroMatch ? macroMatch[0].replace(/SECTION 3[^\n]*/i, '').trim() : 'See full plan above.');
+        setResult('result-grocery', groceryMatch ? groceryMatch[0].replace(/SECTION 4[^\n]*/i, '').trim() : 'See full plan above.');
 
         document.getElementById('results-name').textContent = `${name}'s Personalized Plan`;
 
