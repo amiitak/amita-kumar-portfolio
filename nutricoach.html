@@ -1007,7 +1007,7 @@
 
     function parseSection(fullText, sectionNum) {
       var next = sectionNum + 1;
-      var re = new RegExp('SECTION ' + sectionNum + '[\s\S]*?(?=SECTION ' + next + '|$)', 'i');
+      var re = new RegExp('SECTION ' + sectionNum + '[\\s\\S]*?(?=SECTION ' + next + '|$)', 'i');
       var match = fullText.match(re);
       if (!match) return fullText;
       return match[0].replace(new RegExp('SECTION ' + sectionNum + '[^
