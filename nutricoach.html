@@ -931,8 +931,7 @@
         var dataUrl = ev.target.result;
         photoBase64 = dataUrl.split(',')[1];
         document.getElementById('upload-placeholder').style.display = 'none';
-        var preview = document.getElementById('upload-preview-wrap');
-        preview.style.display = 'block';
+        document.getElementById('upload-preview-wrap').style.display = 'block';
         document.getElementById('upload-preview-img').src = dataUrl;
       };
       reader.readAsDataURL(file);
@@ -962,58 +961,6 @@
       event.target.classList.add('active');
     }
 
-    function renderMarkdown(text) {
-      if (!text) return '';
-      var lines = text.split('
-');
-      var out = [];
-      var inUl = false;
-      for (var i = 0; i < lines.length; i++) {
-        var line = lines[i].trim();
-        // Bold: replace **text** with <strong>text</strong>
-        line = line.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-        if (!line) {
-          if (inUl) { out.push('</ul>'); inUl = false; }
-          continue;
-        }
-        if (line.slice(0,5) === '#### ') {
-          if (inUl) { out.push('</ul>'); inUl = false; }
-          out.push('<h5>' + line.slice(5) + '</h5>');
-        } else if (line.slice(0,4) === '### ') {
-          if (inUl) { out.push('</ul>'); inUl = false; }
-          out.push('<h4>' + line.slice(4) + '</h4>');
-        } else if (line.slice(0,3) === '## ') {
-          if (inUl) { out.push('</ul>'); inUl = false; }
-          out.push('<h3>' + line.slice(3) + '</h3>');
-        } else if (line.slice(0,2) === '# ') {
-          if (inUl) { out.push('</ul>'); inUl = false; }
-          out.push('<h2>' + line.slice(2) + '</h2>');
-        } else if (line.slice(0,2) === '- ' || line.slice(0,2) === '* ') {
-          if (!inUl) { out.push('<ul>'); inUl = true; }
-          out.push('<li>' + line.slice(2) + '</li>');
-        } else {
-          if (inUl) { out.push('</ul>'); inUl = false; }
-          out.push('<p>' + line + '</p>');
-        }
-      }
-      if (inUl) out.push('</ul>');
-      return out.join('');
-    }
-
-    function setResult(id, text) {
-      var el = document.getElementById(id);
-      el.innerHTML = renderMarkdown(text);
-    }
-
-    function parseSection(fullText, sectionNum) {
-      var next = sectionNum + 1;
-      var re = new RegExp('SECTION ' + sectionNum + '[\\s\\S]*?(?=SECTION ' + next + '|$)', 'i');
-      var match = fullText.match(re);
-      if (!match) return fullText;
-      return match[0].replace(new RegExp('SECTION ' + sectionNum + '[^
-]*', 'i'), '').trim();
-    }
-
     async function generatePlan() {
       var name = document.getElementById('user-name').value || 'there';
       var age = document.getElementById('user-age').value;
@@ -1033,36 +980,25 @@
       document.getElementById('step-4-dot').className = 'step-dot active';
       document.getElementById('step-3-dot').className = 'step-dot done';
 
-      var systemPrompt = 'You are NutriCoach AI, an expert nutrition and fitness coach. You create highly personalized, realistic, and actionable plans. Your tone is warm, encouraging, and direct. You always provide specific foods, exercises, and quantities. Format your responses clearly with markdown headers and bullet points.';
+      var systemPrompt = 'You are NutriCoach AI, an expert nutrition and fitness coach. Create highly personalized, realistic, and actionable plans with specific foods, exercises, and quantities.';
 
-      var userContext = 'Name: ' + name + '
-Age: ' + (age || 'not provided') + '
-Height: ' + (height || 'not provided') + '
-Weight: ' + (weight || 'not provided') + '
-Goal: ' + goal + '
-Dietary restrictions: ' + diet + '
-Activity level: ' + activity + '
-Workout days: ' + days + '
-Sleep: ' + sleep + '
-Stress: ' + stress + '
-Notes: ' + (notes || 'none');
+      var userContext = 'Name: ' + name + ', Age: ' + (age||'not provided') + ', Height: ' + (height||'not provided') + ', Weight: ' + (weight||'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes||'none');
 
-      var prompt = 'Here is my profile:
-' + userContext + '
+      var prompt = 'Profile: ' + userContext + '
 
-Please create my complete personalized plan with exactly these 4 sections:
+Create my complete plan with these 4 sections:
 
 SECTION 1 - WEEKLY MEAL PLAN:
-Create a 7-day meal plan with breakfast, lunch, dinner, and 1-2 snacks per day.
+7-day meal plan with breakfast, lunch, dinner, and snacks.
 
 SECTION 2 - WORKOUT PLAN:
-Create a weekly workout schedule based on my available days with specific exercises, sets, and reps.
+Weekly workout schedule with specific exercises, sets, and reps.
 
 SECTION 3 - MACRO BREAKDOWN:
-Provide my daily calorie target and macro split with explanation.
+Daily calorie target and macro split with explanation.
 
 SECTION 4 - GROCERY LIST:
-Create an organized weekly grocery list grouped by category.';
+Weekly grocery list grouped by category.';
 
       try {
         var messages = [];
@@ -1087,12 +1023,23 @@ Create an organized weekly grocery list grouped by category.';
         });
 
         var data = await response.json();
-        var fullText = data.content && data.content[0] ? data.content[0].text : '';
+        var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
 
-        setResult('result-meal', parseSection(fullText, 1));
-        setResult('result-workout', parseSection(fullText, 2));
-        setResult('result-macros', parseSection(fullText, 3));
-        setResult('result-grocery', parseSection(fullText, 4));
+        function getSection(text, num) {
+          var next = num + 1;
+          var startTag = 'SECTION ' + num;
+          var endTag = 'SECTION ' + next;
+          var start = text.indexOf(startTag);
+          if (start === -1) return text;
+          var end = text.indexOf(endTag, start);
+          var chunk = end === -1 ? text.slice(start) : text.slice(start, end);
+          return chunk.replace(startTag + ' - WEEKLY MEAL PLAN:', '').replace(startTag + ' - WORKOUT PLAN:', '').replace(startTag + ' - MACRO BREAKDOWN:', '').replace(startTag + ' - GROCERY LIST:', '').trim();
+        }
+
+        document.getElementById('result-meal').textContent = getSection(fullText, 1);
+        document.getElementById('result-workout').textContent = getSection(fullText, 2);
+        document.getElementById('result-macros').textContent = getSection(fullText, 3);
+        document.getElementById('result-grocery').textContent = getSection(fullText, 4);
 
         document.getElementById('results-name').textContent = name + "'s Personalized Plan";
         document.getElementById('loading-state').classList.remove('active');
@@ -1109,9 +1056,7 @@ Create an organized weekly grocery list grouped by category.';
       }
     }
 
-    function restart() {
-      location.reload();
-    }
+    function restart() { location.reload(); }
   </script>
 
 </body>
