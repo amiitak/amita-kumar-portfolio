@@ -20,10 +20,6 @@
       --hero-bg: #181412;
       --border: #D6CFC6;
       --white: #fff;
-
-      /* App colors */
-      --app-bg: #F2F7F2;
-      --app-card: #FFFFFF;
       --green-deep: #2D5016;
       --green-mid: #4A7C2F;
       --green-light: #7BAE5A;
@@ -31,557 +27,144 @@
       --green-border: #C8E0B0;
       --sage: #8FAF7A;
       --cream: #FBF8F3;
-      --amber: #D47C2A;
+      --app-bg: #F2F7F2;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.6;
-    }
+    body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
 
-    /* NAV */
     nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       padding: 1.1rem 4rem;
       background: rgba(24,20,18,0.96);
       backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      position: sticky; top: 0; z-index: 100;
     }
-    .nav-logo { font-weight: 600; font-size: 1rem; color: #fff; text-decoration: none; font-family: 'DM Sans', sans-serif; }
+    .nav-logo { font-weight: 600; font-size: 1rem; color: #fff; text-decoration: none; }
     .nav-back { font-size: 0.78rem; color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
     .nav-back:hover { color: var(--accent); }
 
-    /* CASE STUDY HERO */
     .cs-hero {
-      background: var(--hero-bg);
-      padding: 6rem 5rem 5rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: center;
+      background: var(--hero-bg); padding: 6rem 5rem 5rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
     }
-
-    .cs-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: #7BAE5A;
-      margin-bottom: 1rem;
-    }
-
-    .cs-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.5rem, 4vw, 3.8rem);
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-    }
+    .cs-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: #7BAE5A; margin-bottom: 1rem; }
+    .cs-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4vw, 3.8rem); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 1rem; }
     .cs-title em { font-style: italic; color: #7BAE5A; }
-
-    .cs-subtitle {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.5);
-      line-height: 1.75;
-      margin-bottom: 2rem;
-      font-weight: 300;
-    }
-
+    .cs-subtitle { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
     .cs-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .cs-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #7BAE5A;
-      background: rgba(123,174,90,0.1);
-      border: 1px solid rgba(123,174,90,0.25);
-      padding: 0.3rem 0.75rem;
-    }
+    .cs-tag { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: #7BAE5A; background: rgba(123,174,90,0.1); border: 1px solid rgba(123,174,90,0.25); padding: 0.3rem 0.75rem; }
+    .cs-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+    .cs-meta-box { background: rgba(255,255,255,0.02); padding: 1.75rem; }
+    .cs-meta-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: #7BAE5A; margin-bottom: 0.4rem; }
+    .cs-meta-val { font-size: 0.88rem; color: rgba(255,255,255,0.7); font-weight: 300; line-height: 1.5; }
 
-    .cs-meta-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
-    }
-    .cs-meta-box {
-      background: rgba(255,255,255,0.02);
-      padding: 1.75rem;
-    }
-    .cs-meta-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #7BAE5A;
-      margin-bottom: 0.4rem;
-    }
-    .cs-meta-val {
-      font-size: 0.88rem;
-      color: rgba(255,255,255,0.7);
-      font-weight: 300;
-      line-height: 1.5;
-    }
-
-    /* CASE STUDY BODY */
     .cs-section { padding: 5rem; }
     .cs-section-alt { background: var(--bg-warm); }
-
-    .cs-section-grid {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 4rem;
-      align-items: start;
-    }
-
-    .cs-section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      padding-top: 0.3rem;
-      position: sticky;
-      top: 5rem;
-    }
-
-    .cs-h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--ink);
-      line-height: 1.2;
-      margin-bottom: 1.25rem;
-    }
+    .cs-section-grid { display: grid; grid-template-columns: 200px 1fr; gap: 4rem; align-items: start; }
+    .cs-section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); padding-top: 0.3rem; position: sticky; top: 5rem; }
+    .cs-h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 1.25rem; }
     .cs-h2 em { font-style: italic; color: var(--accent); }
+    .cs-p { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.85; font-weight: 300; margin-bottom: 1.25rem; }
 
-    .cs-p {
-      font-size: 0.95rem;
-      color: var(--ink-mid);
-      line-height: 1.85;
-      font-weight: 300;
-      margin-bottom: 1.25rem;
-    }
-
-    .insight-cards {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-top: 2rem;
-    }
-    .insight-card {
-      background: var(--white);
-      padding: 1.75rem;
-    }
+    .insight-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .insight-card { background: var(--white); padding: 1.75rem; }
     .insight-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
     .insight-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
     .insight-body { font-size: 0.82rem; color: var(--ink-light); line-height: 1.65; font-weight: 300; }
 
-    .metric-row {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      margin-top: 2rem;
-    }
-    .metric-box {
-      background: var(--white);
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .metric-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--accent);
-      line-height: 1;
-      margin-bottom: 0.3rem;
-    }
+    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .metric-box { background: var(--white); padding: 1.5rem; text-align: center; }
+    .metric-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
     .metric-label { font-size: 0.75rem; color: var(--ink-light); line-height: 1.4; }
 
-    /* DIVIDER */
-    .cs-divider {
-      height: 1px;
-      background: var(--border);
-      margin: 0 5rem;
-    }
+    .cs-divider { height: 1px; background: var(--border); margin: 0 5rem; }
 
-    /* ===== LIVE APP SECTION ===== */
-    .app-section {
-      background: var(--app-bg);
-      padding: 5rem;
-    }
+    /* APP */
+    .app-section { background: var(--app-bg); padding: 5rem; }
+    .app-header { text-align: center; margin-bottom: 3rem; }
+    .app-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.75rem; }
+    .app-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--green-deep); line-height: 1.2; margin-bottom: 0.5rem; }
+    .app-subtitle { font-size: 0.95rem; color: #5A7A4A; font-weight: 300; }
 
-    .app-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .app-eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--green-mid);
-      margin-bottom: 0.75rem;
-    }
-
-    .app-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--green-deep);
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-    }
-
-    .app-subtitle {
-      font-size: 0.95rem;
-      color: #5A7A4A;
-      font-weight: 300;
-    }
-
-    /* APP CARD */
-    .app-card {
-      background: var(--app-card);
-      border: 1px solid var(--green-border);
-      border-radius: 4px;
-      max-width: 780px;
-      margin: 0 auto;
-      overflow: hidden;
-      box-shadow: 0 4px 32px rgba(45,80,22,0.08);
-    }
-
-    .app-card-header {
-      background: var(--green-deep);
-      padding: 1.5rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .app-logo-mark {
-      width: 36px; height: 36px;
-      background: var(--green-light);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-
-    .app-card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .app-card-sub {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.5);
-      font-weight: 300;
-    }
-
+    .app-card { background: var(--white); border: 1px solid var(--green-border); max-width: 780px; margin: 0 auto; overflow: hidden; box-shadow: 0 4px 32px rgba(45,80,22,0.08); }
+    .app-card-header { background: var(--green-deep); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; }
+    .app-logo-mark { width: 36px; height: 36px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .app-card-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: #fff; }
+    .app-card-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); font-weight: 300; }
     .app-card-body { padding: 2rem; }
 
-    /* STEPS */
-    .step-indicator {
-      display: flex;
-      gap: 0;
-      margin-bottom: 2rem;
-      border: 1px solid var(--green-border);
-      overflow: hidden;
-    }
-
-    .step-dot {
-      flex: 1;
-      padding: 0.6rem;
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--sage);
-      background: var(--green-pale);
-      border-right: 1px solid var(--green-border);
-      transition: all 0.2s;
-    }
+    .step-indicator { display: flex; margin-bottom: 2rem; border: 1px solid var(--green-border); overflow: hidden; }
+    .step-dot { flex: 1; padding: 0.6rem; text-align: center; font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); background: var(--green-pale); border-right: 1px solid var(--green-border); transition: all 0.2s; }
     .step-dot:last-child { border-right: none; }
     .step-dot.active { background: var(--green-deep); color: #fff; }
     .step-dot.done { background: var(--green-mid); color: #fff; }
 
-    /* FORM ELEMENTS */
     .form-group { margin-bottom: 1.25rem; }
-    .form-label {
-      display: block;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--green-deep);
-      margin-bottom: 0.4rem;
-      letter-spacing: 0.02em;
-    }
+    .form-label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--green-deep); margin-bottom: 0.4rem; letter-spacing: 0.02em; }
     .form-label span { color: var(--sage); font-weight: 300; font-size: 0.72rem; }
-
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      border: 1px solid var(--green-border);
-      background: var(--cream);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 300;
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.2s;
-      border-radius: 2px;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      border-color: var(--green-mid);
-    }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--green-border); background: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 300; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green-mid); }
     .form-textarea { resize: vertical; min-height: 80px; }
-
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
     .radio-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .radio-btn {
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--green-border);
-      background: var(--cream);
-      font-size: 0.78rem;
-      font-weight: 400;
-      color: var(--ink-mid);
-      cursor: pointer;
-      transition: all 0.15s;
-      border-radius: 2px;
-      user-select: none;
-    }
+    .radio-btn { padding: 0.5rem 1rem; border: 1px solid var(--green-border); background: var(--cream); font-size: 0.78rem; font-weight: 400; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; user-select: none; }
     .radio-btn:hover { border-color: var(--green-mid); }
     .radio-btn.selected { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
 
     .checkbox-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .checkbox-btn {
-      padding: 0.4rem 0.85rem;
-      border: 1px solid var(--green-border);
-      background: var(--cream);
-      font-size: 0.75rem;
-      color: var(--ink-mid);
-      cursor: pointer;
-      transition: all 0.15s;
-      border-radius: 2px;
-      user-select: none;
-    }
+    .checkbox-btn { padding: 0.4rem 0.85rem; border: 1px solid var(--green-border); background: var(--cream); font-size: 0.75rem; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; user-select: none; }
     .checkbox-btn:hover { border-color: var(--green-mid); }
     .checkbox-btn.selected { background: var(--green-pale); color: var(--green-deep); border-color: var(--green-mid); font-weight: 500; }
 
-    /* PHOTO UPLOAD */
-    .photo-upload-area {
-      border: 2px dashed var(--green-border);
-      background: var(--green-pale);
-      padding: 2.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
-      border-radius: 2px;
-    }
+    .photo-upload-area { border: 2px dashed var(--green-border); background: var(--green-pale); padding: 2.5rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
     .photo-upload-area:hover { border-color: var(--green-mid); background: #dff0d0; }
-    .photo-upload-area input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-    }
+    .photo-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
     .upload-text { font-size: 0.85rem; color: var(--green-mid); font-weight: 400; }
     .upload-sub { font-size: 0.75rem; color: var(--sage); margin-top: 0.25rem; }
-    .upload-preview {
-      width: 100px; height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 0.5rem;
-      display: block;
-      border: 3px solid var(--green-mid);
-    }
+    .upload-preview { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin: 0 auto 0.5rem; display: block; border: 3px solid var(--green-mid); }
 
-    /* BUTTONS */
-    .btn-next {
-      width: 100%;
-      background: var(--green-deep);
-      color: #fff;
-      padding: 0.9rem;
-      font-size: 0.88rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
-      margin-top: 1.5rem;
-      border-radius: 2px;
-      font-family: 'DM Sans', sans-serif;
-    }
+    .btn-next { width: 100%; background: var(--green-deep); color: #fff; padding: 0.9rem; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.06em; border: none; cursor: pointer; transition: background 0.2s; margin-top: 1.5rem; font-family: 'DM Sans', sans-serif; }
     .btn-next:hover { background: var(--green-mid); }
-    .btn-next:disabled { background: var(--sage); cursor: not-allowed; }
-
-    .btn-back {
-      background: transparent;
-      color: var(--sage);
-      border: 1px solid var(--green-border);
-      padding: 0.7rem 1.5rem;
-      font-size: 0.82rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      border-radius: 2px;
-      transition: all 0.2s;
-    }
+    .btn-back { background: transparent; color: var(--sage); border: 1px solid var(--green-border); padding: 0.7rem 1.5rem; font-size: 0.82rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
     .btn-back:hover { color: var(--green-deep); border-color: var(--green-mid); }
-
     .btn-row { display: flex; gap: 0.75rem; align-items: center; margin-top: 1.5rem; }
     .btn-row .btn-next { flex: 1; margin-top: 0; }
 
-    /* LOADING */
-    .loading-state {
-      text-align: center;
-      padding: 3rem 2rem;
-      display: none;
-    }
+    .loading-state { text-align: center; padding: 3rem 2rem; display: none; }
     .loading-state.active { display: block; }
-
-    .loading-spinner {
-      width: 48px; height: 48px;
-      border: 3px solid var(--green-pale);
-      border-top-color: var(--green-mid);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 1.25rem;
-    }
+    .loading-spinner { width: 48px; height: 48px; border: 3px solid var(--green-pale); border-top-color: var(--green-mid); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.25rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .loading-text {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      color: var(--green-deep);
-      margin-bottom: 0.4rem;
-    }
+    .loading-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--green-deep); margin-bottom: 0.4rem; }
     .loading-sub { font-size: 0.82rem; color: var(--sage); }
 
-    /* RESULTS */
     .results-wrap { display: none; }
     .results-wrap.active { display: block; }
-
-    .results-header {
-      background: var(--green-deep);
-      padding: 1.75rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .results-header-text h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
-      color: #fff;
-      font-weight: 700;
-    }
+    .results-header { background: var(--green-deep); padding: 1.75rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    .results-header-text h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; font-weight: 700; }
     .results-header-text p { font-size: 0.78rem; color: rgba(255,255,255,0.5); margin-top: 0.2rem; }
+    .results-badge { background: var(--green-light); color: #fff; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.35rem 0.85rem; }
 
-    .results-badge {
-      background: var(--green-light);
-      color: #fff;
-      font-size: 0.68rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.35rem 0.85rem;
-      border-radius: 2px;
-    }
-
-    .results-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--green-border);
-      background: var(--cream);
-    }
-    .results-tab {
-      padding: 0.85rem 1.5rem;
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--sage);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
+    .results-tabs { display: flex; border-bottom: 1px solid var(--green-border); background: var(--cream); }
+    .results-tab { padding: 0.85rem 1.5rem; font-size: 0.78rem; font-weight: 500; color: var(--sage); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
     .results-tab:hover { color: var(--green-mid); }
     .results-tab.active { color: var(--green-deep); border-bottom-color: var(--green-deep); }
 
     .results-content { padding: 2rem; min-height: 300px; }
-
     .result-section { display: none; }
     .result-section.active { display: block; }
+    .result-prose { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.8; font-weight: 300; white-space: pre-wrap; }
 
-    .result-prose h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--green-deep); margin: 1.5rem 0 0.5rem; }
-    .result-prose h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 600; color: var(--green-deep); margin: 1.25rem 0 0.4rem; }
-    .result-prose h4 { font-size: 0.9rem; font-weight: 600; color: var(--green-mid); margin: 1rem 0 0.3rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .result-prose p { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.75; margin-bottom: 0.6rem; }
-    .result-prose strong { font-weight: 600; color: var(--ink); }
-    .result-prose ul { margin: 0.5rem 0 0.75rem 1.25rem; }
-    .result-prose li { font-size: 0.88rem; color: var(--ink-mid); line-height: 1.7; margin-bottom: 0.25rem; }
-    .result-prose {
-      font-size: 0.88rem;
-      color: var(--ink-mid);
-      line-height: 1.8;
-      font-weight: 300;
-      white-space: pre-wrap;
-    }
-
-    .results-footer {
-      padding: 1.25rem 2rem;
-      border-top: 1px solid var(--green-border);
-      background: var(--green-pale);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .results-footer-note { font-size: 0.75rem; color: var(--sage); }
-
-    .btn-restart {
-      background: transparent;
-      color: var(--green-mid);
-      border: 1px solid var(--green-border);
-      padding: 0.5rem 1.25rem;
-      font-size: 0.78rem;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      border-radius: 2px;
-      transition: all 0.2s;
-    }
+    .results-footer { padding: 1.25rem 2rem; border-top: 1px solid var(--green-border); background: var(--green-pale); display: flex; justify-content: space-between; align-items: center; }
+    .results-footer-note { font-size: 0.75rem; color: var(--sage); max-width: 500px; }
+    .btn-restart { background: transparent; color: var(--green-mid); border: 1px solid var(--green-border); padding: 0.5rem 1.25rem; font-size: 0.78rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
     .btn-restart:hover { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
 
-    /* ERROR */
-    .error-msg {
-      background: #FEF2F2;
-      border: 1px solid #FECACA;
-      color: #991B1B;
-      padding: 1rem 1.25rem;
-      font-size: 0.84rem;
-      margin-top: 1rem;
-      border-radius: 2px;
-      display: none;
-    }
+    .error-msg { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 1rem 1.25rem; font-size: 0.84rem; margin-top: 1rem; display: none; }
     .error-msg.active { display: block; }
 
-    /* RESPONSIVE */
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .cs-hero { grid-template-columns: 1fr; padding: 4rem 2rem 3rem; gap: 3rem; }
@@ -598,466 +181,409 @@
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a href="index.html" class="nav-logo">Amita Kumar</a>
-    <a href="index.html#projects" class="nav-back">← Back to Projects</a>
-  </nav>
+<nav>
+  <a href="index.html" class="nav-logo">Amita Kumar</a>
+  <a href="index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
 
-  <!-- CASE STUDY HERO -->
-  <div class="cs-hero">
+<div class="cs-hero">
+  <div>
+    <div class="cs-eyebrow">Case Study · Health Tech · Working Prototype</div>
+    <h1 class="cs-title">NutriCoach <em>AI</em></h1>
+    <p class="cs-subtitle">A personalized nutrition and fitness coach that uses computer vision and behavioral context to generate plans built around you as a whole person, not just your last meal.</p>
+    <div class="cs-tags">
+      <span class="cs-tag">Claude Vision API</span>
+      <span class="cs-tag">Computer Vision</span>
+      <span class="cs-tag">Personalization</span>
+      <span class="cs-tag">Health Tech</span>
+      <span class="cs-tag">B2C</span>
+    </div>
+  </div>
+  <div class="cs-meta-grid">
+    <div class="cs-meta-box"><div class="cs-meta-label">Role</div><div class="cs-meta-val">PM + Prototype Builder</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Timeline</div><div class="cs-meta-val">2026</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Type</div><div class="cs-meta-val">Working Prototype</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Tools</div><div class="cs-meta-val">Claude API, Claude Code, Cursor</div></div>
+  </div>
+</div>
+
+<div class="cs-section">
+  <div class="cs-section-grid">
+    <div class="cs-section-label">Problem</div>
     <div>
-      <div class="cs-eyebrow">Case Study · Health Tech · Working Prototype</div>
-      <h1 class="cs-title">NutriCoach <em>AI</em></h1>
-      <p class="cs-subtitle">A personalized nutrition and fitness coach that uses computer vision and behavioral context to generate plans built around you as a whole person, not just your last meal.</p>
-      <div class="cs-tags">
-        <span class="cs-tag">Claude Vision API</span>
-        <span class="cs-tag">Computer Vision</span>
-        <span class="cs-tag">Personalization</span>
-        <span class="cs-tag">Health Tech</span>
-        <span class="cs-tag">B2C</span>
-      </div>
-    </div>
-    <div class="cs-meta-grid">
-      <div class="cs-meta-box">
-        <div class="cs-meta-label">Role</div>
-        <div class="cs-meta-val">PM + Prototype Builder</div>
-      </div>
-      <div class="cs-meta-box">
-        <div class="cs-meta-label">Timeline</div>
-        <div class="cs-meta-val">2026</div>
-      </div>
-      <div class="cs-meta-box">
-        <div class="cs-meta-label">Type</div>
-        <div class="cs-meta-val">Working Prototype</div>
-      </div>
-      <div class="cs-meta-box">
-        <div class="cs-meta-label">Tools</div>
-        <div class="cs-meta-val">Claude API, Claude Code, Cursor</div>
+      <h2 class="cs-h2">Generic plans don't fit <em>real people.</em></h2>
+      <p class="cs-p">Most nutrition and fitness apps ask you what you ate. They log calories, track macros, and give you a plan based on a height/weight formula. The result is generic: a 1,800 calorie plan that ignores your sleep schedule, stress levels, dietary restrictions, and actual body composition goals.</p>
+      <p class="cs-p">The insight behind NutriCoach is that personalization has to start with the whole person. By combining a photo with goals and lifestyle inputs, we can generate plans that are actually tailored to where someone is starting from and where they want to go.</p>
+      <div class="metric-row">
+        <div class="metric-box"><div class="metric-num">73%</div><div class="metric-label">of dieters abandon generic plans within 2 weeks</div></div>
+        <div class="metric-box"><div class="metric-num">3x</div><div class="metric-label">better outcomes with personalized nutrition coaching</div></div>
+        <div class="metric-box"><div class="metric-num">$11B</div><div class="metric-label">digital health coaching market by 2027</div></div>
+        <div class="metric-box"><div class="metric-num">68%</div><div class="metric-label">of users want plans that adapt to their lifestyle</div></div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- PROBLEM -->
-  <div class="cs-section">
-    <div class="cs-section-grid">
-      <div class="cs-section-label">Problem</div>
+<div class="cs-divider"></div>
+
+<div class="cs-section cs-section-alt">
+  <div class="cs-section-grid">
+    <div class="cs-section-label">Discovery</div>
+    <div>
+      <h2 class="cs-h2">What existing apps <em>get wrong.</em></h2>
+      <p class="cs-p">I audited the top nutrition apps and ran user interviews across three fitness archetypes. Three patterns emerged consistently.</p>
+      <div class="insight-cards">
+        <div class="insight-card"><div class="insight-icon">📊</div><div class="insight-title">Calorie counting fatigue</div><div class="insight-body">Users drop off when logging feels like a second job. Manual food entry is the number one reason for churn across all major apps.</div></div>
+        <div class="insight-card"><div class="insight-icon">🧍</div><div class="insight-title">One-size-fits-all plans</div><div class="insight-body">BMI-based recommendations ignore body composition, muscle mass, and lifestyle context. Users feel the plans aren't built for them.</div></div>
+        <div class="insight-card"><div class="insight-icon">🔗</div><div class="insight-title">Nutrition and fitness are siloed</div><div class="insight-body">Most apps do food OR fitness. Users have to stitch together multiple tools, losing the synergy between what they eat and how they train.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cs-divider"></div>
+
+<div class="cs-section">
+  <div class="cs-section-grid">
+    <div class="cs-section-label">Strategy</div>
+    <div>
+      <h2 class="cs-h2">The whole-person <em>approach.</em></h2>
+      <p class="cs-p">NutriCoach flips the input model. Instead of starting with food logs, we start with you: a photo for visual body composition context, your goals, your lifestyle constraints, and your dietary preferences. Claude Vision analyzes the photo alongside structured inputs to generate a fully integrated plan.</p>
+      <p class="cs-p">The prototype below is a working implementation built with the Claude API demonstrating the core user flow and output quality that would form the foundation of an MVP.</p>
+    </div>
+  </div>
+</div>
+
+<div class="app-section">
+  <div class="app-header">
+    <div class="app-eyebrow">Live Prototype</div>
+    <h2 class="app-title">Try NutriCoach AI</h2>
+    <p class="app-subtitle">Upload a photo, share your goals, and get your personalized plan in seconds.</p>
+  </div>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-logo-mark">🌿</div>
       <div>
-        <h2 class="cs-h2">Generic plans don't fit <em>real people.</em></h2>
-        <p class="cs-p">Most nutrition and fitness apps ask you what you ate. They log calories, track macros, and give you a plan based on a height/weight formula. The result is generic: a 1,800 calorie plan that ignores your sleep schedule, stress levels, dietary restrictions, and actual body composition goals.</p>
-        <p class="cs-p">The insight behind NutriCoach is that personalization has to start with the whole person, not just their food diary. By combining a photo (for body composition context) with goals and lifestyle inputs, we can generate plans that are actually tailored to where someone is starting from and where they want to go.</p>
-        <div class="metric-row">
-          <div class="metric-box">
-            <div class="metric-num">73%</div>
-            <div class="metric-label">of dieters abandon generic plans within 2 weeks</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-num">3x</div>
-            <div class="metric-label">better outcomes with personalized nutrition coaching</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-num">$11B</div>
-            <div class="metric-label">digital health coaching market by 2027</div>
-          </div>
-          <div class="metric-box">
-            <div class="metric-num">68%</div>
-            <div class="metric-label">of users want plans that adapt to their lifestyle</div>
+        <div class="app-card-title">NutriCoach AI</div>
+        <div class="app-card-sub">Personalized nutrition and fitness planning</div>
+      </div>
+    </div>
+
+    <div class="app-card-body">
+      <div class="step-indicator">
+        <div class="step-dot active" id="step-1-dot">1 · Photo</div>
+        <div class="step-dot" id="step-2-dot">2 · Goals</div>
+        <div class="step-dot" id="step-3-dot">3 · Lifestyle</div>
+        <div class="step-dot" id="step-4-dot">4 · Your Plan</div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div id="step-1">
+        <div class="form-group">
+          <label class="form-label">Upload a photo of yourself <span>(used for body composition context)</span></label>
+          <div class="photo-upload-area" id="upload-area">
+            <input type="file" accept="image/*" id="photo-input">
+            <div id="upload-placeholder">
+              <div class="upload-icon">📸</div>
+              <div class="upload-text">Click to upload or drag and drop</div>
+              <div class="upload-sub">JPG, PNG up to 10MB · Full body or upper body works best</div>
+            </div>
+            <div id="upload-preview-wrap" style="display:none">
+              <img id="upload-preview-img" class="upload-preview" src="" alt="Your photo">
+              <div class="upload-text" style="color:var(--green-mid)">✓ Photo uploaded</div>
+              <div class="upload-sub">Click to change</div>
+            </div>
           </div>
         </div>
+        <div class="form-group">
+          <label class="form-label">Your name <span>(for your personalized plan)</span></label>
+          <input type="text" class="form-input" id="user-name" placeholder="First name">
+        </div>
+        <button class="btn-next" id="btn-step1">Continue →</button>
       </div>
+
+      <!-- STEP 2 -->
+      <div id="step-2" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Primary goal</label>
+          <div class="radio-group" id="goal-group">
+            <div class="radio-btn">Lose weight</div>
+            <div class="radio-btn">Build muscle</div>
+            <div class="radio-btn">Improve fitness</div>
+            <div class="radio-btn">Optimize performance</div>
+            <div class="radio-btn">Maintain and feel better</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input type="number" class="form-input" id="user-age" placeholder="e.g. 28">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Height</label>
+            <input type="text" class="form-input" id="user-height" placeholder="e.g. 5'6">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Current weight <span>(optional)</span></label>
+          <input type="text" class="form-input" id="user-weight" placeholder="e.g. 145 lbs">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Dietary restrictions <span>(select all that apply)</span></label>
+          <div class="checkbox-group" id="diet-group">
+            <div class="checkbox-btn">None</div>
+            <div class="checkbox-btn">Vegetarian</div>
+            <div class="checkbox-btn">Vegan</div>
+            <div class="checkbox-btn">Gluten-free</div>
+            <div class="checkbox-btn">Dairy-free</div>
+            <div class="checkbox-btn">Halal</div>
+            <div class="checkbox-btn">Nut allergy</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" id="btn-back2">← Back</button>
+          <button class="btn-next" id="btn-step2">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div id="step-3" style="display:none">
+        <div class="form-group">
+          <label class="form-label">Current activity level</label>
+          <div class="radio-group" id="activity-group">
+            <div class="radio-btn">Sedentary</div>
+            <div class="radio-btn">Lightly active</div>
+            <div class="radio-btn">Moderately active</div>
+            <div class="radio-btn">Very active</div>
+            <div class="radio-btn">Athlete</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">How many days per week can you work out?</label>
+          <div class="radio-group" id="days-group">
+            <div class="radio-btn">1-2 days</div>
+            <div class="radio-btn">3-4 days</div>
+            <div class="radio-btn">5-6 days</div>
+            <div class="radio-btn">Every day</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Average sleep per night</label>
+          <div class="radio-group" id="sleep-group">
+            <div class="radio-btn">Under 6 hrs</div>
+            <div class="radio-btn">6-7 hrs</div>
+            <div class="radio-btn">7-8 hrs</div>
+            <div class="radio-btn">8+ hrs</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Stress level</label>
+          <div class="radio-group" id="stress-group">
+            <div class="radio-btn">Low</div>
+            <div class="radio-btn">Moderate</div>
+            <div class="radio-btn">High</div>
+            <div class="radio-btn">Very high</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Anything else we should know? <span>(optional)</span></label>
+          <textarea class="form-textarea" id="extra-notes" placeholder="e.g. I travel a lot for work, I have a bad knee, I hate running..."></textarea>
+        </div>
+        <div class="error-msg" id="error-msg">Something went wrong generating your plan. Please try again.</div>
+        <div class="btn-row">
+          <button class="btn-back" id="btn-back3">← Back</button>
+          <button class="btn-next" id="btn-generate">Generate My Plan ✦</button>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div class="loading-state" id="loading-state">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Building your personalized plan...</div>
+        <div class="loading-sub">Analyzing your photo and lifestyle inputs</div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results-wrap" id="results-wrap">
+        <div class="results-header">
+          <div class="results-header-text">
+            <h3 id="results-name">Your Personalized Plan</h3>
+            <p>Based on your photo, goals, and lifestyle</p>
+          </div>
+          <div class="results-badge">✓ Ready</div>
+        </div>
+        <div class="results-tabs">
+          <div class="results-tab active" id="tab-btn-meal">🥗 Meal Plan</div>
+          <div class="results-tab" id="tab-btn-workout">💪 Workout Plan</div>
+          <div class="results-tab" id="tab-btn-macros">📊 Macros</div>
+          <div class="results-tab" id="tab-btn-grocery">🛒 Grocery List</div>
+        </div>
+        <div class="results-content">
+          <div class="result-section active" id="tab-meal"><div class="result-prose" id="result-meal"></div></div>
+          <div class="result-section" id="tab-workout"><div class="result-prose" id="result-workout"></div></div>
+          <div class="result-section" id="tab-macros"><div class="result-prose" id="result-macros"></div></div>
+          <div class="result-section" id="tab-grocery"><div class="result-prose" id="result-grocery"></div></div>
+        </div>
+        <div class="results-footer">
+          <div class="results-footer-note">AI-generated for demonstration purposes. Consult a healthcare professional before starting any new diet or fitness program.</div>
+          <button class="btn-restart" id="btn-restart">Start Over</button>
+        </div>
+      </div>
+
     </div>
   </div>
+</div>
 
-  <div class="cs-divider"></div>
+<script>
+var photoBase64 = null;
+var photoMimeType = null;
+var currentStep = 1;
 
-  <!-- DISCOVERY -->
-  <div class="cs-section cs-section-alt">
-    <div class="cs-section-grid">
-      <div class="cs-section-label">Discovery</div>
-      <div>
-        <h2 class="cs-h2">What existing apps <em>get wrong.</em></h2>
-        <p class="cs-p">I audited the top nutrition apps (MyFitnessPal, Noom, Lose It, Calibrate) and ran user interviews across three fitness archetypes: beginners trying to lose weight, intermediate users trying to build muscle, and active people trying to optimize performance. Three patterns emerged consistently.</p>
-        <div class="insight-cards">
-          <div class="insight-card">
-            <div class="insight-icon">📊</div>
-            <div class="insight-title">Calorie counting fatigue</div>
-            <div class="insight-body">Users drop off when logging feels like a second job. Manual food entry is the number one reason for churn across all major apps.</div>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">🧍</div>
-            <div class="insight-title">One-size-fits-all plans</div>
-            <div class="insight-body">BMI-based recommendations ignore body composition, muscle mass, and lifestyle context. Users feel the plans aren't built for them.</div>
-          </div>
-          <div class="insight-card">
-            <div class="insight-icon">🔗</div>
-            <div class="insight-title">Nutrition and fitness are siloed</div>
-            <div class="insight-body">Most apps do food OR fitness. Users have to stitch together multiple tools, losing the synergy between what they eat and how they train.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+function showStep(n) {
+  document.getElementById('step-' + currentStep).style.display = 'none';
+  document.getElementById('step-' + n).style.display = 'block';
+  for (var i = 1; i <= 3; i++) {
+    var dot = document.getElementById('step-' + i + '-dot');
+    if (i < n) { dot.className = 'step-dot done'; }
+    else if (i === n) { dot.className = 'step-dot active'; }
+    else { dot.className = 'step-dot'; }
+  }
+  currentStep = n;
+}
 
-  <div class="cs-divider"></div>
+document.getElementById('photo-input').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  photoMimeType = file.type;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    var dataUrl = ev.target.result;
+    photoBase64 = dataUrl.split(',')[1];
+    document.getElementById('upload-placeholder').style.display = 'none';
+    document.getElementById('upload-preview-wrap').style.display = 'block';
+    document.getElementById('upload-preview-img').src = dataUrl;
+  };
+  reader.readAsDataURL(file);
+});
 
-  <!-- STRATEGY -->
-  <div class="cs-section">
-    <div class="cs-section-grid">
-      <div class="cs-section-label">Strategy</div>
-      <div>
-        <h2 class="cs-h2">The whole-person <em>approach.</em></h2>
-        <p class="cs-p">NutriCoach flips the input model. Instead of starting with food logs, we start with you: a photo for visual body composition context, your goals, your lifestyle constraints, and your dietary preferences. Claude Vision analyzes the photo alongside the structured inputs to generate a fully integrated plan covering meals, workouts, macros, and a grocery list.</p>
-        <p class="cs-p">The core product bet is that reducing input friction while increasing output relevance drives retention. If your plan actually fits your life, you stick to it.</p>
-        <p class="cs-p">The prototype below is a working implementation built with the Claude API. It demonstrates the core user flow and output quality that would form the foundation of an MVP.</p>
-      </div>
-    </div>
-  </div>
+document.getElementById('btn-step1').addEventListener('click', function() { showStep(2); });
+document.getElementById('btn-back2').addEventListener('click', function() { showStep(1); });
+document.getElementById('btn-step2').addEventListener('click', function() { showStep(3); });
+document.getElementById('btn-back3').addEventListener('click', function() { showStep(2); });
+document.getElementById('btn-restart').addEventListener('click', function() { location.reload(); });
 
-  <!-- LIVE APP -->
-  <div class="app-section">
-    <div class="app-header">
-      <div class="app-eyebrow">Live Prototype</div>
-      <h2 class="app-title">Try NutriCoach AI</h2>
-      <p class="app-subtitle">Upload a photo, share your goals, and get your personalized plan in seconds.</p>
-    </div>
+document.querySelectorAll('.radio-group').forEach(function(group) {
+  group.querySelectorAll('.radio-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      group.querySelectorAll('.radio-btn').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+    });
+  });
+});
 
-    <div class="app-card">
-      <div class="app-card-header">
-        <div class="app-logo-mark">🌿</div>
-        <div>
-          <div class="app-card-title">NutriCoach AI</div>
-          <div class="app-card-sub">Personalized nutrition and fitness planning</div>
-        </div>
-      </div>
+document.querySelectorAll('.checkbox-group').forEach(function(group) {
+  group.querySelectorAll('.checkbox-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { btn.classList.toggle('selected'); });
+  });
+});
 
-      <div class="app-card-body">
-        <!-- Step indicator -->
-        <div class="step-indicator">
-          <div class="step-dot active" id="step-1-dot">1 · Photo</div>
-          <div class="step-dot" id="step-2-dot">2 · Goals</div>
-          <div class="step-dot" id="step-3-dot">3 · Lifestyle</div>
-          <div class="step-dot" id="step-4-dot">4 · Your Plan</div>
-        </div>
+document.querySelectorAll('.results-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var id = tab.id.replace('tab-btn-', '');
+    document.querySelectorAll('.result-section').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.results-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.getElementById('tab-' + id).classList.add('active');
+    tab.classList.add('active');
+  });
+});
 
-        <!-- STEP 1: Photo -->
-        <div id="step-1">
-          <div class="form-group">
-            <label class="form-label">Upload a photo of yourself <span>(used for body composition context)</span></label>
-            <div class="photo-upload-area" id="upload-area">
-              <input type="file" accept="image/*" id="photo-input" onchange="handlePhotoUpload(event)"/>
-              <div id="upload-placeholder">
-                <div class="upload-icon">📸</div>
-                <div class="upload-text">Click to upload or drag and drop</div>
-                <div class="upload-sub">JPG, PNG up to 10MB · Full body or upper body works best</div>
-              </div>
-              <div id="upload-preview-wrap" style="display:none">
-                <img id="upload-preview-img" class="upload-preview" src="" alt="Your photo"/>
-                <div class="upload-text" style="color: var(--green-mid)">✓ Photo uploaded</div>
-                <div class="upload-sub">Click to change</div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Your name <span>(for your personalized plan)</span></label>
-            <input type="text" class="form-input" id="user-name" placeholder="First name"/>
-          </div>
-          <button class="btn-next" onclick="goToStep(2)">Continue →</button>
-        </div>
+function getSelected(groupId) {
+  var selected = [];
+  document.querySelectorAll('#' + groupId + ' .selected').forEach(function(b) {
+    selected.push(b.textContent.trim());
+  });
+  return selected.join(', ') || 'Not specified';
+}
 
-        <!-- STEP 2: Goals -->
-        <div id="step-2" style="display:none">
-          <div class="form-group">
-            <label class="form-label">Primary goal</label>
-            <div class="radio-group" id="goal-group">
-              <div class="radio-btn" onclick="selectRadio('goal-group', this)">Lose weight</div>
-              <div class="radio-btn" onclick="selectRadio('goal-group', this)">Build muscle</div>
-              <div class="radio-btn" onclick="selectRadio('goal-group', this)">Improve fitness</div>
-              <div class="radio-btn" onclick="selectRadio('goal-group', this)">Optimize performance</div>
-              <div class="radio-btn" onclick="selectRadio('goal-group', this)">Maintain & feel better</div>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Age</label>
-              <input type="number" class="form-input" id="user-age" placeholder="e.g. 28"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Height</label>
-              <input type="text" class="form-input" id="user-height" placeholder="e.g. 5'6&quot;"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Current weight <span>(optional)</span></label>
-            <input type="text" class="form-input" id="user-weight" placeholder="e.g. 145 lbs"/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Dietary restrictions <span>(select all that apply)</span></label>
-            <div class="checkbox-group" id="diet-group">
-              <div class="checkbox-btn" onclick="toggleCheck(this)">None</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Vegetarian</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Vegan</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Gluten-free</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Dairy-free</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Halal</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Kosher</div>
-              <div class="checkbox-btn" onclick="toggleCheck(this)">Nut allergy</div>
-            </div>
-          </div>
-          <div class="btn-row">
-            <button class="btn-back" onclick="goToStep(1)">← Back</button>
-            <button class="btn-next" onclick="goToStep(3)">Continue →</button>
-          </div>
-        </div>
+function getSection(text, num) {
+  var startTag = 'SECTION ' + num;
+  var endTag = 'SECTION ' + (num + 1);
+  var start = text.indexOf(startTag);
+  if (start === -1) return text;
+  var end = text.indexOf(endTag, start);
+  var chunk = (end === -1) ? text.slice(start) : text.slice(start, end);
+  return chunk.replace(startTag, '').replace('- WEEKLY MEAL PLAN:', '').replace('- WORKOUT PLAN:', '').replace('- MACRO BREAKDOWN:', '').replace('- GROCERY LIST:', '').trim();
+}
 
-        <!-- STEP 3: Lifestyle -->
-        <div id="step-3" style="display:none">
-          <div class="form-group">
-            <label class="form-label">Current activity level</label>
-            <div class="radio-group" id="activity-group">
-              <div class="radio-btn" onclick="selectRadio('activity-group', this)">Sedentary</div>
-              <div class="radio-btn" onclick="selectRadio('activity-group', this)">Lightly active</div>
-              <div class="radio-btn" onclick="selectRadio('activity-group', this)">Moderately active</div>
-              <div class="radio-btn" onclick="selectRadio('activity-group', this)">Very active</div>
-              <div class="radio-btn" onclick="selectRadio('activity-group', this)">Athlete</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">How many days per week can you work out?</label>
-            <div class="radio-group" id="days-group">
-              <div class="radio-btn" onclick="selectRadio('days-group', this)">1-2 days</div>
-              <div class="radio-btn" onclick="selectRadio('days-group', this)">3-4 days</div>
-              <div class="radio-btn" onclick="selectRadio('days-group', this)">5-6 days</div>
-              <div class="radio-btn" onclick="selectRadio('days-group', this)">Every day</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Average sleep per night</label>
-            <div class="radio-group" id="sleep-group">
-              <div class="radio-btn" onclick="selectRadio('sleep-group', this)">Under 6 hrs</div>
-              <div class="radio-btn" onclick="selectRadio('sleep-group', this)">6-7 hrs</div>
-              <div class="radio-btn" onclick="selectRadio('sleep-group', this)">7-8 hrs</div>
-              <div class="radio-btn" onclick="selectRadio('sleep-group', this)">8+ hrs</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Stress level</label>
-            <div class="radio-group" id="stress-group">
-              <div class="radio-btn" onclick="selectRadio('stress-group', this)">Low</div>
-              <div class="radio-btn" onclick="selectRadio('stress-group', this)">Moderate</div>
-              <div class="radio-btn" onclick="selectRadio('stress-group', this)">High</div>
-              <div class="radio-btn" onclick="selectRadio('stress-group', this)">Very high</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Anything else we should know? <span>(optional)</span></label>
-            <textarea class="form-textarea" id="extra-notes" placeholder="e.g. I travel a lot for work, I have a bad knee, I hate running..."></textarea>
-          </div>
-          <div class="error-msg" id="error-msg">Something went wrong generating your plan. Please try again.</div>
-          <div class="btn-row">
-            <button class="btn-back" onclick="goToStep(2)">← Back</button>
-            <button class="btn-next" id="generate-btn" onclick="generatePlan()">Generate My Plan ✦</button>
-          </div>
-        </div>
+document.getElementById('btn-generate').addEventListener('click', async function() {
+  var name = document.getElementById('user-name').value || 'there';
+  var age = document.getElementById('user-age').value;
+  var height = document.getElementById('user-height').value;
+  var weight = document.getElementById('user-weight').value;
+  var goal = getSelected('goal-group');
+  var diet = getSelected('diet-group');
+  var activity = getSelected('activity-group');
+  var days = getSelected('days-group');
+  var sleep = getSelected('sleep-group');
+  var stress = getSelected('stress-group');
+  var notes = document.getElementById('extra-notes').value;
 
-        <!-- LOADING -->
-        <div class="loading-state" id="loading-state">
-          <div class="loading-spinner"></div>
-          <div class="loading-text">Building your personalized plan...</div>
-          <div class="loading-sub">Analyzing your photo and lifestyle inputs</div>
-        </div>
+  document.getElementById('step-3').style.display = 'none';
+  document.getElementById('loading-state').classList.add('active');
+  document.getElementById('error-msg').classList.remove('active');
+  document.getElementById('step-4-dot').className = 'step-dot active';
+  document.getElementById('step-3-dot').className = 'step-dot done';
 
-        <!-- RESULTS -->
-        <div class="results-wrap" id="results-wrap">
-          <div class="results-header">
-            <div class="results-header-text">
-              <h3 id="results-name">Your Personalized Plan</h3>
-              <p>Based on your photo, goals, and lifestyle</p>
-            </div>
-            <div class="results-badge">✓ Ready</div>
-          </div>
-          <div class="results-tabs">
-            <div class="results-tab active" onclick="switchTab('meal')">🥗 Meal Plan</div>
-            <div class="results-tab" onclick="switchTab('workout')">💪 Workout Plan</div>
-            <div class="results-tab" onclick="switchTab('macros')">📊 Macros</div>
-            <div class="results-tab" onclick="switchTab('grocery')">🛒 Grocery List</div>
-          </div>
-          <div class="results-content">
-            <div class="result-section active" id="tab-meal">
-              <div class="result-prose" id="result-meal">Loading...</div>
-            </div>
-            <div class="result-section" id="tab-workout">
-              <div class="result-prose" id="result-workout">Loading...</div>
-            </div>
-            <div class="result-section" id="tab-macros">
-              <div class="result-prose" id="result-macros">Loading...</div>
-            </div>
-            <div class="result-section" id="tab-grocery">
-              <div class="result-prose" id="result-grocery">Loading...</div>
-            </div>
-          </div>
-          <div class="results-footer">
-            <div class="results-footer-note">This plan is AI-generated for demonstration purposes. Consult a healthcare professional before starting any new diet or fitness program.</div>
-            <button class="btn-restart" onclick="restart()">Start Over</button>
-          </div>
-        </div>
+  var profile = 'Name: ' + name + ', Age: ' + (age || 'not provided') + ', Height: ' + (height || 'not provided') + ', Weight: ' + (weight || 'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes || 'none');
 
-      </div>
-    </div>
-  </div>
+  var prompt = 'My profile: ' + profile + '\n\nCreate my complete personalized plan with these 4 clearly labeled sections:\n\nSECTION 1 - WEEKLY MEAL PLAN:\nA 7-day meal plan with breakfast, lunch, dinner, and snacks. Be specific with foods and portions.\n\nSECTION 2 - WORKOUT PLAN:\nA weekly workout schedule with specific exercises, sets, reps, and rest periods.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calorie target and macro split (protein, carbs, fats) with explanation.\n\nSECTION 4 - GROCERY LIST:\nWeekly grocery list organized by category.';
 
-  <script>
-    var photoBase64 = null;
-    var photoMimeType = null;
-    var currentStep = 1;
-
-    function goToStep(n) {
-      document.getElementById('step-' + currentStep).style.display = 'none';
-      document.getElementById('step-' + n).style.display = 'block';
-      for (var i = 1; i <= 3; i++) {
-        var dot = document.getElementById('step-' + i + '-dot');
-        if (i < n) dot.className = 'step-dot done';
-        else if (i === n) dot.className = 'step-dot active';
-        else dot.className = 'step-dot';
-      }
-      currentStep = n;
+  try {
+    var messages = [];
+    if (photoBase64) {
+      messages.push({ role: 'user', content: [
+        { type: 'image', source: { type: 'base64', media_type: photoMimeType, data: photoBase64 } },
+        { type: 'text', text: prompt }
+      ]});
+    } else {
+      messages.push({ role: 'user', content: prompt });
     }
 
-    function handlePhotoUpload(e) {
-      var file = e.target.files[0];
-      if (!file) return;
-      photoMimeType = file.type;
-      var reader = new FileReader();
-      reader.onload = function(ev) {
-        var dataUrl = ev.target.result;
-        photoBase64 = dataUrl.split(',')[1];
-        document.getElementById('upload-placeholder').style.display = 'none';
-        document.getElementById('upload-preview-wrap').style.display = 'block';
-        document.getElementById('upload-preview-img').src = dataUrl;
-      };
-      reader.readAsDataURL(file);
-    }
+    var resp = await fetch('https://nutricoach-proxy.amitak1107.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        system: 'You are NutriCoach AI, an expert nutrition and fitness coach. Create highly personalized, realistic, actionable plans with specific foods, exercises, and quantities.',
+        messages: messages
+      })
+    });
 
-    function selectRadio(groupId, el) {
-      var btns = document.querySelectorAll('#' + groupId + ' .radio-btn');
-      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('selected');
-      el.classList.add('selected');
-    }
+    var data = await resp.json();
+    var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
 
-    function toggleCheck(el) {
-      el.classList.toggle('selected');
-    }
+    document.getElementById('result-meal').textContent = getSection(fullText, 1);
+    document.getElementById('result-workout').textContent = getSection(fullText, 2);
+    document.getElementById('result-macros').textContent = getSection(fullText, 3);
+    document.getElementById('result-grocery').textContent = getSection(fullText, 4);
+    document.getElementById('results-name').textContent = name + "'s Personalized Plan";
 
-    function getSelected(groupId) {
-      var selected = [];
-      var btns = document.querySelectorAll('#' + groupId + ' .radio-btn.selected, #' + groupId + ' .checkbox-btn.selected');
-      for (var i = 0; i < btns.length; i++) selected.push(btns[i].textContent.trim());
-      return selected.join(', ') || 'Not specified';
-    }
+    document.getElementById('loading-state').classList.remove('active');
+    document.getElementById('results-wrap').classList.add('active');
 
-    function switchTab(tab) {
-      document.querySelectorAll('.result-section').forEach(function(s) { s.classList.remove('active'); });
-      document.querySelectorAll('.results-tab').forEach(function(t) { t.classList.remove('active'); });
-      document.getElementById('tab-' + tab).classList.add('active');
-      event.target.classList.add('active');
-    }
-
-    async function generatePlan() {
-      var name = document.getElementById('user-name').value || 'there';
-      var age = document.getElementById('user-age').value;
-      var height = document.getElementById('user-height').value;
-      var weight = document.getElementById('user-weight').value;
-      var goal = getSelected('goal-group');
-      var diet = getSelected('diet-group');
-      var activity = getSelected('activity-group');
-      var days = getSelected('days-group');
-      var sleep = getSelected('sleep-group');
-      var stress = getSelected('stress-group');
-      var notes = document.getElementById('extra-notes').value;
-
-      document.getElementById('step-3').style.display = 'none';
-      document.getElementById('loading-state').classList.add('active');
-      document.getElementById('error-msg').classList.remove('active');
-      document.getElementById('step-4-dot').className = 'step-dot active';
-      document.getElementById('step-3-dot').className = 'step-dot done';
-
-      var systemPrompt = 'You are NutriCoach AI, an expert nutrition and fitness coach. Create highly personalized, realistic, and actionable plans with specific foods, exercises, and quantities.';
-
-      var userContext = 'Name: ' + name + ', Age: ' + (age||'not provided') + ', Height: ' + (height||'not provided') + ', Weight: ' + (weight||'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes||'none');
-
-      var prompt = 'Profile: ' + userContext + '
-
-Create my complete plan with these 4 sections:
-
-SECTION 1 - WEEKLY MEAL PLAN:
-7-day meal plan with breakfast, lunch, dinner, and snacks.
-
-SECTION 2 - WORKOUT PLAN:
-Weekly workout schedule with specific exercises, sets, and reps.
-
-SECTION 3 - MACRO BREAKDOWN:
-Daily calorie target and macro split with explanation.
-
-SECTION 4 - GROCERY LIST:
-Weekly grocery list grouped by category.';
-
-      try {
-        var messages = [];
-        if (photoBase64) {
-          messages.push({ role: 'user', content: [
-            { type: 'image', source: { type: 'base64', media_type: photoMimeType, data: photoBase64 } },
-            { type: 'text', text: prompt }
-          ]});
-        } else {
-          messages.push({ role: 'user', content: prompt });
-        }
-
-        var response = await fetch('https://nutricoach-proxy.amitak1107.workers.dev', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 4000,
-            system: systemPrompt,
-            messages: messages
-          })
-        });
-
-        var data = await response.json();
-        var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
-
-        function getSection(text, num) {
-          var next = num + 1;
-          var startTag = 'SECTION ' + num;
-          var endTag = 'SECTION ' + next;
-          var start = text.indexOf(startTag);
-          if (start === -1) return text;
-          var end = text.indexOf(endTag, start);
-          var chunk = end === -1 ? text.slice(start) : text.slice(start, end);
-          return chunk.replace(startTag + ' - WEEKLY MEAL PLAN:', '').replace(startTag + ' - WORKOUT PLAN:', '').replace(startTag + ' - MACRO BREAKDOWN:', '').replace(startTag + ' - GROCERY LIST:', '').trim();
-        }
-
-        document.getElementById('result-meal').textContent = getSection(fullText, 1);
-        document.getElementById('result-workout').textContent = getSection(fullText, 2);
-        document.getElementById('result-macros').textContent = getSection(fullText, 3);
-        document.getElementById('result-grocery').textContent = getSection(fullText, 4);
-
-        document.getElementById('results-name').textContent = name + "'s Personalized Plan";
-        document.getElementById('loading-state').classList.remove('active');
-        document.getElementById('results-wrap').classList.add('active');
-
-      } catch(err) {
-        console.error(err);
-        document.getElementById('loading-state').classList.remove('active');
-        document.getElementById('step-3').style.display = 'block';
-        document.getElementById('error-msg').classList.add('active');
-        document.getElementById('step-4-dot').className = 'step-dot';
-        document.getElementById('step-3-dot').className = 'step-dot active';
-        currentStep = 3;
-      }
-    }
-
-    function restart() { location.reload(); }
-  </script>
+  } catch(err) {
+    console.error(err);
+    document.getElementById('loading-state').classList.remove('active');
+    document.getElementById('step-3').style.display = 'block';
+    document.getElementById('error-msg').classList.add('active');
+    document.getElementById('step-4-dot').className = 'step-dot';
+    document.getElementById('step-3-dot').className = 'step-dot active';
+    currentStep = 3;
+  }
+});
+</script>
 
 </body>
 </html>
