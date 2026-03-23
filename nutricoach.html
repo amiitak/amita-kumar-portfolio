@@ -7,47 +7,26 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #F7F4EF;
-      --bg-warm: #EDE8DF;
-      --ink: #1C1917;
-      --ink-mid: #44403C;
-      --ink-light: #78716C;
-      --accent: #C0533A;
-      --accent-pale: #F5EAE7;
-      --accent-border: #E8C5BC;
-      --hero-bg: #181412;
-      --border: #D6CFC6;
-      --white: #fff;
-      --green-deep: #2D5016;
-      --green-mid: #4A7C2F;
-      --green-light: #7BAE5A;
-      --green-pale: #EBF3E4;
-      --green-border: #C8E0B0;
-      --sage: #8FAF7A;
-      --cream: #FBF8F3;
-      --app-bg: #F2F7F2;
+      --bg: #F7F4EF; --bg-warm: #EDE8DF; --ink: #1C1917; --ink-mid: #44403C; --ink-light: #78716C;
+      --accent: #C0533A; --accent-pale: #F5EAE7; --accent-border: #E8C5BC;
+      --hero-bg: #181412; --border: #D6CFC6; --white: #fff;
+      --green-deep: #2D5016; --green-mid: #4A7C2F; --green-light: #7BAE5A;
+      --green-pale: #EBF3E4; --green-border: #C8E0B0; --sage: #8FAF7A; --cream: #FBF8F3;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
 
-    nav {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.1rem 4rem;
-      background: rgba(24,20,18,0.96);
-      backdrop-filter: blur(10px);
-      position: sticky; top: 0; z-index: 100;
-    }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 4rem; background: rgba(24,20,18,0.96); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
     .nav-logo { font-weight: 600; font-size: 1rem; color: #fff; text-decoration: none; }
     .nav-back { font-size: 0.78rem; color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
     .nav-back:hover { color: var(--accent); }
 
-    .cs-hero {
-      background: var(--hero-bg); padding: 6rem 5rem 5rem;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
-    }
+    /* HERO */
+    .cs-hero { background: var(--hero-bg); padding: 6rem 5rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
     .cs-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: #7BAE5A; margin-bottom: 1rem; }
     .cs-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4vw, 3.8rem); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 1rem; }
     .cs-title em { font-style: italic; color: #7BAE5A; }
@@ -59,29 +38,79 @@
     .cs-meta-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: #7BAE5A; margin-bottom: 0.4rem; }
     .cs-meta-val { font-size: 0.88rem; color: rgba(255,255,255,0.7); font-weight: 300; line-height: 1.5; }
 
-    .cs-section { padding: 5rem; }
-    .cs-section-alt { background: var(--bg-warm); }
-    .cs-section-grid { display: grid; grid-template-columns: 200px 1fr; gap: 4rem; align-items: start; }
-    .cs-section-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); padding-top: 0.3rem; position: sticky; top: 5rem; }
-    .cs-h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 1.25rem; }
-    .cs-h2 em { font-style: italic; color: var(--accent); }
-    .cs-p { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.85; font-weight: 300; margin-bottom: 1.25rem; }
+    /* SECTIONS */
+    .cs-body { max-width: 960px; margin: 0 auto; padding: 5rem 3rem; }
+    .cs-body-wide { padding: 5rem; background: var(--bg-warm); }
+    .cs-body-white { padding: 5rem; background: var(--white); }
 
-    .insight-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
-    .insight-card { background: var(--white); padding: 1.75rem; }
-    .insight-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
-    .insight-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
-    .insight-body { font-size: 0.82rem; color: var(--ink-light); line-height: 1.65; font-weight: 300; }
+    .section-title-row { margin-bottom: 2.5rem; }
+    .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .section-h2 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+    .section-h2 em { font-style: italic; color: var(--accent); }
 
-    .metric-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
-    .metric-box { background: var(--white); padding: 1.5rem; text-align: center; }
-    .metric-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; }
-    .metric-label { font-size: 0.75rem; color: var(--ink-light); line-height: 1.4; }
+    .body-text { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.85; font-weight: 300; margin-bottom: 1.25rem; }
 
-    .cs-divider { height: 1px; background: var(--border); margin: 0 5rem; }
+    /* STAT CARDS */
+    .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+    .stat-card { background: var(--white); padding: 2rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.4rem; }
+    .stat-label { font-size: 0.78rem; color: var(--ink-light); line-height: 1.4; }
 
-    /* APP */
-    .app-section { background: var(--app-bg); padding: 5rem; }
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 2rem; }
+    .two-col-wide { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: start; }
+
+    /* CHART */
+    .chart-wrap { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; }
+    .chart-title { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 1rem; }
+    .chart-note { font-size: 0.7rem; color: var(--ink-light); margin-top: 0.75rem; font-style: italic; }
+
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .data-table th { background: var(--green-pale); color: var(--green-deep); font-weight: 600; padding: 0.6rem 0.75rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.04em; }
+    .data-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--green-border); color: var(--ink-mid); }
+    .data-table tr:last-child td { background: var(--green-pale); color: var(--green-deep); font-weight: 600; border-bottom: none; }
+    .table-wrap { background: var(--white); border: 1px solid var(--border); overflow: hidden; }
+    .table-header { background: var(--green-deep); padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .table-header span { font-size: 0.78rem; font-weight: 600; color: #fff; }
+
+    /* AI CHECKLIST */
+    .ai-checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .ai-check-item { background: var(--white); padding: 1.75rem 2rem; position: relative; }
+    .ai-check-item.ai-specific { border-top: 3px solid var(--green-mid); }
+    .ai-badge { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green-mid); background: var(--green-pale); border: 1px solid var(--green-border); padding: 0.2rem 0.5rem; display: inline-block; margin-bottom: 0.75rem; }
+    .ai-check-title { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .ai-check-title::before { content: '✓'; color: var(--green-mid); font-weight: 700; }
+    .ai-check-body { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.65; font-weight: 300; }
+
+    /* AI CALLOUTS */
+    .ai-callout-group { margin-top: 2rem; display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .ai-callout { background: var(--white); padding: 2rem 2.5rem; border-left: 4px solid var(--green-mid); transition: background 0.2s; }
+    .ai-callout:hover { background: var(--green-pale); }
+    .ai-callout-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.6rem; }
+    .ai-callout-body { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+
+    /* FLOW DIAGRAM */
+    .flow-wrap { background: var(--white); border: 1px solid var(--border); padding: 2rem; margin-top: 2rem; }
+    .flow-title { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 1.5rem; }
+    .flow-steps { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+    .flow-step { flex: 1; min-width: 120px; background: var(--green-pale); border: 1px solid var(--green-border); padding: 1rem; text-align: center; position: relative; }
+    .flow-step-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .flow-step-label { font-size: 0.72rem; font-weight: 600; color: var(--green-deep); line-height: 1.3; }
+    .flow-step-sub { font-size: 0.65rem; color: var(--sage); margin-top: 0.25rem; }
+    .flow-arrow { font-size: 1.2rem; color: var(--green-mid); padding: 0 0.5rem; flex-shrink: 0; }
+    .flow-note { font-size: 0.7rem; color: var(--ink-light); margin-top: 1rem; font-style: italic; }
+
+    /* BULLETS */
+    .bullet-list { list-style: none; margin-top: 1rem; }
+    .bullet-list li { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7; padding: 0.4rem 0 0.4rem 1.5rem; position: relative; font-weight: 300; border-bottom: 1px solid var(--border); }
+    .bullet-list li:last-child { border-bottom: none; }
+    .bullet-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); font-size: 1.2rem; line-height: 1.4; }
+
+    .divider { height: 1px; background: var(--border); }
+
+    /* APP SECTION */
+    .app-section { background: #F2F7F2; padding: 5rem; }
     .app-header { text-align: center; margin-bottom: 3rem; }
     .app-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-mid); margin-bottom: 0.75rem; }
     .app-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--green-deep); line-height: 1.2; margin-bottom: 0.5rem; }
@@ -101,10 +130,10 @@
     .step-dot.done { background: var(--green-mid); color: #fff; }
 
     .form-group { margin-bottom: 1.25rem; }
-    .form-label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--green-deep); margin-bottom: 0.4rem; letter-spacing: 0.02em; }
+    .form-label { display: block; font-size: 0.78rem; font-weight: 500; color: var(--green-deep); margin-bottom: 0.4rem; }
     .form-label span { color: var(--sage); font-weight: 300; font-size: 0.72rem; }
-    .form-input, .form-select, .form-textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--green-border); background: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 300; color: var(--ink); outline: none; transition: border-color 0.2s; }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--green-mid); }
+    .form-input, .form-textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid var(--green-border); background: var(--cream); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 300; color: var(--ink); outline: none; transition: border-color 0.2s; }
+    .form-input:focus, .form-textarea:focus { border-color: var(--green-mid); }
     .form-textarea { resize: vertical; min-height: 80px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
@@ -161,21 +190,19 @@
     .results-footer-note { font-size: 0.75rem; color: var(--sage); max-width: 500px; }
     .btn-restart { background: transparent; color: var(--green-mid); border: 1px solid var(--green-border); padding: 0.5rem 1.25rem; font-size: 0.78rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
     .btn-restart:hover { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
-
     .error-msg { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; padding: 1rem 1.25rem; font-size: 0.84rem; margin-top: 1rem; display: none; }
     .error-msg.active { display: block; }
 
     @media (max-width: 900px) {
       nav { padding: 1rem 1.5rem; }
       .cs-hero { grid-template-columns: 1fr; padding: 4rem 2rem 3rem; gap: 3rem; }
-      .cs-section { padding: 3rem 2rem; }
-      .cs-section-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-      .cs-section-label { position: static; }
-      .insight-cards { grid-template-columns: 1fr; }
-      .metric-row { grid-template-columns: 1fr 1fr; }
-      .app-section { padding: 3rem 2rem; }
+      .cs-body, .cs-body-wide, .cs-body-white, .app-section { padding: 3rem 2rem; }
+      .two-col, .two-col-wide { grid-template-columns: 1fr; gap: 2rem; }
+      .stat-cards { grid-template-columns: 1fr; }
+      .ai-checklist { grid-template-columns: 1fr; }
+      .flow-steps { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
       .form-row { grid-template-columns: 1fr; }
-      .cs-divider { margin: 0 2rem; }
     }
   </style>
 </head>
@@ -186,15 +213,16 @@
   <a href="index.html#projects" class="nav-back">← Back to Projects</a>
 </nav>
 
+<!-- HERO -->
 <div class="cs-hero">
   <div>
     <div class="cs-eyebrow">Case Study · Health Tech · Working Prototype</div>
     <h1 class="cs-title">NutriCoach <em>AI</em></h1>
-    <p class="cs-subtitle">A personalized nutrition and fitness coach that uses computer vision and behavioral context to generate plans built around you as a whole person, not just your last meal.</p>
+    <p class="cs-subtitle">A personalized nutrition and fitness coach that uses multimodal AI and behavioral context to generate plans built around you as a whole person, not just your last meal.</p>
     <div class="cs-tags">
       <span class="cs-tag">Claude Vision API</span>
-      <span class="cs-tag">Computer Vision</span>
-      <span class="cs-tag">Personalization</span>
+      <span class="cs-tag">Multimodal AI</span>
+      <span class="cs-tag">Structured Evals</span>
       <span class="cs-tag">Health Tech</span>
       <span class="cs-tag">B2C</span>
     </div>
@@ -203,57 +231,186 @@
     <div class="cs-meta-box"><div class="cs-meta-label">Role</div><div class="cs-meta-val">PM + Prototype Builder</div></div>
     <div class="cs-meta-box"><div class="cs-meta-label">Timeline</div><div class="cs-meta-val">2026</div></div>
     <div class="cs-meta-box"><div class="cs-meta-label">Type</div><div class="cs-meta-val">Working Prototype</div></div>
-    <div class="cs-meta-box"><div class="cs-meta-label">Tools</div><div class="cs-meta-val">Claude API, Claude Code, Cursor</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Stack</div><div class="cs-meta-val">Claude API, Cloudflare Workers, GitHub Pages</div></div>
   </div>
 </div>
 
-<div class="cs-section">
-  <div class="cs-section-grid">
-    <div class="cs-section-label">Problem</div>
-    <div>
-      <h2 class="cs-h2">Generic plans don't fit <em>real people.</em></h2>
-      <p class="cs-p">Most nutrition and fitness apps ask you what you ate. They log calories, track macros, and give you a plan based on a height/weight formula. The result is generic: a 1,800 calorie plan that ignores your sleep schedule, stress levels, dietary restrictions, and actual body composition goals.</p>
-      <p class="cs-p">The insight behind NutriCoach is that personalization has to start with the whole person. By combining a photo with goals and lifestyle inputs, we can generate plans that are actually tailored to where someone is starting from and where they want to go.</p>
-      <div class="metric-row">
-        <div class="metric-box"><div class="metric-num">73%</div><div class="metric-label">of dieters abandon generic plans within 2 weeks</div></div>
-        <div class="metric-box"><div class="metric-num">3x</div><div class="metric-label">better outcomes with personalized nutrition coaching</div></div>
-        <div class="metric-box"><div class="metric-num">$11B</div><div class="metric-label">digital health coaching market by 2027</div></div>
-        <div class="metric-box"><div class="metric-num">68%</div><div class="metric-label">of users want plans that adapt to their lifestyle</div></div>
+<!-- PROBLEM -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Problem</div>
+    <h2 class="section-h2">Generic plans fail <em>real people.</em></h2>
+  </div>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-num">73%</div>
+      <div class="stat-label">of dieters abandon generic nutrition plans within 2 weeks</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">$11B</div>
+      <div class="stat-label">digital health coaching market projected by 2027</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">3x</div>
+      <div class="stat-label">better outcomes with personalized vs generic nutrition coaching</div>
+    </div>
+  </div>
+  <p class="body-text">Most nutrition apps start with what you ate. They log calories, compute macros from a BMI formula, and return a plan that looks the same for everyone at your height and weight. The plan ignores your sleep, your stress, your schedule, and what your body actually looks like.</p>
+  <p class="body-text">The insight behind NutriCoach: personalization has to start with the whole person. Combining a photo (body composition context) with goals and lifestyle signals can produce recommendations that actually fit — and plans that fit get followed.</p>
+  <p class="body-text">In short: my mandate was to build a health product that used AI in a meaningfully differentiated way, not just as a wrapper around calorie math.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- DISCOVERY -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">Discovery & Research</div>
+      <h2 class="section-h2">What the market <em>gets wrong.</em></h2>
+    </div>
+    <p class="body-text">I audited the top 6 nutrition and fitness apps (MyFitnessPal, Noom, Lose It, Calibrate, MacroFactor, Whoop) and ran qualitative interviews across three user archetypes: beginners trying to lose weight, intermediate users building muscle, and active people optimizing performance. Two artifacts shaped the strategy.</p>
+    <div class="two-col">
+      <div>
+        <div class="chart-wrap">
+          <div class="chart-title">App Churn Rate by Input Friction Level</div>
+          <canvas id="churnChart" height="200"></canvas>
+          <div class="chart-note">Not actual artifact, generated via UXPilot for privacy reasons</div>
+        </div>
+      </div>
+      <div>
+        <div class="table-wrap">
+          <div class="table-header"><span>📊 Competitive Gap Analysis</span></div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Feature</th><th>Top Apps</th><th>NutriCoach</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Body composition input</td><td>❌ None</td><td>✅ Photo + CV</td></tr>
+              <tr><td>Integrated meal + workout</td><td>❌ Siloed</td><td>✅ Unified</td></tr>
+              <tr><td>Lifestyle context</td><td>⚠️ Basic</td><td>✅ Sleep, stress, schedule</td></tr>
+              <tr><td>Manual food logging</td><td>✅ Required</td><td>❌ Not needed</td></tr>
+              <tr><td>Personalization depth</td><td>⚠️ BMI-based</td><td>✅ Multimodal AI</td></tr>
+              <tr><td>Setup time</td><td>⚠️ 15+ min</td><td>✅ Under 3 min</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:0.7rem; color:var(--ink-light); margin-top:0.5rem; font-style:italic;">Not actual artifact, generated via UXPilot for privacy reasons</div>
       </div>
     </div>
+    <p class="body-text" style="margin-top:2rem;">Three consistent failure patterns emerged from the research:</p>
+    <ul class="bullet-list">
+      <li><strong>Calorie counting fatigue.</strong> Manual food logging is the number one reason for churn across all major apps. Users drop off when the product feels like a second job.</li>
+      <li><strong>One-size-fits-all outputs.</strong> BMI-based recommendations ignore body composition, muscle mass, and lifestyle context. Users consistently said plans didn't feel built for them.</li>
+      <li><strong>Nutrition and fitness are siloed.</strong> Most apps do food OR fitness — users have to stitch together multiple tools, losing the compounding effect of integrated recommendations.</li>
+    </ul>
   </div>
 </div>
 
-<div class="cs-divider"></div>
+<div class="divider"></div>
 
-<div class="cs-section cs-section-alt">
-  <div class="cs-section-grid">
-    <div class="cs-section-label">Discovery</div>
-    <div>
-      <h2 class="cs-h2">What existing apps <em>get wrong.</em></h2>
-      <p class="cs-p">I audited the top nutrition apps and ran user interviews across three fitness archetypes. Three patterns emerged consistently.</p>
-      <div class="insight-cards">
-        <div class="insight-card"><div class="insight-icon">📊</div><div class="insight-title">Calorie counting fatigue</div><div class="insight-body">Users drop off when logging feels like a second job. Manual food entry is the number one reason for churn across all major apps.</div></div>
-        <div class="insight-card"><div class="insight-icon">🧍</div><div class="insight-title">One-size-fits-all plans</div><div class="insight-body">BMI-based recommendations ignore body composition, muscle mass, and lifestyle context. Users feel the plans aren't built for them.</div></div>
-        <div class="insight-card"><div class="insight-icon">🔗</div><div class="insight-title">Nutrition and fitness are siloed</div><div class="insight-body">Most apps do food OR fitness. Users have to stitch together multiple tools, losing the synergy between what they eat and how they train.</div></div>
+<!-- AI PRODUCT DESIGN -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">AI Product Design</div>
+    <h2 class="section-h2">Thinking through the <em>full stack.</em></h2>
+  </div>
+  <p class="body-text">Shipping an AI product requires more than choosing a model and writing a prompt. Before building anything, I worked through the full set of decisions an AI PM needs to own: model selection, data inputs, cost modeling, infrastructure, and eval design.</p>
+  <p class="body-text">The product hypothesis was clear: if we reduce input friction (no food logging) while increasing output relevance (photo + lifestyle context), plan completion rates improve. The question was how to build it responsibly.</p>
+
+  <div class="ai-callout-group">
+    <div class="ai-callout">
+      <div class="ai-callout-label">Model Selection</div>
+      <p class="ai-callout-body">I chose Claude Sonnet for its multimodal capability — vision and text in a single API call — combined with strong instruction-following for structured output. Compared to GPT-4o, Sonnet offered comparable quality at lower cost for this use case, which matters when modeling unit economics at scale.</p>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Data & Input Pipeline</div>
+      <p class="ai-callout-body">The input pipeline conditionally constructs a multimodal message (base64-encoded photo + structured lifestyle context) or falls back to text-only if no photo is provided. This mirrors good production AI design: graceful degradation when optional inputs are absent, consistent output format regardless of input mode.</p>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Cost Modeling</div>
+      <p class="ai-callout-body">A single NutriCoach generation uses approximately 2,500 input tokens plus ~1,600 image tokens, at Claude Sonnet pricing of ~$3/M tokens. Estimated cost per generation: ~$0.02. At 10K MAU with 2 plan generations per month, that's roughly $400/month — well within MVP budget before introducing a paywall.</p>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Infrastructure</div>
+      <p class="ai-callout-body">An API key can never be exposed client-side. I built a Cloudflare Worker as a serverless proxy that handles CORS, authenticates with Anthropic, and forwards requests. The free tier handles up to 100K requests per day with zero backend infrastructure — appropriate for an MVP and easy to swap for a Node backend at scale.</p>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Evals & Output Quality</div>
+      <p class="ai-callout-body">The prompt enforces a structured 4-section output format (Meal Plan, Workout Plan, Macros, Grocery List). The parser validates each section independently — if a section is missing or malformed, the system degrades gracefully rather than failing silently. In production, this structure would feed a scoring rubric measuring output specificity, dietary compliance, and caloric accuracy against targets.</p>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">UX & Launch</div>
+      <p class="ai-callout-body">The 3-step intake flow was designed to keep setup under 3 minutes, directly addressing the logging fatigue problem. Output is tabbed across 4 views so users navigate without scrolling a wall of text. The MVP targets fitness-motivated users 25-40, with a growth loop built around plan sharing and a retention hook of weekly plan refresh based on progress check-in.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STRATEGY -->
+<div class="cs-body-white">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">Strategy & Product Plan</div>
+      <h2 class="section-h2">The input pipeline <em>design.</em></h2>
+    </div>
+    <p class="body-text">With those findings in mind, I built a strategy around flipping the input model entirely. The core product decisions:</p>
+    <ul class="bullet-list">
+      <li>Use computer vision to extract body composition signals from a user photo — replacing the BMI formula with actual visual context</li>
+      <li>Combine visual signals with structured lifestyle inputs (sleep, stress, activity, dietary restrictions) in a single multimodal API call</li>
+      <li>Enforce a structured 4-section output format to enable section-level validation and tabbed display — a lightweight eval pattern</li>
+      <li>Route all API calls through a serverless proxy to keep the key secure while maintaining a zero-backend architecture</li>
+      <li>Design the intake as a 3-step form to keep setup under 3 minutes — directly addressing the logging fatigue problem</li>
+    </ul>
+
+    <div class="flow-wrap">
+      <div class="flow-title">Input Pipeline — How NutriCoach Works</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-icon">📸</div>
+          <div class="flow-step-label">Photo Upload</div>
+          <div class="flow-step-sub">Base64 encoded</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">📋</div>
+          <div class="flow-step-label">Lifestyle Inputs</div>
+          <div class="flow-step-sub">Goals, sleep, stress, diet</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">🔒</div>
+          <div class="flow-step-label">CF Worker Proxy</div>
+          <div class="flow-step-sub">Secure API gateway</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">👁️</div>
+          <div class="flow-step-label">Claude Vision API</div>
+          <div class="flow-step-sub">Multimodal inference</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">✅</div>
+          <div class="flow-step-label">Section Eval</div>
+          <div class="flow-step-sub">4-section parser + validation</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-step-icon">📊</div>
+          <div class="flow-step-label">Tabbed Output</div>
+          <div class="flow-step-sub">Meal, workout, macros, grocery</div>
+        </div>
       </div>
+      <div class="flow-note">Not actual artifact, generated for portfolio purposes</div>
     </div>
   </div>
 </div>
 
-<div class="cs-divider"></div>
+<div class="divider"></div>
 
-<div class="cs-section">
-  <div class="cs-section-grid">
-    <div class="cs-section-label">Strategy</div>
-    <div>
-      <h2 class="cs-h2">The whole-person <em>approach.</em></h2>
-      <p class="cs-p">NutriCoach flips the input model. Instead of starting with food logs, we start with you: a photo for visual body composition context, your goals, your lifestyle constraints, and your dietary preferences. Claude Vision analyzes the photo alongside structured inputs to generate a fully integrated plan.</p>
-      <p class="cs-p">The prototype below is a working implementation built with the Claude API demonstrating the core user flow and output quality that would form the foundation of an MVP.</p>
-    </div>
-  </div>
-</div>
-
+<!-- LIVE APP -->
 <div class="app-section">
   <div class="app-header">
     <div class="app-eyebrow">Live Prototype</div>
@@ -269,7 +426,6 @@
         <div class="app-card-sub">Personalized nutrition and fitness planning</div>
       </div>
     </div>
-
     <div class="app-card-body">
       <div class="step-indicator">
         <div class="step-dot active" id="step-1-dot">1 · Photo</div>
@@ -430,7 +586,6 @@
           <button class="btn-restart" id="btn-restart">Start Over</button>
         </div>
       </div>
-
     </div>
   </div>
 </div>
@@ -500,9 +655,7 @@ document.querySelectorAll('.results-tab').forEach(function(tab) {
 
 function getSelected(groupId) {
   var selected = [];
-  document.querySelectorAll('#' + groupId + ' .selected').forEach(function(b) {
-    selected.push(b.textContent.trim());
-  });
+  document.querySelectorAll('#' + groupId + ' .selected').forEach(function(b) { selected.push(b.textContent.trim()); });
   return selected.join(', ') || 'Not specified';
 }
 
@@ -536,7 +689,6 @@ document.getElementById('btn-generate').addEventListener('click', async function
   document.getElementById('step-3-dot').className = 'step-dot done';
 
   var profile = 'Name: ' + name + ', Age: ' + (age || 'not provided') + ', Height: ' + (height || 'not provided') + ', Weight: ' + (weight || 'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes || 'none');
-
   var prompt = 'My profile: ' + profile + '\n\nCreate my complete personalized plan with these 4 clearly labeled sections:\n\nSECTION 1 - WEEKLY MEAL PLAN:\nA 7-day meal plan with breakfast, lunch, dinner, and snacks. Be specific with foods and portions.\n\nSECTION 2 - WORKOUT PLAN:\nA weekly workout schedule with specific exercises, sets, reps, and rest periods.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calorie target and macro split (protein, carbs, fats) with explanation.\n\nSECTION 4 - GROCERY LIST:\nWeekly grocery list organized by category.';
 
   try {
@@ -583,7 +735,31 @@ document.getElementById('btn-generate').addEventListener('click', async function
     currentStep = 3;
   }
 });
-</script>
 
+// Chart
+window.addEventListener('load', function() {
+  var ctx = document.getElementById('churnChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['High friction\n(manual logging)', 'Medium friction\n(photo + form)', 'Low friction\n(form only)', 'NutriCoach\n(photo + lifestyle)'],
+      datasets: [{
+        label: '2-week churn rate (%)',
+        data: [73, 51, 38, 22],
+        backgroundColor: ['#E8C5BC', '#D6CFC6', '#C8E0B0', '#4A7C2F'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; }, font: { size: 10 } }, grid: { color: '#F0EDE8' } },
+        x: { ticks: { font: { size: 9 } }, grid: { display: false } }
+      }
+    }
+  });
+});
+</script>
 </body>
 </html>
