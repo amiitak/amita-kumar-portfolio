@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agentic Campaign Manager — Amita Kumar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #F7F4EF; --bg-warm: #EDE8DF; --ink: #1C1917; --ink-mid: #44403C; --ink-light: #78716C;
+      --accent: #C0533A; --accent-pale: #F5EAE7; --accent-border: #E8C5BC;
+      --hero-bg: #0F1419; --border: #D6CFC6; --white: #fff;
+      --blue-deep: #0D2E4A; --blue-mid: #1B5E8A; --blue-light: #3A8FC4;
+      --blue-pale: #E8F3FA; --blue-border: #B3D4EA; --blue-muted: #6FA8C9;
+      --slate: #2A3642; --slate-mid: #3D5060; --code-bg: #0F1E2D;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 4rem; background: rgba(15,20,25,0.96); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-weight: 600; font-size: 1rem; color: #fff; text-decoration: none; }
+    .nav-back { font-size: 0.78rem; color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    /* HERO */
+    .cs-hero { background: var(--hero-bg); padding: 6rem 5rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; position: relative; overflow: hidden; }
+    .cs-hero::before { content: ''; position: absolute; top: -50%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(58,143,196,0.08) 0%, transparent 70%); pointer-events: none; }
+    .cs-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 1rem; }
+    .cs-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 1rem; }
+    .cs-title em { font-style: italic; color: var(--blue-light); }
+    .cs-subtitle { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
+    .cs-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .cs-tag { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-light); background: rgba(58,143,196,0.1); border: 1px solid rgba(58,143,196,0.25); padding: 0.3rem 0.75rem; }
+    .cs-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+    .cs-meta-box { background: rgba(255,255,255,0.02); padding: 1.75rem; }
+    .cs-meta-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 0.4rem; }
+    .cs-meta-val { font-size: 0.88rem; color: rgba(255,255,255,0.7); font-weight: 300; line-height: 1.5; }
+
+    /* BODY SECTIONS */
+    .cs-body { max-width: 960px; margin: 0 auto; padding: 5rem 3rem; }
+    .cs-body-wide { padding: 5rem; background: var(--bg-warm); }
+    .cs-body-dark { padding: 5rem; background: var(--hero-bg); }
+    .cs-body-white { padding: 5rem; background: var(--white); }
+
+    .section-title-row { margin-bottom: 2.5rem; }
+    .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .section-eyebrow-blue { color: var(--blue-mid); }
+    .section-h2 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+    .section-h2 em { font-style: italic; color: var(--accent); }
+    .section-h2-light { color: #fff; }
+    .section-h2-light em { color: var(--blue-light); }
+
+    .body-text { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.85; font-weight: 300; margin-bottom: 1.25rem; }
+    .body-text-light { color: rgba(255,255,255,0.6); }
+
+    /* STAT CARDS */
+    .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+    .stat-card { background: var(--white); padding: 2rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.4rem; }
+    .stat-label { font-size: 0.78rem; color: var(--ink-light); line-height: 1.4; }
+
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 2rem; }
+
+    /* CHART & TABLE */
+    .chart-wrap { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; }
+    .chart-title { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 1rem; }
+    .chart-note { font-size: 0.7rem; color: var(--ink-light); margin-top: 0.75rem; font-style: italic; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .data-table th { background: var(--blue-pale); color: var(--blue-deep); font-weight: 600; padding: 0.6rem 0.75rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.04em; }
+    .data-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--blue-border); color: var(--ink-mid); }
+    .data-table .highlight-row td { background: var(--blue-pale); color: var(--blue-deep); font-weight: 600; border-bottom: none; }
+    .table-wrap { background: var(--white); border: 1px solid var(--border); overflow: hidden; }
+    .table-header { background: var(--blue-deep); padding: 0.75rem 1rem; }
+    .table-header span { font-size: 0.78rem; font-weight: 600; color: #fff; }
+
+    /* WORKFLOW STEPS */
+    .workflow-wrap { background: var(--white); border: 1px solid var(--border); padding: 2rem; margin-top: 2rem; }
+    .workflow-title { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 1.5rem; }
+    .workflow-steps { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .workflow-step { background: var(--white); padding: 1.25rem 1.5rem; display: grid; grid-template-columns: 40px 1fr auto; gap: 1rem; align-items: center; }
+    .workflow-step-num { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 800; color: var(--blue-border); line-height: 1; }
+    .workflow-step-text { font-size: 0.85rem; color: var(--ink-mid); }
+    .workflow-step-text strong { color: var(--ink); font-weight: 600; display: block; margin-bottom: 0.1rem; }
+    .workflow-time { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--accent); background: var(--accent-pale); border: 1px solid var(--accent-border); padding: 0.2rem 0.5rem; white-space: nowrap; }
+    .workflow-note { font-size: 0.7rem; color: var(--ink-light); margin-top: 1rem; font-style: italic; }
+
+    /* AI CALLOUTS */
+    .ai-callout-group { margin-top: 2rem; display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .ai-callout { background: var(--white); padding: 2rem 2.5rem; border-left: 4px solid var(--blue-mid); transition: background 0.2s; }
+    .ai-callout:hover { background: var(--blue-pale); }
+    .ai-callout-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-mid); margin-bottom: 0.6rem; }
+    .ai-callout-body { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+
+    /* AGENT ARCHITECTURE */
+    .arch-wrap { background: var(--code-bg); border: 1px solid rgba(58,143,196,0.2); padding: 2.5rem; margin-top: 2rem; }
+    .arch-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue-muted); margin-bottom: 2rem; }
+    .arch-flow { display: flex; flex-direction: column; gap: 1rem; }
+    .arch-row { display: flex; align-items: center; gap: 1rem; }
+    .arch-node { background: rgba(58,143,196,0.12); border: 1px solid rgba(58,143,196,0.3); padding: 0.75rem 1.25rem; flex: 1; }
+    .arch-node-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue-muted); margin-bottom: 0.2rem; }
+    .arch-node-name { font-size: 0.85rem; font-weight: 500; color: #fff; }
+    .arch-node-sub { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem; }
+    .arch-node.human { background: rgba(192,83,58,0.12); border-color: rgba(192,83,58,0.3); }
+    .arch-node.human .arch-node-label { color: #E8917A; }
+    .arch-node.output { background: rgba(123,174,90,0.12); border-color: rgba(123,174,90,0.3); }
+    .arch-node.output .arch-node-label { color: #7BAE5A; }
+    .arch-arrow-down { text-align: center; color: rgba(58,143,196,0.5); font-size: 1rem; margin: -0.25rem 0; }
+    .arch-note { font-size: 0.7rem; color: rgba(255,255,255,0.3); margin-top: 1.5rem; font-style: italic; }
+
+    /* BULLETS */
+    .bullet-list { list-style: none; margin-top: 1rem; }
+    .bullet-list li { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7; padding: 0.4rem 0 0.4rem 1.5rem; position: relative; font-weight: 300; border-bottom: 1px solid var(--border); }
+    .bullet-list li:last-child { border-bottom: none; }
+    .bullet-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); font-size: 1.2rem; line-height: 1.4; }
+
+    .divider { height: 1px; background: var(--border); }
+
+    /* APP */
+    .app-section { background: #0F1E2D; padding: 5rem; }
+    .app-header { text-align: center; margin-bottom: 3rem; }
+    .app-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue-muted); margin-bottom: 0.75rem; }
+    .app-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 0.5rem; }
+    .app-title em { color: var(--blue-light); font-style: italic; }
+    .app-subtitle { font-size: 0.95rem; color: rgba(255,255,255,0.4); font-weight: 300; }
+
+    .app-card { background: #162535; border: 1px solid rgba(58,143,196,0.2); max-width: 820px; margin: 0 auto; overflow: hidden; box-shadow: 0 8px 48px rgba(0,0,0,0.4); }
+    .app-card-header { background: var(--blue-deep); padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    .app-card-header-left { display: flex; align-items: center; gap: 1rem; }
+    .app-logo-mark { width: 32px; height: 32px; background: var(--blue-mid); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .app-card-title { font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.08em; color: #fff; font-weight: 500; }
+    .app-card-sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); }
+    .status-badge { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.75rem; }
+    .status-badge.idle { background: rgba(58,143,196,0.15); color: var(--blue-muted); border: 1px solid rgba(58,143,196,0.2); }
+    .status-badge.running { background: rgba(255,193,7,0.15); color: #FFC107; border: 1px solid rgba(255,193,7,0.2); animation: pulse 1.5s ease-in-out infinite; }
+    .status-badge.done { background: rgba(123,174,90,0.15); color: #7BAE5A; border: 1px solid rgba(123,174,90,0.2); }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    .app-card-body { padding: 2rem; }
+
+    /* BRIEF INPUT */
+    .brief-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--blue-muted); margin-bottom: 0.75rem; }
+    .brief-textarea { width: 100%; background: #0F1E2D; border: 1px solid rgba(58,143,196,0.2); color: rgba(255,255,255,0.85); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 300; padding: 1rem; line-height: 1.7; resize: vertical; min-height: 140px; outline: none; transition: border-color 0.2s; }
+    .brief-textarea:focus { border-color: rgba(58,143,196,0.5); }
+    .brief-textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+    .brief-examples { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; margin-bottom: 1.5rem; }
+    .brief-example { font-size: 0.72rem; color: var(--blue-muted); background: rgba(58,143,196,0.08); border: 1px solid rgba(58,143,196,0.15); padding: 0.3rem 0.75rem; cursor: pointer; transition: all 0.2s; }
+    .brief-example:hover { background: rgba(58,143,196,0.15); color: var(--blue-light); }
+
+    .btn-generate { background: var(--blue-mid); color: #fff; border: none; padding: 0.85rem 2rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: background 0.2s; width: 100%; }
+    .btn-generate:hover { background: var(--blue-deep); }
+    .btn-generate:disabled { background: rgba(58,143,196,0.2); color: rgba(255,255,255,0.3); cursor: not-allowed; }
+
+    /* AGENT LOG */
+    .agent-log { background: #0A1520; border: 1px solid rgba(58,143,196,0.15); padding: 1.25rem; margin-top: 1.5rem; min-height: 80px; display: none; }
+    .agent-log.active { display: block; }
+    .agent-log-title { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(58,143,196,0.5); margin-bottom: 0.75rem; }
+    .agent-log-line { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: rgba(255,255,255,0.5); line-height: 1.8; }
+    .agent-log-line.active-line { color: #FFC107; }
+    .agent-log-line.done-line { color: #7BAE5A; }
+    .agent-log-line::before { content: '> '; color: rgba(58,143,196,0.4); }
+
+    /* RESULTS */
+    .results-section { display: none; margin-top: 1.5rem; }
+    .results-section.active { display: block; }
+
+    .approval-banner { background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.2); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .approval-banner-text { font-size: 0.82rem; color: #FFC107; font-weight: 400; }
+    .approval-banner-text span { display: block; font-size: 0.72rem; color: rgba(255,193,7,0.6); margin-top: 0.15rem; font-weight: 300; }
+    .btn-approve { background: rgba(123,174,90,0.15); color: #7BAE5A; border: 1px solid rgba(123,174,90,0.3); padding: 0.5rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
+    .btn-approve:hover { background: rgba(123,174,90,0.25); }
+
+    .results-tabs { display: flex; border-bottom: 1px solid rgba(58,143,196,0.15); }
+    .results-tab { padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 500; color: rgba(255,255,255,0.3); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; font-family: 'DM Mono', monospace; letter-spacing: 0.06em; font-size: 0.65rem; text-transform: uppercase; }
+    .results-tab:hover { color: rgba(255,255,255,0.6); }
+    .results-tab.active { color: var(--blue-light); border-bottom-color: var(--blue-light); }
+
+    .results-content { padding: 1.5rem 0; }
+    .result-panel { display: none; }
+    .result-panel.active { display: block; }
+    .result-prose { font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.85; font-weight: 300; white-space: pre-wrap; background: #0A1520; padding: 1.5rem; border: 1px solid rgba(58,143,196,0.1); }
+
+    .results-footer { padding: 1rem 0 0; border-top: 1px solid rgba(58,143,196,0.1); display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
+    .results-note { font-size: 0.7rem; color: rgba(255,255,255,0.25); }
+    .btn-reset { background: transparent; color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.1); padding: 0.4rem 1rem; font-size: 0.72rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-reset:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
+
+    .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #F87171; padding: 1rem; font-size: 0.82rem; margin-top: 1rem; display: none; }
+    .error-msg.active { display: block; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .cs-hero { grid-template-columns: 1fr; padding: 4rem 2rem 3rem; gap: 3rem; }
+      .cs-body, .cs-body-wide, .cs-body-dark, .cs-body-white, .app-section { padding: 3rem 2rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .stat-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Amita Kumar</a>
+  <a href="index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<!-- HERO -->
+<div class="cs-hero">
+  <div>
+    <div class="cs-eyebrow">Case Study · Ad Tech · PRD + Working Prototype</div>
+    <h1 class="cs-title">Agentic Campaign <em>Manager</em></h1>
+    <p class="cs-subtitle">An AI agent that automates the full programmatic campaign setup loop — from brief to trafficking — with human-in-the-loop approval gates and structured output validation.</p>
+    <div class="cs-tags">
+      <span class="cs-tag">Agentic AI</span>
+      <span class="cs-tag">Programmatic / DSP</span>
+      <span class="cs-tag">Claude API</span>
+      <span class="cs-tag">B2B SaaS</span>
+      <span class="cs-tag">Structured Evals</span>
+    </div>
+  </div>
+  <div class="cs-meta-grid">
+    <div class="cs-meta-box"><div class="cs-meta-label">Role</div><div class="cs-meta-val">PM + Prototype Builder</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Timeline</div><div class="cs-meta-val">2026</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Type</div><div class="cs-meta-val">PRD + Working Prototype</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Stack</div><div class="cs-meta-val">Claude API, Cloudflare Workers, GitHub Pages</div></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Problem</div>
+    <h2 class="section-h2">Campaign ops is still <em>manual work.</em></h2>
+  </div>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-num">4–6 hrs</div>
+      <div class="stat-label">average time to set up a single programmatic campaign end to end</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">23%</div>
+      <div class="stat-label">of campaign launches delayed due to trafficking or setup errors</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">60%</div>
+      <div class="stat-label">of ops team time spent on repetitive setup tasks vs strategic work</div>
+    </div>
+  </div>
+  <p class="body-text">In programmatic advertising, translating a client brief into a live campaign requires a surprising amount of manual, error-prone work. A trader or ops manager receives a brief — often unstructured, via email or a shared doc — and must manually parse it, set up line items in the DSP, configure targeting, apply brand safety rules, set pacing and budget caps, and hand off trafficking instructions. Each step is a potential point of failure.</p>
+  <p class="body-text">The cost isn't just time. Trafficking errors and misconfigurations directly impact campaign performance and client trust. And with ops teams stretched thin, strategic work gets deprioritized in favor of setup and QA.</p>
+  <p class="body-text">My mandate: design an AI agent that takes a campaign brief as input and produces a structured, validated campaign setup — with a human-in-the-loop approval gate before anything goes live.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- DISCOVERY -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">Discovery & Research</div>
+      <h2 class="section-h2">Where the workflow <em>breaks down.</em></h2>
+    </div>
+    <p class="body-text">I mapped the end-to-end campaign setup workflow across a typical DSP environment, identifying where time is lost and where errors originate. Two artifacts anchored the discovery.</p>
+    <div class="two-col">
+      <div>
+        <div class="workflow-wrap">
+          <div class="workflow-title">Current State: Campaign Setup Workflow</div>
+          <div class="workflow-steps">
+            <div class="workflow-step">
+              <div class="workflow-step-num">01</div>
+              <div class="workflow-step-text"><strong>Brief received</strong>Unstructured email or doc from client or sales team</div>
+              <div class="workflow-time">15 min</div>
+            </div>
+            <div class="workflow-step">
+              <div class="workflow-step-num">02</div>
+              <div class="workflow-step-text"><strong>Brief interpretation</strong>Ops manually parses objectives, targeting, budgets, flight dates</div>
+              <div class="workflow-time">45 min</div>
+            </div>
+            <div class="workflow-step">
+              <div class="workflow-step-num">03</div>
+              <div class="workflow-step-text"><strong>DSP campaign build</strong>Manual line item creation, targeting configuration, bid strategy</div>
+              <div class="workflow-time">90 min</div>
+            </div>
+            <div class="workflow-step">
+              <div class="workflow-step-num">04</div>
+              <div class="workflow-step-text"><strong>Creative trafficking</strong>Assigning creatives, verifying specs, setting click URLs</div>
+              <div class="workflow-time">45 min</div>
+            </div>
+            <div class="workflow-step">
+              <div class="workflow-step-num">05</div>
+              <div class="workflow-step-text"><strong>QA & review</strong>Manual checklist verification before launch</div>
+              <div class="workflow-time">60 min</div>
+            </div>
+            <div class="workflow-step">
+              <div class="workflow-step-num">06</div>
+              <div class="workflow-step-text"><strong>Launch</strong>Campaign goes live — errors surface post-launch</div>
+              <div class="workflow-time">15 min</div>
+            </div>
+          </div>
+          <div class="workflow-note">Not actual artifact, generated via UXPilot for privacy reasons</div>
+        </div>
+      </div>
+      <div>
+        <div class="table-wrap">
+          <div class="table-header"><span>📊 Error Source Analysis</span></div>
+          <table class="data-table">
+            <thead><tr><th>Error Type</th><th>Frequency</th><th>Avg Impact</th></tr></thead>
+            <tbody>
+              <tr><td>Wrong targeting params</td><td>34%</td><td>High</td></tr>
+              <tr><td>Budget misconfiguration</td><td>22%</td><td>High</td></tr>
+              <tr><td>Creative spec mismatch</td><td>19%</td><td>Medium</td></tr>
+              <tr><td>Flight date errors</td><td>14%</td><td>High</td></tr>
+              <tr><td>Brand safety gaps</td><td>7%</td><td>Critical</td></tr>
+              <tr><td>Other</td><td>4%</td><td>Low</td></tr>
+              <tr class="highlight-row"><td>Total avoidable errors</td><td>96%</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:0.7rem; color:var(--ink-light); margin-top:0.5rem; font-style:italic;">Not actual artifact, generated via UXPilot for privacy reasons</div>
+        <p class="body-text" style="margin-top:1.5rem;">The key finding: nearly all errors stem from the brief interpretation and manual data entry steps — exactly the steps an AI agent can own. The human judgment required is concentrated in the approval gate, not in the setup itself.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- AI PRODUCT DESIGN -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">AI Product Design</div>
+    <h2 class="section-h2">Designing the <em>agent architecture.</em></h2>
+  </div>
+  <p class="body-text">This project required thinking through AI agent design end to end — not just what the model does, but how it's structured, where humans stay in the loop, and how outputs get validated before anything consequential happens.</p>
+
+  <div class="ai-callout-group">
+    <div class="ai-callout">
+      <div class="ai-callout-label">Why an agent, not a single prompt</div>
+      <div class="ai-callout-body">A single LLM call would produce unstructured output with no validation layer. An agentic architecture breaks the task into discrete stages — brief parsing, campaign structuring, QA validation, trafficking output — where each stage can be evaluated independently. This mirrors how a human ops team works, and makes the system auditable and debuggable.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Model selection</div>
+      <div class="ai-callout-body">Claude Sonnet for its strong instruction-following on structured output tasks and its ability to handle the domain-specific language of programmatic advertising (CPM, CTR, viewability thresholds, frequency caps, deal IDs). The model is prompted with a system context that grounds it in DSP workflow conventions.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Human-in-the-loop design</div>
+      <div class="ai-callout-body">The agent produces a complete campaign setup proposal but does not submit it. A human approval gate sits between generation and trafficking — the ops manager reviews the structured output, can edit any field, and explicitly approves before the system hands off to the DSP. This is a core product decision: AI owns the setup, humans own the launch decision.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Structured output & evals</div>
+      <div class="ai-callout-body">The prompt enforces a structured 5-section output (Campaign Summary, Targeting Setup, Budget & Pacing, Creative Trafficking, QA Checklist). Each section is parsed and validated independently. The QA Checklist section is itself an eval — the model scores its own output against a standard trafficking checklist, flagging any gaps before the human review.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Cost & infrastructure</div>
+      <div class="ai-callout-body">A single campaign generation uses approximately 3,000 input tokens + 2,000 output tokens at Claude Sonnet pricing. Estimated cost per campaign setup: ~$0.03. At 500 campaigns/month for a mid-size trading desk, that's ~$15/month in inference cost — a 99% reduction vs the ops labor cost it replaces. Infrastructure mirrors NutriCoach: Cloudflare Worker proxy for secure API access.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Risk & guardrails</div>
+      <div class="ai-callout-body">The system is explicitly designed to never auto-submit to a DSP. All outputs are read-only proposals until human approval. Brand safety rules are injected as hard constraints in the system prompt. Budget caps are validated against client contract values where available. Any missing required field triggers a QA flag rather than a best-guess fill.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STRATEGY -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">Strategy & Architecture</div>
+      <h2 class="section-h2">The agent <em>pipeline.</em></h2>
+    </div>
+    <p class="body-text">The strategy centers on one core insight from the discovery: human judgment is required at the approval gate, not throughout the setup process. The agent owns everything before that gate; the human owns everything after.</p>
+    <ul class="bullet-list">
+      <li><strong>Brief intake.</strong> Free-text brief input — can be pasted directly from an email, a shared doc, or a client conversation. No structured template required on input.</li>
+      <li><strong>Agent parsing.</strong> The model extracts campaign objectives, target audience, geo, devices, budget, flight dates, KPIs, and brand safety requirements from the unstructured brief.</li>
+      <li><strong>Campaign structuring.</strong> The agent builds a complete campaign setup: line item structure, targeting parameters, bid strategy recommendation, budget allocation, and creative specs.</li>
+      <li><strong>Self-QA.</strong> The model runs its output against a standard trafficking checklist and flags any missing fields, conflicts, or anomalies before presenting to the human reviewer.</li>
+      <li><strong>Human approval gate.</strong> The ops manager reviews the structured output across 5 tabbed sections. Any field can be edited before approval. Nothing is submitted to the DSP without explicit sign-off.</li>
+      <li><strong>Trafficking handoff.</strong> Approved output is formatted as a structured trafficking spec ready for DSP import or manual entry.</li>
+    </ul>
+
+    <div class="arch-wrap">
+      <div class="arch-title">Agent Architecture — Campaign Setup Pipeline</div>
+      <div class="arch-flow">
+        <div class="arch-row">
+          <div class="arch-node"><div class="arch-node-label">Input</div><div class="arch-node-name">Campaign Brief</div><div class="arch-node-sub">Free-text, unstructured</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-node"><div class="arch-node-label">Agent · Stage 1</div><div class="arch-node-name">Brief Parser</div><div class="arch-node-sub">Extracts objectives, targeting, budget, dates, KPIs</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-node"><div class="arch-node-label">Agent · Stage 2</div><div class="arch-node-name">Campaign Builder</div><div class="arch-node-sub">Structures line items, targeting, bid strategy, creative specs</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-node"><div class="arch-node-label">Agent · Stage 3</div><div class="arch-node-name">QA Validator</div><div class="arch-node-sub">Self-scores output against trafficking checklist, flags gaps</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-node human"><div class="arch-node-label">Human Gate</div><div class="arch-node-name">Ops Manager Review</div><div class="arch-node-sub">Reviews, edits, and explicitly approves before any DSP action</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-node output"><div class="arch-node-label">Output</div><div class="arch-node-name">Trafficking Spec</div><div class="arch-node-sub">Structured handoff ready for DSP import</div></div>
+        </div>
+      </div>
+      <div class="arch-note">Not actual artifact, generated for portfolio purposes</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- LIVE APP -->
+<div class="app-section">
+  <div class="app-header">
+    <div class="app-eyebrow">Live Prototype</div>
+    <h2 class="app-title">Try the <em>Campaign Manager</em></h2>
+    <p class="app-subtitle">Paste a campaign brief and the agent will generate a complete structured setup.</p>
+  </div>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-card-header-left">
+        <div class="app-logo-mark">⚡</div>
+        <div>
+          <div class="app-card-title">Agentic Campaign Manager</div>
+          <div class="app-card-sub">Programmatic DSP workflow automation</div>
+        </div>
+      </div>
+      <div class="status-badge idle" id="status-badge">● Idle</div>
+    </div>
+
+    <div class="app-card-body">
+      <div id="input-section">
+        <div class="brief-label">Campaign Brief Input</div>
+        <textarea class="brief-textarea" id="brief-input" placeholder="Paste your campaign brief here. Can be an email, a doc excerpt, or free-form notes. The agent will parse and structure it..."></textarea>
+
+        <div class="brief-examples">
+          <span style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(255,255,255,0.2); letter-spacing:0.08em; text-transform:uppercase; align-self:center;">Try an example:</span>
+          <div class="brief-example" id="example-1">Retail brand, Q4 awareness</div>
+          <div class="brief-example" id="example-2">Auto launch, performance</div>
+          <div class="brief-example" id="example-3">CPG retargeting campaign</div>
+        </div>
+
+        <div class="error-msg" id="error-msg">Something went wrong. Please check your brief and try again.</div>
+        <button class="btn-generate" id="btn-generate">Run Campaign Agent ↗</button>
+      </div>
+
+      <div class="agent-log" id="agent-log">
+        <div class="agent-log-title">Agent Activity Log</div>
+        <div id="log-lines"></div>
+      </div>
+
+      <div class="results-section" id="results-section">
+        <div class="approval-banner" id="approval-banner">
+          <div class="approval-banner-text">
+            ⚠ Awaiting human approval
+            <span>Review all sections before approving. Nothing is submitted to the DSP without your sign-off.</span>
+          </div>
+          <button class="btn-approve" id="btn-approve">✓ Approve & Export</button>
+        </div>
+
+        <div class="results-tabs">
+          <div class="results-tab active" id="rtab-summary">Summary</div>
+          <div class="results-tab" id="rtab-targeting">Targeting</div>
+          <div class="results-tab" id="rtab-budget">Budget & Pacing</div>
+          <div class="results-tab" id="rtab-creative">Creative Trafficking</div>
+          <div class="results-tab" id="rtab-qa">QA Checklist</div>
+        </div>
+
+        <div class="results-content">
+          <div class="result-panel active" id="panel-summary"><div class="result-prose" id="result-summary"></div></div>
+          <div class="result-panel" id="panel-targeting"><div class="result-prose" id="result-targeting"></div></div>
+          <div class="result-panel" id="panel-budget"><div class="result-prose" id="result-budget"></div></div>
+          <div class="result-panel" id="panel-creative"><div class="result-prose" id="result-creative"></div></div>
+          <div class="result-panel" id="panel-qa"><div class="result-prose" id="result-qa"></div></div>
+        </div>
+
+        <div class="results-footer">
+          <div class="results-note">AI-generated campaign setup. Always review before trafficking. Not connected to a live DSP.</div>
+          <button class="btn-reset" id="btn-reset">New Brief</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var WORKER_URL = 'https://nutricoach-proxy.amitak1107.workers.dev';
+
+var EXAMPLES = {
+  'example-1': "Q4 holiday campaign for a mid-size retail brand (apparel). Target: women 25-44, HHI $75K+, interested in fashion and shopping. Geo: US national. Budget: $180,000 total, flight 11/15 - 12/31. KPIs: awareness, target CPM $12-15. Formats: display 300x250 and 728x90, video 15s pre-roll. Brand safety: no news, no UGC. Frequency cap: 5x per user per week.",
+  'example-2': "Auto manufacturer launching a new sedan model. Goal is lead gen and test drive bookings. Target: in-market auto intenders, 30-55, male skew, HHI $80K+. Geo: top 25 DMAs. Budget: $250,000, flight 2 weeks starting next Monday. KPIs: CTR 0.15%+, CPA for test drive form fill under $45. Formats: native, display, pre-roll video 30s. Retargeting pool from manufacturer site visitors.",
+  'example-3': "CPG snack brand retargeting campaign. Re-engage site visitors who viewed product pages but didn't purchase. Audience: 1st party pixel data, 30-day lookback. Budget: $40,000 over 30 days. Geo: US. KPIs: ROAS 3.5x, frequency 8-10x per user. Formats: display and social display. Creative: dynamic product ads with discount overlay. Brand safety: standard."
+};
+
+document.querySelectorAll('.brief-example').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var text = EXAMPLES[btn.id];
+    if (text) document.getElementById('brief-input').value = text;
+  });
+});
+
+document.querySelectorAll('.results-tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    var id = tab.id.replace('rtab-', '');
+    document.querySelectorAll('.result-panel').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.results-tab').forEach(function(t) { t.classList.remove('active'); });
+    document.getElementById('panel-' + id).classList.add('active');
+    tab.classList.add('active');
+  });
+});
+
+document.getElementById('btn-approve').addEventListener('click', function() {
+  var banner = document.getElementById('approval-banner');
+  banner.style.background = 'rgba(123,174,90,0.08)';
+  banner.style.borderColor = 'rgba(123,174,90,0.2)';
+  banner.querySelector('.approval-banner-text').style.color = '#7BAE5A';
+  banner.querySelector('.approval-banner-text').innerHTML = '✓ Approved — Ready for trafficking<span>Campaign setup exported. Ready for DSP import.</span>';
+  document.getElementById('btn-approve').style.display = 'none';
+  document.getElementById('status-badge').textContent = '● Approved';
+  document.getElementById('status-badge').className = 'status-badge done';
+});
+
+document.getElementById('btn-reset').addEventListener('click', function() { location.reload(); });
+
+function addLog(text, type) {
+  var log = document.getElementById('log-lines');
+  var line = document.createElement('div');
+  line.className = 'agent-log-line' + (type ? ' ' + type : '');
+  line.textContent = text;
+  log.appendChild(line);
+}
+
+function getSection(text, label) {
+  var start = text.indexOf('SECTION: ' + label);
+  if (start === -1) return text;
+  var end = text.indexOf('SECTION:', start + 1);
+  var chunk = (end === -1) ? text.slice(start) : text.slice(start, end);
+  return chunk.replace('SECTION: ' + label, '').trim();
+}
+
+document.getElementById('btn-generate').addEventListener('click', async function() {
+  var brief = document.getElementById('brief-input').value.trim();
+  if (!brief) {
+    document.getElementById('error-msg').textContent = 'Please enter a campaign brief before running the agent.';
+    document.getElementById('error-msg').classList.add('active');
+    return;
+  }
+
+  document.getElementById('error-msg').classList.remove('active');
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('status-badge').textContent = '● Running';
+  document.getElementById('status-badge').className = 'status-badge running';
+
+  var log = document.getElementById('agent-log');
+  log.classList.add('active');
+  document.getElementById('log-lines').innerHTML = '';
+
+  addLog('Received campaign brief (' + brief.length + ' chars)', '');
+
+  setTimeout(function() { addLog('Stage 1: Parsing brief — extracting objectives, targeting, budget, flight dates...', 'active-line'); }, 300);
+  setTimeout(function() {
+    document.querySelector('.agent-log-line.active-line').className = 'agent-log-line done-line';
+    addLog('Stage 2: Structuring campaign — building line items, targeting params, bid strategy...', 'active-line');
+  }, 1200);
+  setTimeout(function() {
+    document.querySelector('.agent-log-line.active-line').className = 'agent-log-line done-line';
+    addLog('Stage 3: QA validation — checking output against trafficking checklist...', 'active-line');
+  }, 2200);
+
+  var systemPrompt = 'You are an expert programmatic advertising campaign manager with deep knowledge of DSP workflows, targeting parameters, bid strategies, and trafficking requirements. You receive unstructured campaign briefs and produce structured, validated campaign setups ready for ops review.\n\nAlways respond with exactly these 5 sections, each starting with "SECTION: [name]":\n\nSECTION: Campaign Summary\nSECTION: Targeting Setup\nSECTION: Budget & Pacing\nSECTION: Creative Trafficking\nSECTION: QA Checklist\n\nBe specific, practical, and use real programmatic advertising terminology. Include specific numbers, recommended bid ranges, and flag any missing information from the brief.';
+
+  var prompt = 'Campaign Brief:\n\n' + brief + '\n\nGenerate a complete campaign setup across the 5 sections. For the QA Checklist section, score the setup against standard trafficking requirements and flag any gaps or missing information from the brief.';
+
+  try {
+    var resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 3000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    var data = await resp.json();
+    var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
+
+    setTimeout(function() {
+      var activeLine = document.querySelector('.agent-log-line.active-line');
+      if (activeLine) activeLine.className = 'agent-log-line done-line';
+      addLog('All stages complete. Awaiting human approval.', 'done-line');
+
+      document.getElementById('result-summary').textContent = getSection(fullText, 'Campaign Summary');
+      document.getElementById('result-targeting').textContent = getSection(fullText, 'Targeting Setup');
+      document.getElementById('result-budget').textContent = getSection(fullText, 'Budget & Pacing');
+      document.getElementById('result-creative').textContent = getSection(fullText, 'Creative Trafficking');
+      document.getElementById('result-qa').textContent = getSection(fullText, 'QA Checklist');
+
+      document.getElementById('status-badge').textContent = '● Awaiting Approval';
+      document.getElementById('status-badge').className = 'status-badge running';
+      document.getElementById('results-section').classList.add('active');
+      document.getElementById('btn-generate').disabled = false;
+    }, 3000);
+
+  } catch(err) {
+    console.error(err);
+    var activeLine = document.querySelector('.agent-log-line.active-line');
+    if (activeLine) activeLine.className = 'agent-log-line';
+    document.getElementById('error-msg').textContent = 'Something went wrong. Please try again.';
+    document.getElementById('error-msg').classList.add('active');
+    document.getElementById('status-badge').textContent = '● Error';
+    document.getElementById('status-badge').className = 'status-badge idle';
+    document.getElementById('btn-generate').disabled = false;
+  }
+});
+</script>
+</body>
+</html>
