@@ -714,7 +714,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
+        max_tokens: 800,
         system: 'You are NutriCoach AI, an expert nutrition and fitness coach. Create highly personalized, realistic, actionable plans with specific foods, exercises, and quantities.',
         messages: messages
       })
