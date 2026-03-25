@@ -666,7 +666,14 @@ function getSection(text, num) {
   if (start === -1) return text;
   var end = text.indexOf(endTag, start);
   var chunk = (end === -1) ? text.slice(start) : text.slice(start, end);
-  return chunk.replace(startTag, '').replace('- WEEKLY MEAL PLAN:', '').replace('- WORKOUT PLAN:', '').replace('- MACRO BREAKDOWN:', '').replace('- GROCERY LIST:', '').trim();
+  return chunk
+    .replace(/^#+\s*/gm, '')
+    .replace(startTag, '')
+    .replace('- WEEKLY MEAL PLAN:', '')
+    .replace('- WORKOUT PLAN:', '')
+    .replace('- MACRO BREAKDOWN:', '')
+    .replace('- GROCERY LIST:', '')
+    .trim();
 }
 
 document.getElementById('btn-generate').addEventListener('click', async function() {
