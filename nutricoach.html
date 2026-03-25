@@ -549,7 +549,7 @@
         <div class="error-msg" id="error-msg">Something went wrong generating your plan. Please try again.</div>
         <div class="btn-row">
           <button class="btn-back" id="btn-back3">← Back</button>
-          <button class="btn-next" id="btn-generate">Generate My Plan ✦</button>
+          <button class="btn-next" id="btn-generate" onclick="generatePlan()">Generate My Plan ✦</button>
         </div>
       </div>
 
@@ -676,7 +676,7 @@ function getSection(text, num) {
     .trim();
 }
 
-document.getElementById('btn-generate').addEventListener('click', async function() {
+async function generatePlan() {
   var name = document.getElementById('user-name').value || 'there';
   var age = document.getElementById('user-age').value;
   var height = document.getElementById('user-height').value;
@@ -709,17 +709,22 @@ document.getElementById('btn-generate').addEventListener('click', async function
       messages.push({ role: 'user', content: prompt });
     }
 
+    var controller = new AbortController();
+    var timeout = setTimeout(function() { controller.abort(); }, 25000);
+
     var resp = await fetch('https://nutricoach-proxy.amitak1107.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        system: 'You are NutriCoach AI, an expert nutrition and fitness coach. Create highly personalized, realistic, actionable plans with specific foods, exercises, and quantities.',
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1500,
+        system: 'You are NutriCoach AI, an expert nutrition and fitness coach. Be concise but specific. Use bullet points.',
         messages: messages
       })
     });
 
+    clearTimeout(timeout);
     var data = await resp.json();
     var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
 
@@ -741,7 +746,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
     document.getElementById('step-3-dot').className = 'step-dot active';
     currentStep = 3;
   }
-});
+}
 
 // Chart
 window.addEventListener('load', function() {
