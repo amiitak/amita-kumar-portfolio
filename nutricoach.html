@@ -660,20 +660,36 @@ function getSelected(groupId) {
 }
 
 function getSection(text, num) {
-  var startTag = 'SECTION ' + num;
-  var endTag = 'SECTION ' + (num + 1);
-  var start = text.indexOf(startTag);
-  if (start === -1) return text;
-  var end = text.indexOf(endTag, start);
-  var chunk = (end === -1) ? text.slice(start) : text.slice(start, end);
-  return chunk
-    .replace(/^#+\s*/gm, '')
-    .replace(startTag, '')
-    .replace('- WEEKLY MEAL PLAN:', '')
-    .replace('- WORKOUT PLAN:', '')
-    .replace('- MACRO BREAKDOWN:', '')
-    .replace('- GROCERY LIST:', '')
-    .trim();
+  var patterns = [
+    'SECTION ' + num + ' - ',
+    'SECTION ' + num + '-',
+    'SECTION ' + num + ':',
+    'SECTION ' + num + '\n',
+    'SECTION ' + num
+  ];
+  var nextPatterns = [
+    'SECTION ' + (num+1) + ' - ',
+    'SECTION ' + (num+1) + '-',
+    'SECTION ' + (num+1) + ':',
+    'SECTION ' + (num+1) + '\n',
+    'SECTION ' + (num+1)
+  ];
+  var start = -1;
+  for (var i = 0; i < patterns.length; i++) {
+    start = text.indexOf(patterns[i]);
+    if (start > -1) break;
+  }
+  if (start === -1) return '';
+  var end = text.length;
+  for (var j = 0; j < nextPatterns.length; j++) {
+    var candidate = text.indexOf(nextPatterns[j], start + 1);
+    if (candidate > -1 && candidate < end) { end = candidate; break; }
+  }
+  var chunk = text.slice(start, end);
+  chunk = chunk.replace(/^#+\s*/gm, '');
+  chunk = chunk.replace(/SECTION \d+\s*[-:]?\s*(WEEKLY MEAL PLAN|WORKOUT PLAN|MACRO BREAKDOWN|GROCERY LIST)?:?/gi, '');
+  chunk = chunk.replace(/^-{3,}$/gm, '');
+  return chunk.trim();
 }
 
 async function generatePlan() {
