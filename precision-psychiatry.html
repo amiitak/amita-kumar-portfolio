@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Precision Psychiatry PM — Amita Kumar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #F7F4EF; --bg-warm: #EDE8DF; --ink: #1C1917; --ink-mid: #44403C; --ink-light: #78716C;
+      --accent: #C0533A; --accent-pale: #F5EAE7; --accent-border: #E8C5BC;
+      --border: #D6CFC6; --white: #fff;
+      --hero-bg: #0E1318;
+      --purple-deep: #2D1B4E; --purple-mid: #5B3FA0; --purple-light: #8B6FD4;
+      --purple-pale: #F0EBF9; --purple-border: #C9B8ED;
+      --teal: #1A5F6E; --teal-light: #2E9DB5; --teal-pale: #E4F4F7;
+      --amber: #92400E; --amber-light: #D97706; --amber-pale: #FEF3C7;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 4rem; background: rgba(14,19,24,0.96); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-weight: 600; font-size: 1rem; color: #fff; text-decoration: none; }
+    .nav-back { font-size: 0.78rem; color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    /* HERO */
+    .cs-hero { background: var(--hero-bg); padding: 6rem 5rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; position: relative; overflow: hidden; }
+    .cs-hero::before { content: ''; position: absolute; top: -30%; right: -5%; width: 700px; height: 700px; background: radial-gradient(circle, rgba(91,63,160,0.12) 0%, transparent 70%); pointer-events: none; }
+    .cs-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 1rem; }
+    .cs-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4vw, 3.5rem); font-weight: 800; color: #fff; line-height: 1.1; margin-bottom: 1rem; }
+    .cs-title em { font-style: italic; color: var(--purple-light); }
+    .cs-subtitle { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
+    .cs-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .cs-tag { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-light); background: rgba(91,63,160,0.1); border: 1px solid rgba(91,63,160,0.25); padding: 0.3rem 0.75rem; }
+    .cs-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+    .cs-meta-box { background: rgba(255,255,255,0.02); padding: 1.75rem; }
+    .cs-meta-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.4rem; }
+    .cs-meta-val { font-size: 0.88rem; color: rgba(255,255,255,0.7); font-weight: 300; line-height: 1.5; }
+
+    /* DISCLAIMER BANNER */
+    .disclaimer { background: var(--amber-pale); border-bottom: 1px solid #FDE68A; padding: 0.85rem 5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .disclaimer-icon { font-size: 0.9rem; }
+    .disclaimer-text { font-size: 0.78rem; color: var(--amber); line-height: 1.5; }
+
+    /* SECTIONS */
+    .cs-body { max-width: 960px; margin: 0 auto; padding: 5rem 3rem; }
+    .cs-body-wide { padding: 5rem; background: var(--bg-warm); }
+    .cs-body-white { padding: 5rem; background: var(--white); }
+    .cs-body-purple { padding: 5rem; background: var(--purple-deep); }
+    .cs-body-teal { padding: 5rem; background: var(--teal); }
+
+    .section-title-row { margin-bottom: 2.5rem; }
+    .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .section-eyebrow-purple { color: var(--purple-mid); }
+    .section-eyebrow-light { color: var(--purple-light); }
+    .section-h2 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+    .section-h2 em { font-style: italic; color: var(--accent); }
+    .section-h2-light { color: #fff; }
+    .section-h2-light em { color: var(--purple-light); }
+
+    .body-text { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.85; font-weight: 300; margin-bottom: 1.25rem; }
+    .body-text-light { color: rgba(255,255,255,0.6); }
+
+    /* STAT CARDS */
+    .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+    .stat-card { background: var(--white); padding: 2rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.4rem; }
+    .stat-label { font-size: 0.78rem; color: var(--ink-light); line-height: 1.4; }
+
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 2rem; }
+
+    /* CHART */
+    .chart-wrap { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; }
+    .chart-title { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin-bottom: 1rem; }
+    .chart-note { font-size: 0.7rem; color: var(--ink-light); margin-top: 0.75rem; font-style: italic; }
+
+    /* TABLE */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .data-table th { background: var(--purple-pale); color: var(--purple-deep); font-weight: 600; padding: 0.6rem 0.75rem; text-align: left; font-size: 0.75rem; letter-spacing: 0.04em; }
+    .data-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--purple-border); color: var(--ink-mid); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .table-wrap { background: var(--white); border: 1px solid var(--border); overflow: hidden; }
+    .table-header { background: var(--purple-deep); padding: 0.75rem 1rem; }
+    .table-header span { font-size: 0.78rem; font-weight: 600; color: #fff; }
+
+    /* STAKEHOLDER CARDS */
+    .stakeholder-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .stakeholder-card { background: var(--white); padding: 2rem; }
+    .stakeholder-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .stakeholder-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-mid); margin-bottom: 0.4rem; }
+    .stakeholder-name { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.75rem; }
+    .stakeholder-needs { list-style: none; }
+    .stakeholder-needs li { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.6; padding: 0.3rem 0 0.3rem 1.25rem; position: relative; border-bottom: 1px solid var(--border); font-weight: 300; }
+    .stakeholder-needs li:last-child { border-bottom: none; }
+    .stakeholder-needs li::before { content: '·'; position: absolute; left: 0; color: var(--purple-mid); font-size: 1.1rem; line-height: 1.4; }
+
+    /* AI CALLOUTS */
+    .ai-callout-group { margin-top: 2rem; display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .ai-callout { background: var(--white); padding: 2rem 2.5rem; border-left: 4px solid var(--purple-mid); transition: background 0.2s; }
+    .ai-callout:hover { background: var(--purple-pale); }
+    .ai-callout.warning { border-left-color: var(--accent); }
+    .ai-callout.warning:hover { background: var(--accent-pale); }
+    .ai-callout-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple-mid); margin-bottom: 0.6rem; }
+    .ai-callout.warning .ai-callout-label { color: var(--accent); }
+    .ai-callout-body { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+
+    /* REGULATORY PATHWAY */
+    .reg-pathway { margin-top: 2rem; }
+    .reg-steps { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .reg-step { background: var(--white); padding: 1.5rem 2rem; display: grid; grid-template-columns: 120px 1fr auto; gap: 1.5rem; align-items: start; }
+    .reg-step-phase { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-mid); padding-top: 0.2rem; }
+    .reg-step-title { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; }
+    .reg-step-body { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+    .reg-timeline { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--accent); background: var(--accent-pale); border: 1px solid var(--accent-border); padding: 0.2rem 0.6rem; white-space: nowrap; height: fit-content; }
+
+    /* PRD SECTIONS */
+    .prd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); margin-top: 2rem; }
+    .prd-box { background: rgba(255,255,255,0.03); padding: 2rem; }
+    .prd-box-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple-light); margin-bottom: 0.75rem; }
+    .prd-box-content { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.75; font-weight: 300; }
+    .prd-box-content strong { color: #fff; font-weight: 500; }
+
+    /* RISK CARDS */
+    .risk-cards { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .risk-card { background: var(--white); padding: 1.75rem 2rem; display: grid; grid-template-columns: 120px 1fr 120px; gap: 2rem; align-items: start; }
+    .risk-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-light); padding-top: 0.2rem; }
+    .risk-title { font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-bottom: 0.3rem; }
+    .risk-body { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.6; font-weight: 300; }
+    .risk-severity { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.75rem; text-align: center; height: fit-content; }
+    .risk-severity.critical { background: rgba(220,38,38,0.1); color: #DC2626; border: 1px solid rgba(220,38,38,0.2); }
+    .risk-severity.high { background: rgba(192,83,58,0.1); color: var(--accent); border: 1px solid var(--accent-border); }
+    .risk-severity.medium { background: var(--amber-pale); color: var(--amber-light); border: 1px solid #FDE68A; }
+
+    /* BULLETS */
+    .bullet-list { list-style: none; margin-top: 1rem; }
+    .bullet-list li { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7; padding: 0.4rem 0 0.4rem 1.5rem; position: relative; font-weight: 300; border-bottom: 1px solid var(--border); }
+    .bullet-list li:last-child { border-bottom: none; }
+    .bullet-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); font-size: 1.2rem; line-height: 1.4; }
+    .bullet-list-light li { color: rgba(255,255,255,0.6); border-bottom-color: rgba(255,255,255,0.08); }
+    .bullet-list-light li::before { color: var(--purple-light); }
+
+    .divider { height: 1px; background: var(--border); }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .cs-hero { grid-template-columns: 1fr; padding: 4rem 2rem 3rem; gap: 3rem; }
+      .cs-body, .cs-body-wide, .cs-body-white, .cs-body-purple, .cs-body-teal { padding: 3rem 2rem; }
+      .disclaimer { padding: 0.85rem 2rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .stat-cards, .stakeholder-cards { grid-template-columns: 1fr; }
+      .prd-grid { grid-template-columns: 1fr; }
+      .risk-card { grid-template-columns: 1fr; gap: 0.75rem; }
+      .reg-step { grid-template-columns: 1fr; gap: 0.5rem; }
+    }
+
+    /* USER JOURNEY */
+    .journey-wrap { margin-top: 2rem; }
+    .journey-table { width: 100%; border-collapse: collapse; }
+    .journey-table th { background: var(--purple-pale); color: var(--purple-mid); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.75rem 1rem; border: 1px solid var(--purple-border); text-align: left; }
+    .journey-table td { background: var(--white); padding: 1.1rem 1.25rem; border: 1px solid var(--border); vertical-align: top; }
+    .journey-table td:first-child { background: var(--purple-pale); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple-mid); white-space: nowrap; font-weight: 500; }
+    .journey-step-title { font-size: 0.85rem; font-weight: 600; color: var(--ink); margin-bottom: 0.25rem; }
+    .journey-step-body { font-size: 0.78rem; color: var(--ink-light); line-height: 1.55; font-weight: 300; }
+    .journey-note { font-size: 0.7rem; color: var(--ink-light); margin-top: 0.75rem; font-style: italic; }
+
+    /* EVALS */
+    .eval-lifecycle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .eval-step { background: var(--white); padding: 2rem; border-top: 4px solid var(--purple-mid); }
+    .eval-step.improve { border-top-color: var(--accent); }
+    .eval-step-num { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--purple-mid); margin-bottom: 0.5rem; }
+    .eval-step.improve .eval-step-num { color: var(--accent); }
+    .eval-step-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.75rem; }
+    .eval-step-body { font-size: 0.84rem; color: var(--ink-mid); line-height: 1.7; font-weight: 300; }
+    .eval-metrics { margin-top: 2rem; display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .eval-metric { background: var(--white); padding: 1.1rem 1.75rem; display: grid; grid-template-columns: 200px 1fr 100px; gap: 2rem; align-items: center; }
+    .eval-metric-name { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+    .eval-metric-desc { font-size: 0.82rem; color: var(--ink-mid); line-height: 1.5; font-weight: 300; }
+    .eval-metric-type { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.6rem; text-align: center; }
+    .eval-metric-type.llm { background: var(--purple-pale); color: var(--purple-mid); border: 1px solid var(--purple-border); }
+    .eval-metric-type.code { background: #E4F4F7; color: var(--teal); border: 1px solid #B3D9E4; }
+    .eval-metric-type.human { background: var(--accent-pale); color: var(--accent); border: 1px solid var(--accent-border); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Amita Kumar</a>
+  <a href="index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <div class="disclaimer-icon">⚠️</div>
+  <div class="disclaimer-text">This is a speculative product concept created to demonstrate AI PM thinking in a regulated, high-stakes domain. It is not affiliated with any clinical institution or real product. All data and frameworks are illustrative.</div>
+</div>
+
+<!-- HERO -->
+<div class="cs-hero">
+  <div>
+    <div class="cs-eyebrow">Concept PRD · Mental Health · AI/ML · Regulated Domain</div>
+    <h1 class="cs-title">Precision <em>Psychiatry</em> PM</h1>
+    <p class="cs-subtitle">A product vision for using neuroimaging data and machine learning (specifically graph neural networks trained on brain connectivity patterns) to match patients with depression and anxiety to targeted treatment pathways, moving mental healthcare from trial-and-error toward precision medicine.</p>
+    <div class="cs-tags">
+      <span class="cs-tag">AI/ML</span>
+      <span class="cs-tag">Health Tech</span>
+      <span class="cs-tag">FDA Regulated</span>
+      <span class="cs-tag">Ethical AI</span>
+      <span class="cs-tag">Concept PRD</span>
+    </div>
+  </div>
+  <div class="cs-meta-grid">
+    <div class="cs-meta-box"><div class="cs-meta-label">Role</div><div class="cs-meta-val">PM · Product Strategy</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Type</div><div class="cs-meta-val">Speculative Concept PRD</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Domain</div><div class="cs-meta-val">Mental Health · Precision Medicine</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Regulation</div><div class="cs-meta-val">FDA De Novo pathway</div></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Problem</div>
+    <h2 class="section-h2">Mental healthcare runs on <em>trial and error.</em></h2>
+  </div>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-num">50%</div>
+      <div class="stat-label">of depression patients don't respond to their first prescribed medication</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">11 yrs</div>
+      <div class="stat-label">average time between symptom onset and correct diagnosis for mood disorders</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">$225B</div>
+      <div class="stat-label">annual cost of depression and anxiety in the US, including lost productivity</div>
+    </div>
+  </div>
+  <p class="body-text">When a patient presents with depression or anxiety, a psychiatrist selects a treatment based almost entirely on self-reported symptoms and clinical interviews. There is no biomarker test, no objective measurement. You prescribe, wait 6-8 weeks, and find out if it worked.</p>
+  <p class="body-text">This isn't a failure of care. It's a data problem. We haven't had reliable ways to measure the biological underpinnings of mental illness. That is changing. Advances in neuroimaging, genomics, and machine learning now make it possible to identify patterns in brain activity that predict treatment response with meaningful accuracy.</p>
+  <p class="body-text">The product opportunity: a clinical decision support tool that surfaces these insights at the moment of prescribing, not replacing clinical judgment, but giving it an objective foundation.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- THE SCIENCE -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">The Science</div>
+      <h2 class="section-h2">What makes this <em>possible now.</em></h2>
+    </div>
+    <p class="body-text">Precision psychiatry is not a new idea. Three converging factors make it viable as a product in 2026 in ways that were not true even five years ago.</p>
+    <div class="two-col">
+      <div>
+        <div class="chart-wrap">
+          <div class="chart-title">ML Prediction Accuracy: Treatment Response by Input Type</div>
+          <canvas id="scienceChart" height="220"></canvas>
+          <div class="chart-note">Not actual artifact, generated via UXPilot for privacy reasons</div>
+        </div>
+      </div>
+      <div>
+        <div class="ai-callout-group">
+          <div class="ai-callout">
+            <div class="ai-callout-label">Neuroimaging at scale</div>
+            <div class="ai-callout-body">Large-scale fMRI datasets (UK Biobank, HCP, ABCD Study) have made it possible to train models on brain connectivity patterns across tens of thousands of patients. What required a research lab in 2015 can now be done with cloud ML infrastructure.</div>
+          </div>
+          <div class="ai-callout">
+            <div class="ai-callout-label">ML model maturity</div>
+            <div class="ai-callout-body">Graph neural networks and transformer architectures have shown strong performance on brain connectivity data — achieving 65-72% accuracy in predicting SSRI response in recent research, compared to ~50% for clinical judgment alone. Not a silver bullet, but a meaningful signal.</div>
+          </div>
+          <div class="ai-callout">
+            <div class="ai-callout-label">Regulatory momentum</div>
+            <div class="ai-callout-body">The FDA has approved several AI-based clinical decision support tools under De Novo pathways in recent years, establishing precedent for ML-assisted psychiatric tools. The regulatory path, while complex, is navigable.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- DISCOVERY -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Discovery & Stakeholder Research</div>
+    <h2 class="section-h2">Three stakeholders, <em>one system.</em></h2>
+  </div>
+  <p class="body-text">A clinical decision support tool sits at the intersection of patients, clinicians, and payers — each with different incentives, constraints, and definitions of success. Getting the product right requires understanding all three.</p>
+  <div class="stakeholder-cards">
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🧠</div>
+      <div class="stakeholder-label">Primary User</div>
+      <div class="stakeholder-name">Psychiatrist / Prescriber</div>
+      <ul class="stakeholder-needs">
+        <li>Wants objective data to support treatment decisions without replacing clinical judgment</li>
+        <li>Fears liability from over-relying on algorithmic recommendations</li>
+        <li>Needs seamless EHR integration and will not adopt a separate tool</li>
+        <li>Skeptical of "black box" AI; needs explainability to trust outputs</li>
+        <li>Reimbursement for additional diagnostic steps must be justified</li>
+      </ul>
+    </div>
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🙋</div>
+      <div class="stakeholder-label">End Beneficiary</div>
+      <div class="stakeholder-name">Patient</div>
+      <ul class="stakeholder-needs">
+        <li>Wants faster path to a treatment that works</li>
+        <li>Highly sensitive to privacy, as neuroimaging data feels deeply personal</li>
+        <li>Needs informed consent that's genuinely understandable</li>
+        <li>Concerns about insurance discrimination from mental health data</li>
+        <li>Wants to know how data will be used and stored</li>
+      </ul>
+    </div>
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🏥</div>
+      <div class="stakeholder-label">Economic Buyer</div>
+      <div class="stakeholder-name">Health System / Payer</div>
+      <ul class="stakeholder-needs">
+        <li>Wants to reduce cost of failed treatment episodes</li>
+        <li>Needs clinical validation data (RCT or real-world evidence)</li>
+        <li>Requires HIPAA compliance and BAA before any data sharing</li>
+        <li>Will only reimburse with CPT code coverage for the diagnostic step</li>
+        <li>Values outcomes data: reduced hospitalizations, improved adherence</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- AI PRODUCT DESIGN -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">AI Product Design</div>
+      <h2 class="section-h2">Designing for <em>high stakes.</em></h2>
+    </div>
+    <p class="body-text">This is not a chatbot. The AI design decisions here carry clinical and legal weight. Every choice — from model architecture to output format — needs to be made with that gravity in mind.</p>
+
+    <div class="ai-callout-group">
+      <div class="ai-callout">
+        <div class="ai-callout-label">Model architecture</div>
+        <div class="ai-callout-body">This product does not use a large language model. The core AI is a graph neural network (GNN) trained on fMRI brain connectivity data, classifying patients into treatment response profiles. A secondary LLM layer translates model outputs into plain-language clinical summaries for the prescriber. These are two separate systems with different validation requirements.</div>
+      </div>
+      <div class="ai-callout">
+        <div class="ai-callout-label">Training data requirements</div>
+        <div class="ai-callout-body">The model requires labeled neuroimaging datasets with known treatment outcomes, ideally longitudinal data showing which patients responded to which treatments over 12 months or more. Minimum viable dataset: ~5,000 labeled patient scans across depression subtypes. Initial data partnerships with academic medical centers (e.g., Stanford, UCSF, Mass General) are required before any commercial training.</div>
+      </div>
+      <div class="ai-callout warning">
+        <div class="ai-callout-label">Bias & fairness: critical risk</div>
+        <div class="ai-callout-body">Neuroimaging datasets are historically skewed toward white, highly educated, Western populations. A model trained on biased data will produce biased treatment recommendations — potentially at the expense of already-underserved mental health populations. Bias auditing across race, gender, age, and socioeconomic status is not optional. It is a launch blocker.</div>
+      </div>
+      <div class="ai-callout">
+        <div class="ai-callout-label">Explainability requirement</div>
+        <div class="ai-callout-body">Psychiatrists will not act on a black-box recommendation. The product must surface which brain regions and connectivity patterns drove the model's output, using attention visualization or SHAP values, in a form a clinician can evaluate. "The model recommends X" is not sufficient. "The model identified reduced prefrontal-amygdala connectivity consistent with SSRI responder profiles" is.</div>
+      </div>
+      <div class="ai-callout">
+        <div class="ai-callout-label">Output design</div>
+        <div class="ai-callout-body">The product outputs a ranked probability distribution across treatment options, not a single recommendation. It surfaces confidence intervals, flags low-confidence cases, and always presents outputs as "supporting evidence" rather than directives. The psychiatrist retains full clinical authority. This is a deliberate product and liability decision.</div>
+      </div>
+      <div class="ai-callout">
+        <div class="ai-callout-label">Privacy & data architecture</div>
+        <div class="ai-callout-body">Neuroimaging data never leaves the health system's infrastructure. The model runs on-premise or in a HIPAA-compliant VPC. Federated learning architecture allows model improvement across sites without centralizing patient data. All data access requires explicit patient consent under a plain-language consent framework co-designed with bioethicists.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- REGULATORY -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Regulatory Pathway</div>
+    <h2 class="section-h2">The FDA path to <em>market.</em></h2>
+  </div>
+  <p class="body-text">A clinical decision support tool that influences treatment selection for a psychiatric condition is a Software as a Medical Device (SaMD) under FDA jurisdiction. The likely pathway is De Novo, which is used for novel, low-to-moderate risk devices without a predicate. Here's how I'd structure the approach.</p>
+
+  <div class="reg-pathway">
+    <div class="reg-steps">
+      <div class="reg-step">
+        <div class="reg-step-phase">Phase 1</div>
+        <div>
+          <div class="reg-step-title">Pre-Submission Meeting (Q-Sub)</div>
+          <div class="reg-step-body">Engage FDA before filing to align on intended use, risk classification, and required clinical evidence. This is a free FDA program and dramatically reduces rejection risk. Key questions: Is this a decision support tool or a diagnostic? What level of clinical validation is required?</div>
+        </div>
+        <div class="reg-timeline">Months 1-6</div>
+      </div>
+      <div class="reg-step">
+        <div class="reg-step-phase">Phase 2</div>
+        <div>
+          <div class="reg-step-title">Clinical Validation Study</div>
+          <div class="reg-step-body">Prospective multi-site study across 3-5 academic medical centers. Primary endpoint: improvement in treatment response rate at 12 weeks vs standard of care. Secondary endpoints: time to remission, clinician confidence scores, patient satisfaction. Target: 500+ patients per arm.</div>
+        </div>
+        <div class="reg-timeline">Months 6-24</div>
+      </div>
+      <div class="reg-step">
+        <div class="reg-step-phase">Phase 3</div>
+        <div>
+          <div class="reg-step-title">De Novo Submission</div>
+          <div class="reg-step-body">File De Novo request with clinical study data, algorithmic performance documentation, bias audit results, cybersecurity assessment, and labeling. De Novo review typically takes 12-18 months. If approved, establishes a predicate for future 510(k) submissions in the category.</div>
+        </div>
+        <div class="reg-timeline">Months 24-42</div>
+      </div>
+      <div class="reg-step">
+        <div class="reg-step-phase">Phase 4</div>
+        <div>
+          <div class="reg-step-title">Commercial Launch + Post-Market Surveillance</div>
+          <div class="reg-step-body">Limited launch with 10-15 health system partners. Post-market surveillance is required, covering ongoing monitoring of real-world outcomes, adverse events, and model drift. FDA requires re-submission if the algorithm is retrained with new data that changes performance characteristics.</div>
+        </div>
+        <div class="reg-timeline">Month 42+</div>
+      </div>
+    </div>
+    <div style="font-size:0.7rem; color:var(--ink-light); margin-top:0.75rem; font-style:italic;">Not actual artifact, generated for portfolio purposes</div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- PRODUCT VISION & PRD -->
+<div class="cs-body-purple">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow-light section-eyebrow">Product Vision & PRD</div>
+      <h2 class="section-h2 section-h2-light">What we're actually <em>building.</em></h2>
+    </div>
+    <p class="body-text body-text-light">The MVP is a clinical decision support module embedded in the psychiatrist's EHR workflow. It surfaces a treatment response probability profile at the moment of prescribing — not a separate app, not a separate login. Here's the core PRD framework.</p>
+
+    <div class="prd-grid">
+      <div class="prd-box">
+        <div class="prd-box-label">North Star Metric</div>
+        <div class="prd-box-content"><strong>% of patients achieving remission at 12 weeks</strong> in practices using the tool vs matched controls. Secondary: time to first effective treatment.</div>
+      </div>
+      <div class="prd-box">
+        <div class="prd-box-label">MVP Scope</div>
+        <div class="prd-box-content">Depression (MDD) only. Three treatment dimensions: SSRI vs SNRI vs therapy-first. EHR integration with Epic via SMART on FHIR. Explainability view for clinician. Consent capture workflow for patient.</div>
+      </div>
+      <div class="prd-box">
+        <div class="prd-box-label">Customer & GTM</div>
+        <div class="prd-box-content">Initial customer: large academic medical centers with existing neuroimaging infrastructure and research appetite. GTM: partnership model with 3-5 founding health systems who co-fund the clinical study in exchange for early access and co-authorship.</div>
+      </div>
+      <div class="prd-box">
+        <div class="prd-box-label">Business Model</div>
+        <div class="prd-box-content">B2B SaaS to health systems, priced per-scan or per-seat. Reimbursement path via CPT code for "AI-assisted psychiatric assessment." Long-term: licensing to EHR vendors (Epic, Cerner) as a native module.</div>
+      </div>
+      <div class="prd-box">
+        <div class="prd-box-label">What's Out of Scope (V1)</div>
+        <div class="prd-box-content">Anxiety disorders, bipolar, schizophrenia. Direct-to-consumer. Autonomous prescribing. Genomic data integration. Real-time monitoring. Pediatric populations.</div>
+      </div>
+      <div class="prd-box">
+        <div class="prd-box-label">Success at 18 Months</div>
+        <div class="prd-box-content">5 health system pilots live, 1,000+ patients assessed, clinical validation data submitted with De Novo application, zero reportable adverse events attributable to tool recommendations.</div>
+      </div>
+    </div>
+
+    <p class="body-text body-text-light" style="margin-top:2rem;">The user journey for the prescriber:</p>
+    <ul class="bullet-list bullet-list-light">
+      <li><strong>Patient consent captured</strong> during intake via a plain-language form co-designed with bioethicists and stored in the EHR</li>
+      <li><strong>Neuroimaging scan ordered</strong> as part of the standard psychiatric workup, integrated into the existing radiology workflow</li>
+      <li><strong>Model runs automatically</strong> on scan data within the health system's own infrastructure. No data leaves the facility.</li>
+      <li><strong>Treatment probability profile surfaces</strong> in the EHR at the moment of prescribing. The clinician sees ranked options with confidence intervals and brain region explainability.</li>
+      <li><strong>Prescriber makes the final decision.</strong> The tool is always advisory, never directive. The decision and any override rationale are logged automatically for post-market surveillance.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- RISKS -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Risks & Mitigations</div>
+    <h2 class="section-h2">Hard problems with <em>real answers.</em></h2>
+  </div>
+  <p class="body-text">Surfacing risks is not pessimism. It is the job. Every risk here has a mitigation path, because a PM who finds the problems is also the person responsible for solving them.</p>
+
+  <div class="risk-cards">
+    <div class="risk-card">
+      <div class="risk-label">Bias & Equity</div>
+      <div>
+        <div class="risk-title">Model underperforms for underrepresented populations</div>
+        <div class="risk-body">Neuroimaging datasets historically skew toward white, educated, Western populations. A model trained on biased data produces biased recommendations — potentially widening the mental health disparities it's meant to address. Mitigation: mandatory demographic performance reporting as a launch condition, diversity requirements built into data partnership agreements with academic medical centers, and a published equity commitment reviewed by an independent ethics board before any commercial deployment.</div>
+      </div>
+      <div class="risk-severity critical">Critical</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">Liability</div>
+      <div>
+        <div class="risk-title">Clinicians defer to the model when they shouldn't</div>
+        <div class="risk-body">Even with "advisory only" framing, a time-pressured psychiatrist may follow the recommendation without critically evaluating it. Mitigation: mandatory explainability (the model must show its reasoning, not just its output), required override documentation in the EHR, and liability language in health system contracts clarifying that the prescriber retains full clinical responsibility. Legal framework developed with malpractice counsel before any clinical deployment.</div>
+      </div>
+      <div class="risk-severity critical">Critical</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">Adoption</div>
+      <div>
+        <div class="risk-title">Psychiatrists don't trust the tool and don't use it</div>
+        <div class="risk-body">Clinical culture change is slow, and trust in algorithmic systems in psychiatry is low. Mitigation: co-design the output format and explainability interface with psychiatrists from day one, treating them as co-developers rather than end users. Run a structured pilot with 10-15 clinicians before any broad rollout. Track clinician override rates as a leading indicator of trust. If override rates are high, that's a signal to improve explainability, not to push adoption harder.</div>
+      </div>
+      <div class="risk-severity high">High</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">Reimbursement</div>
+      <div>
+        <div class="risk-title">No CPT code coverage means health systems can't justify the cost</div>
+        <div class="risk-body">CMS reimbursement for AI-assisted psychiatric assessment is not yet established. Without it, health systems absorb the cost entirely. Mitigation: pursue a parallel reimbursement advocacy track from year one, working with a clinical economics team to build the ROI case. Use the clinical validation study to generate real-world outcomes data that supports a CPT code application. The founding health system partners fund the pilot in exchange for early access and co-authorship on the outcomes research.</div>
+      </div>
+      <div class="risk-severity high">High</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">Model Drift</div>
+      <div>
+        <div class="risk-title">Performance degrades as treatment protocols evolve</div>
+        <div class="risk-body">A static model trained in 2026 will drift from its validated performance as clinical practice and patient populations change. Mitigation: a continuous monitoring eval running against a held-out validation set post-launch, with a defined performance threshold that triggers re-validation. FDA notification is required for performance-altering updates under the approved De Novo, so the drift detection system needs to run before FDA thresholds are crossed, not after.</div>
+      </div>
+      <div class="risk-severity medium">Medium</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CLOSING -->
+<div class="cs-body-white">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">User Journey</div>
+      <h2 class="section-h2">What the experience <em>actually looks like.</em></h2>
+    </div>
+    <p class="body-text">The product has to work for three different people: a patient consenting to something they may not fully understand, a psychiatrist under time pressure, and a health system trying to contain costs. Here's how the journey maps across all three.</p>
+    <div class="journey-wrap">
+      <table class="journey-table">
+        <thead>
+          <tr>
+            <th>Actor</th>
+            <th>Step 1</th>
+            <th>Step 2</th>
+            <th>Step 3</th>
+            <th>Step 4</th>
+            <th>Step 5</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Patient</td>
+            <td><div class="journey-step-title">Referral</div><div class="journey-step-body">Referred by GP for psychiatric evaluation. Receives pre-visit materials explaining the neuroimaging component.</div></td>
+            <td><div class="journey-step-title">Consent</div><div class="journey-step-body">Reviews plain-language consent form. Asks questions. Explicitly opts in to neuroimaging data use.</div></td>
+            <td><div class="journey-step-title">Scan</div><div class="journey-step-body">Completes fMRI scan as part of standard intake. ~45 minutes. No additional appointment required.</div></td>
+            <td><div class="journey-step-title">Consultation</div><div class="journey-step-body">Meets psychiatrist. Learns treatment recommendation and the reasoning behind it.</div></td>
+            <td><div class="journey-step-title">Treatment</div><div class="journey-step-body">Begins recommended treatment. Outcome tracked at 4, 8, and 12 weeks for post-market surveillance.</div></td>
+          </tr>
+          <tr>
+            <td>Psychiatrist</td>
+            <td><div class="journey-step-title">Patient intake</div><div class="journey-step-body">Reviews patient history and symptom profile in EHR ahead of consultation.</div></td>
+            <td><div class="journey-step-title">Consent confirmed</div><div class="journey-step-body">EHR flags that patient has consented to AI-assisted assessment. No additional action required.</div></td>
+            <td><div class="journey-step-title">Model runs</div><div class="journey-step-body">Model processes scan automatically. No separate login or tool needed. Output appears in the EHR at the moment of prescribing.</div></td>
+            <td><div class="journey-step-title">Reviews probability profile</div><div class="journey-step-body">Sees ranked treatment options with confidence intervals and brain region explainability. Makes final decision.</div></td>
+            <td><div class="journey-step-title">Documents rationale</div><div class="journey-step-body">Decision and override (if any) logged automatically. Feeds post-market surveillance data.</div></td>
+          </tr>
+          <tr>
+            <td>Health System</td>
+            <td><div class="journey-step-title">Tool deployed</div><div class="journey-step-body">Integrated into Epic via SMART on FHIR. Activated for consenting psychiatry patients.</div></td>
+            <td><div class="journey-step-title">Consent workflow live</div><div class="journey-step-body">Consent capture built into standard intake flow. Compliance team signs off.</div></td>
+            <td><div class="journey-step-title">Model runs on-prem</div><div class="journey-step-body">Data never leaves the health system's infrastructure. HIPAA compliance maintained.</div></td>
+            <td><div class="journey-step-title">Outcomes tracked</div><div class="journey-step-body">Dashboard shows treatment response rates vs baseline. Data supports reimbursement case.</div></td>
+            <td><div class="journey-step-title">ROI measured</div><div class="journey-step-body">Fewer failed treatment episodes, reduced hospitalizations, improved patient retention metrics.</div></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="journey-note">Not actual artifact, generated for portfolio purposes</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Evals Framework</div>
+    <h2 class="section-h2">Measuring what <em>actually matters.</em></h2>
+  </div>
+  <p class="body-text">Evals are to AI products what unit tests are to traditional software — except harder, because LLM outputs are non-deterministic and "correct" is rarely binary. For a high-stakes clinical tool, defining and running the right evals isn't optional. It's the foundation of trust.</p>
+  <p class="body-text">I'd structure the eval program around the three-step lifecycle: Analyze failure modes qualitatively, Measure them quantitatively, Improve based on evidence. That cycle runs continuously, not just at launch.</p>
+
+  <div class="eval-lifecycle">
+    <div class="eval-step">
+      <div class="eval-step-num">Step 1</div>
+      <div class="eval-step-title">Analyze</div>
+      <div class="eval-step-body">Inspect real model outputs on representative patient scans. Qualitatively identify where the model fails, and not just when it is wrong but <em>how</em> it is wrong. Does it fail on certain demographic groups? Certain symptom profiles? Does the plain-language summary misrepresent the model's confidence? You can't measure what you haven't observed.</div>
+    </div>
+    <div class="eval-step">
+      <div class="eval-step-num">Step 2</div>
+      <div class="eval-step-title">Measure</div>
+      <div class="eval-step-body">Build specific evaluators for the failure modes you found. Run them at scale across your validation dataset. This is what turns qualitative observations into prioritized problems. Without measurement, you are guessing which fixes matter most. In a clinical context, that is not acceptable.</div>
+    </div>
+    <div class="eval-step improve">
+      <div class="eval-step-num">Step 3</div>
+      <div class="eval-step-title">Improve</div>
+      <div class="eval-step-body">Make targeted interventions based on measurement data — prompt changes for the LLM summary layer, retraining for the GNN on underrepresented populations, architecture changes for specific failure modes. Then cycle back to Analyze. The loop never stops — it just gets faster as your eval infrastructure matures.</div>
+    </div>
+  </div>
+
+  <p class="body-text" style="margin-top:2rem;">The specific metrics I'd build evaluators for:</p>
+  <div class="eval-metrics">
+    <div class="eval-metric">
+      <div class="eval-metric-name">Calibration accuracy</div>
+      <div class="eval-metric-desc">Does the model's 70% confidence score actually correlate with 70% treatment response in real-world outcomes? Miscalibrated confidence is more dangerous than low accuracy.</div>
+      <div class="eval-metric-type code">Code-based</div>
+    </div>
+    <div class="eval-metric">
+      <div class="eval-metric-name">Demographic parity</div>
+      <div class="eval-metric-desc">Is accuracy consistent across race, gender, age, and socioeconomic status? Any gap here is a launch blocker, not a post-launch fix.</div>
+      <div class="eval-metric-type code">Code-based</div>
+    </div>
+    <div class="eval-metric">
+      <div class="eval-metric-name">Explainability faithfulness</div>
+      <div class="eval-metric-desc">Does the brain region attribution shown to the psychiatrist actually match what drove the model's prediction? Misleading explainability is worse than no explainability.</div>
+      <div class="eval-metric-type human">Human</div>
+    </div>
+    <div class="eval-metric">
+      <div class="eval-metric-name">Summary accuracy</div>
+      <div class="eval-metric-desc">Does the LLM-generated plain-language summary accurately represent the model's probability output? Evaluate for hallucination, overconfidence, and clinically dangerous misrepresentation.</div>
+      <div class="eval-metric-type llm">LLM-as-judge</div>
+    </div>
+    <div class="eval-metric">
+      <div class="eval-metric-name">Clinician override rate</div>
+      <div class="eval-metric-desc">What % of cases does the psychiatrist override the top recommendation? High override rate signals low trust or poor calibration. Zero override rate signals over-reliance — also a problem.</div>
+      <div class="eval-metric-type human">Human</div>
+    </div>
+    <div class="eval-metric">
+      <div class="eval-metric-name">Model drift detection</div>
+      <div class="eval-metric-desc">Does performance degrade over time as patient populations or treatment protocols evolve? Requires a continuous monitoring eval running against a held-out validation set post-launch.</div>
+      <div class="eval-metric-type code">Code-based</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<div class="cs-body-teal">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow-light section-eyebrow">Why This Matters</div>
+      <h2 class="section-h2 section-h2-light">The PM's role in <em>high-stakes AI.</em></h2>
+    </div>
+    <p class="body-text body-text-light">I did not build this because I expect to ship a psychiatric AI tool. I built it because the thinking required to do it right is exactly what an AI PM needs in any high-stakes domain.</p>
+    <p class="body-text body-text-light">The questions here show up everywhere AI touches consequential decisions: how do you validate a system that influences outcomes you can't easily measure? How do you design for explainability when users need to trust, not just use, the output? How do you move fast without moving recklessly?</p>
+    <p class="body-text body-text-light">These are not engineering questions. They're product questions. The PM's job is to own them explicitly — not hand them off to ethicists or lawyers after the code is written.</p>
+  </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+  var ctx = document.getElementById('scienceChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Clinical\ninterview only', 'Symptoms +\ngenomics', 'fMRI\nalone', 'fMRI +\nclinical data', 'fMRI + genomics\n+ clinical (full)'],
+      datasets: [{
+        label: 'Treatment response prediction accuracy (%)',
+        data: [51, 58, 63, 69, 74],
+        backgroundColor: ['#D6CFC6', '#C9B8ED', '#9B7FDB', '#7B5FC4', '#5B3FA0'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; }, font: { size: 10 } }, grid: { color: '#F0EDE8' } },
+        x: { ticks: { font: { size: 9 } }, grid: { display: false } }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>
