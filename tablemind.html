@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TableMind — Amita Kumar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F7F4EF;
+      --bg-warm: #EDE8DF;
+      --ink: #1C1917;
+      --ink-mid: #44403C;
+      --ink-light: #78716C;
+      --accent: #C0533A;
+      --accent-pale: #F5EAE7;
+      --accent-border: #E8C5BC;
+      --hero-bg: #1A1208;
+      --border: #D6CFC6;
+      --white: #fff;
+      --amber: #D47C2A;
+      --amber-pale: #FDF3E3;
+      --amber-border: #F0D4A0;
+      --amber-deep: #92400E;
+      --gold: #B8860B;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--ink); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; }
+
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.1rem 4rem; background: rgba(26,18,8,0.96); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-weight: 600; font-size: 1rem; color: #fff; text-decoration: none; }
+    .nav-back { font-size: 0.78rem; color: rgba(255,255,255,0.5); text-decoration: none; letter-spacing: 0.06em; transition: color 0.2s; }
+    .nav-back:hover { color: var(--accent); }
+
+    /* HERO */
+    .cs-hero { background: var(--hero-bg); padding: 6rem 5rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; position: relative; overflow: hidden; }
+    .cs-hero::before { content: ''; position: absolute; top: -20%; right: -10%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(212,124,42,0.1) 0%, transparent 70%); pointer-events: none; }
+    .cs-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber); margin-bottom: 1rem; }
+    .cs-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 4.5vw, 4.2rem); font-weight: 900; color: #fff; line-height: 1.0; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cs-title em { font-style: italic; color: var(--amber); }
+    .cs-subtitle { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.75; margin-bottom: 2rem; font-weight: 300; }
+    .cs-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .cs-tag { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); background: rgba(212,124,42,0.1); border: 1px solid rgba(212,124,42,0.25); padding: 0.3rem 0.75rem; }
+    .cs-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+    .cs-meta-box { background: rgba(255,255,255,0.02); padding: 1.75rem; }
+    .cs-meta-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.4rem; }
+    .cs-meta-val { font-size: 0.88rem; color: rgba(255,255,255,0.7); font-weight: 300; line-height: 1.5; }
+
+    /* SECTIONS */
+    .cs-body { max-width: 960px; margin: 0 auto; padding: 5rem 3rem; }
+    .cs-body-wide { padding: 5rem; background: var(--bg-warm); }
+    .cs-body-white { padding: 5rem; background: var(--white); }
+    .section-title-row { margin-bottom: 2.5rem; }
+    .section-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .section-h2 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+    .section-h2 em { font-style: italic; color: var(--accent); }
+    .body-text { font-size: 0.95rem; color: var(--ink-mid); line-height: 1.85; font-weight: 300; margin-bottom: 1.25rem; }
+
+    /* STAT CARDS */
+    .stat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+    .stat-card { background: var(--white); padding: 2rem; text-align: center; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 800; color: var(--accent); line-height: 1; margin-bottom: 0.4rem; }
+    .stat-label { font-size: 0.78rem; color: var(--ink-light); line-height: 1.4; }
+
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; margin-top: 2rem; }
+
+    /* INSIGHT CARDS */
+    .insight-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 2rem; }
+    .insight-card { background: var(--white); padding: 1.75rem; }
+    .insight-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .insight-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
+    .insight-body { font-size: 0.82rem; color: var(--ink-light); line-height: 1.65; font-weight: 300; }
+
+    /* AI CALLOUTS */
+    .ai-callout-group { margin-top: 2rem; display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .ai-callout { background: var(--white); padding: 2rem 2.5rem; border-left: 4px solid var(--amber); transition: background 0.2s; }
+    .ai-callout:hover { background: var(--amber-pale); }
+    .ai-callout-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber-deep); margin-bottom: 0.6rem; }
+    .ai-callout-body { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.8; font-weight: 300; }
+
+    /* SCORING TABLE */
+    .scoring-table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: 0.85rem; }
+    .scoring-table th { background: var(--hero-bg); color: var(--amber); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; }
+    .scoring-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); color: var(--ink-mid); vertical-align: top; }
+    .scoring-table tr:last-child td { border-bottom: none; }
+    .scoring-table tr:hover td { background: var(--amber-pale); }
+    .score-weight { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--accent); }
+
+    /* BULLET LIST */
+    .bullet-list { list-style: none; margin-top: 1rem; }
+    .bullet-list li { font-size: 0.9rem; color: var(--ink-mid); line-height: 1.7; padding: 0.4rem 0 0.4rem 1.5rem; position: relative; font-weight: 300; border-bottom: 1px solid var(--border); }
+    .bullet-list li:last-child { border-bottom: none; }
+    .bullet-list li::before { content: '·'; position: absolute; left: 0; color: var(--accent); font-size: 1.2rem; line-height: 1.4; }
+
+    .divider { height: 1px; background: var(--border); }
+
+    /* ===== APP SECTION ===== */
+    .app-section { background: var(--hero-bg); padding: 5rem; position: relative; overflow: hidden; }
+    .app-section::before { content: ''; position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(212,124,42,0.08) 0%, transparent 70%); pointer-events: none; }
+    .app-header { text-align: center; margin-bottom: 3.5rem; }
+    .app-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.75rem; }
+    .app-title { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .app-title em { font-style: italic; color: var(--amber); }
+    .app-subtitle { font-size: 0.95rem; color: rgba(255,255,255,0.4); font-weight: 300; }
+
+    .app-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(212,124,42,0.2); max-width: 820px; margin: 0 auto; overflow: hidden; box-shadow: 0 8px 64px rgba(0,0,0,0.5); }
+    .app-card-header { background: rgba(212,124,42,0.12); border-bottom: 1px solid rgba(212,124,42,0.2); padding: 1.25rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    .app-brand { display: flex; align-items: center; gap: 0.75rem; }
+    .app-brand-mark { font-size: 1.2rem; }
+    .app-brand-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+    .app-brand-sub { font-size: 0.7rem; color: rgba(255,255,255,0.4); font-weight: 300; }
+    .app-step-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); }
+
+    .app-body { padding: 2rem; }
+
+    /* STEP INDICATORS */
+    .step-bar { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+    .step-pip { flex: 1; height: 3px; background: rgba(255,255,255,0.1); transition: background 0.3s; }
+    .step-pip.active { background: var(--amber); }
+    .step-pip.done { background: rgba(212,124,42,0.4); }
+
+    /* FORM */
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+    .form-intro { font-size: 1rem; font-weight: 500; color: #fff; margin-bottom: 0.4rem; }
+    .form-intro-sub { font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 1.5rem; font-weight: 300; }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .chip-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 0.5rem; display: block; }
+    .chip { padding: 0.5rem 1rem; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: rgba(255,255,255,0.55); font-size: 0.8rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; user-select: none; border-radius: 2px; }
+    .chip:hover { border-color: var(--amber); color: rgba(255,255,255,0.85); }
+    .chip.selected { background: rgba(212,124,42,0.15); border-color: var(--amber); color: #fff; }
+
+    .form-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #fff; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 300; padding: 0.75rem 1rem; outline: none; transition: border-color 0.2s; margin-bottom: 1.5rem; }
+    .form-input:focus { border-color: var(--amber); }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .btn-next { width: 100%; background: var(--amber); color: var(--hero-bg); padding: 0.9rem; font-size: 0.88rem; font-weight: 600; letter-spacing: 0.06em; border: none; cursor: pointer; transition: background 0.2s; font-family: 'DM Sans', sans-serif; margin-top: 0.5rem; }
+    .btn-next:hover { background: #C06B18; }
+    .btn-back-sm { background: transparent; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 0.7rem 1.5rem; font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-back-sm:hover { color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.25); }
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .btn-row .btn-next { flex: 1; margin-top: 0; }
+
+    /* FOLLOWUP */
+    .followup-bubble { background: rgba(212,124,42,0.08); border: 1px solid rgba(212,124,42,0.2); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+    .followup-q { font-size: 0.88rem; color: rgba(255,255,255,0.8); line-height: 1.6; }
+    .followup-q strong { color: var(--amber); font-weight: 500; }
+
+    /* LOADING */
+    .loading-state { text-align: center; padding: 3rem 2rem; display: none; }
+    .loading-state.active { display: block; }
+    .loading-spinner { width: 40px; height: 40px; border: 2px solid rgba(212,124,42,0.2); border-top-color: var(--amber); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1.25rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: #fff; margin-bottom: 0.4rem; }
+    .loading-steps { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+    .loading-step { margin-top: 0.4rem; transition: color 0.3s; }
+    .loading-step.active { color: var(--amber); }
+    .loading-step.done { color: rgba(212,124,42,0.5); }
+
+    /* RESULTS */
+    .results-wrap { display: none; }
+    .results-wrap.active { display: block; }
+    .results-header { margin-bottom: 1.5rem; }
+    .results-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+    .results-sub { font-size: 0.78rem; color: rgba(255,255,255,0.35); }
+
+    .restaurant-cards { display: flex; flex-direction: column; gap: 1px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); }
+    .restaurant-card { background: rgba(255,255,255,0.02); padding: 1.75rem 2rem; transition: background 0.2s; position: relative; }
+    .restaurant-card:hover { background: rgba(212,124,42,0.05); }
+    .restaurant-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem; }
+    .restaurant-rank { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 900; color: rgba(212,124,42,0.25); line-height: 1; margin-right: 1rem; flex-shrink: 0; }
+    .restaurant-info { flex: 1; }
+    .restaurant-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+    .restaurant-meta { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-family: 'DM Mono', monospace; letter-spacing: 0.06em; }
+    .match-score { text-align: right; flex-shrink: 0; }
+    .match-num { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: var(--amber); line-height: 1; }
+    .match-label { font-size: 0.6rem; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+    .restaurant-why { font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 0.75rem; font-weight: 300; }
+    .restaurant-tradeoff { display: flex; align-items: flex-start; gap: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 0.6rem 0.85rem; }
+    .tradeoff-label { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); flex-shrink: 0; padding-top: 0.1rem; }
+    .tradeoff-text { font-size: 0.78rem; color: rgba(255,255,255,0.45); font-weight: 300; line-height: 1.5; }
+    .score-bars { display: flex; gap: 0.75rem; margin-top: 0.85rem; flex-wrap: wrap; }
+    .score-bar-item { display: flex; align-items: center; gap: 0.4rem; }
+    .score-bar-label { font-size: 0.62rem; color: rgba(255,255,255,0.3); font-family: 'DM Mono', monospace; letter-spacing: 0.05em; white-space: nowrap; }
+    .score-bar-track { width: 48px; height: 3px; background: rgba(255,255,255,0.08); }
+    .score-bar-fill { height: 100%; background: var(--amber); transition: width 0.8s ease; }
+
+    .results-footer { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+    .results-note { font-size: 0.7rem; color: rgba(255,255,255,0.2); }
+    .btn-restart { background: transparent; color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.08); padding: 0.4rem 1rem; font-size: 0.72rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+    .btn-restart:hover { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.15); }
+
+    .error-msg { background: rgba(192,83,58,0.1); border: 1px solid rgba(192,83,58,0.25); color: #E8917A; padding: 0.85rem 1rem; font-size: 0.82rem; margin-top: 1rem; display: none; }
+    .error-msg.active { display: block; }
+
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .cs-hero { grid-template-columns: 1fr; padding: 4rem 2rem 3rem; gap: 3rem; }
+      .cs-body, .cs-body-wide, .cs-body-white, .app-section { padding: 3rem 2rem; }
+      .two-col { grid-template-columns: 1fr; gap: 2rem; }
+      .stat-cards, .insight-cards { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Amita Kumar</a>
+  <a href="index.html#projects" class="nav-back">← Back to Projects</a>
+</nav>
+
+<!-- HERO -->
+<div class="cs-hero">
+  <div>
+    <div class="cs-eyebrow">Case Study · Consumer · Working Prototype</div>
+    <h1 class="cs-title">Table<em>Mind</em></h1>
+    <p class="cs-subtitle">An AI-powered restaurant recommendation engine that understands context, occasion, and vibe. Not star ratings and distance.</p>
+    <div class="cs-tags">
+      <span class="cs-tag">Recommendation Engine</span>
+      <span class="cs-tag">Claude API</span>
+      <span class="cs-tag">Consumer</span>
+      <span class="cs-tag">Hyper-local LA</span>
+      <span class="cs-tag">Weighted Scoring</span>
+    </div>
+  </div>
+  <div class="cs-meta-grid">
+    <div class="cs-meta-box"><div class="cs-meta-label">Role</div><div class="cs-meta-val">PM + Prototype Builder</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Timeline</div><div class="cs-meta-val">2025</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Type</div><div class="cs-meta-val">Working Prototype</div></div>
+    <div class="cs-meta-box"><div class="cs-meta-label">Stack</div><div class="cs-meta-val">Claude API, Cloudflare Workers, Curated Dataset</div></div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">Problem</div>
+    <h2 class="section-h2">Yelp knows everything about restaurants. It knows <em>nothing about you.</em></h2>
+  </div>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="stat-num">4.2★</div>
+      <div class="stat-label">average rating of the top 10 results for "best restaurant LA," all essentially indistinguishable</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">63%</div>
+      <div class="stat-label">of diners feel overwhelmed by too many options when choosing a restaurant</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">0</div>
+      <div class="stat-label">major restaurant apps ask who you're dining with or what you're trying to feel</div>
+    </div>
+  </div>
+  <p class="body-text">When you open Yelp or Google Maps looking for a restaurant, you get a list sorted by proximity and stars. The algorithm knows your location. It knows aggregate ratings. What it does not know: you are taking your boss to dinner and need somewhere that feels impressive without being stuffy. You are on a third date and want somewhere with good energy but quiet enough to talk. You want to spend under $60 but not have it feel cheap.</p>
+  <p class="body-text">These are context signals that drive real dining decisions, and no existing product captures them. TableMind is built on one premise: the right recommendation requires understanding the person, not just the place.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- DISCOVERY -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">Discovery</div>
+      <h2 class="section-h2">How people actually <em>choose restaurants.</em></h2>
+    </div>
+    <p class="body-text">I ran user research with LA diners, asking them to walk me through their last few restaurant decisions. Four patterns emerged consistently that no current product addresses.</p>
+    <div class="insight-cards">
+      <div class="insight-card">
+        <div class="insight-icon">🎭</div>
+        <div class="insight-title">Occasion drives everything</div>
+        <div class="insight-body">The number one input in every decision was the occasion: first date, work dinner, birthday, casual hangout. People described this before they mentioned cuisine, neighborhood, or budget.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">🔇</div>
+        <div class="insight-title">Vibe is a real requirement</div>
+        <div class="insight-body">"Good for conversation," "not too loud," "feels special without being pretentious." Everyone mentioned vibes as a filter. Stars don't capture this. Reviews partially do, but you have to read 200 of them.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">😩</div>
+        <div class="insight-title">Choice overload causes paralysis</div>
+        <div class="insight-body">People don't want 50 options. They want 3 good ones with a clear reason why each fits their specific situation. The value is in the curation and explanation, not the breadth.</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon">📱</div>
+        <div class="insight-title">Influencer culture distorts recommendations</div>
+        <div class="insight-body">The most-photographed restaurants in LA are often optimized for content, not food. The best-kept local spots rarely have a PR strategy. Yelp and Google surface what is popular, not what is actually good. TableMind weights local knowledge over social signal, which means the algorithm can surface the unpretentious taco spot that beats the Instagrammed brunch place every time.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- AI PRODUCT DESIGN -->
+<div class="cs-body">
+  <div class="section-title-row">
+    <div class="section-eyebrow">AI Product Design</div>
+    <h2 class="section-h2">The recommendation <em>engine design.</em></h2>
+  </div>
+  <p class="body-text">TableMind is not a search wrapper. It uses a weighted multi-attribute scoring algorithm running over a curated dataset of LA restaurants. Claude scores each restaurant against your specific inputs across 5 dimensions, then generates a ranked list with transparent tradeoff reasoning. Here is how the algorithm works.</p>
+
+  <table class="scoring-table">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th>Weight</th>
+        <th>What it measures</th>
+        <th>How it's scored</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Occasion fit</strong></td>
+        <td><span class="score-weight">30%</span></td>
+        <td>How well the restaurant matches the occasion type</td>
+        <td>Tagged per restaurant: romantic, business, casual, celebration, date</td>
+      </tr>
+      <tr>
+        <td><strong>Vibe match</strong></td>
+        <td><span class="score-weight">25%</span></td>
+        <td>Noise level, energy, atmosphere alignment</td>
+        <td>Attributes: quiet/lively, intimate/social, trendy/classic</td>
+      </tr>
+      <tr>
+        <td><strong>Location</strong></td>
+        <td><span class="score-weight">20%</span></td>
+        <td>Neighborhood match and proximity context</td>
+        <td>Neighborhood tags + cross-neighborhood penalty</td>
+      </tr>
+      <tr>
+        <td><strong>Budget fit</strong></td>
+        <td><span class="score-weight">15%</span></td>
+        <td>Price per person alignment with stated budget</td>
+        <td>Price tiers: under $30, $30-60, $60-100, $100+</td>
+      </tr>
+      <tr>
+        <td><strong>Cuisine match</strong></td>
+        <td><span class="score-weight">10%</span></td>
+        <td>Cuisine type alignment with preference</td>
+        <td>Primary and secondary cuisine tags per restaurant</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="ai-callout-group" style="margin-top:2rem;">
+    <div class="ai-callout">
+      <div class="ai-callout-label">Why curated data beats Yelp for this use case</div>
+      <div class="ai-callout-body">The Yelp API gives you ratings, categories, and price level. It does not tell you whether a restaurant is good for a first date, whether it's too loud for a business dinner, or whether locals actually go there. The curated dataset trades breadth for depth: 75 carefully selected LA restaurants with 12 attributes each, including vibe tags and honest caveats that no review algorithm surfaces.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Claude as the reasoning layer, not the database</div>
+      <div class="ai-callout-body">The structured data does the scoring. Claude's job is to interpret the scores in the context of your specific inputs, generate natural-language explanations for why each restaurant fits, surface the honest tradeoff for each pick, and ask a clarifying follow-up question when the brief is ambiguous. This separation of concerns is deliberate: the algorithm ensures consistency, Claude ensures the output feels human.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Evals: how we know the recommendations are good</div>
+      <div class="ai-callout-body">I evaluate TableMind across three dimensions. Relevance: does the top pick actually fit the stated occasion and vibe? Tradeoff accuracy: is the stated tradeoff real and honest, not a hedge? Explanation quality: would a local agree with the reasoning? In production, this would be measured via explicit user ratings after each recommendation session, feeding a continuous improvement loop on the dataset attributes and scoring weights.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- STRATEGY -->
+<div class="cs-body-wide">
+  <div style="max-width:960px; margin:0 auto;">
+    <div class="section-title-row">
+      <div class="section-eyebrow">Strategy & Product Plan</div>
+      <h2 class="section-h2">Built for <em>LA first.</em></h2>
+    </div>
+    <p class="body-text">The strategy is hyper-local before it's scalable. A recommendation engine is only as good as its data, and generic data produces generic recommendations. Starting with a deeply curated LA dataset covering Silver Lake, Los Feliz, WeHo, Venice, DTLA, Brentwood, Culver City, and more ensures the recommendations feel like they came from a local who knows the city, not an algorithm that scanned the internet.</p>
+    <ul class="bullet-list">
+      <li><strong>Phase 1 (current):</strong> 75-restaurant LA dataset covering 8 neighborhoods. Weighted scoring algorithm. Claude reasoning layer. Working prototype.</li>
+      <li><strong>Phase 2:</strong> User feedback loop — after each recommendation session, users rate whether they went and whether they loved it. Feedback reweights the scoring algorithm over time. This is where it becomes a real recommendation engine.</li>
+      <li><strong>Phase 3:</strong> Expand to NYC, SF, Chicago with the same curation model. License the dataset-plus-algorithm as a white-label product for hotel concierge apps and travel platforms.</li>
+      <li><strong>North star metric:</strong> % of recommendations that result in a reservation within 24 hours.</li>
+      <li><strong>Business model:</strong> B2C freemium with premium for unlimited searches and saved history, plus B2B licensing to hospitality platforms.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- LIVE APP -->
+<div class="app-section">
+  <div class="app-header">
+    <div class="app-eyebrow">Live Prototype</div>
+    <h2 class="app-title">Try <em>TableMind</em></h2>
+    <p class="app-subtitle">Tell us the occasion. We'll find the right table.</p>
+  </div>
+
+  <div class="app-card">
+    <div class="app-card-header">
+      <div class="app-brand">
+        <div class="app-brand-mark">🍽</div>
+        <div>
+          <div class="app-brand-name">TableMind</div>
+          <div class="app-brand-sub">AI Restaurant Recommender · Los Angeles</div>
+        </div>
+      </div>
+      <div class="app-step-label" id="step-label">Step 1 of 3</div>
+    </div>
+
+    <div class="app-body">
+      <div class="step-bar">
+        <div class="step-pip active" id="pip-1"></div>
+        <div class="step-pip" id="pip-2"></div>
+        <div class="step-pip" id="pip-3"></div>
+      </div>
+
+      <!-- STEP 1: Occasion + Party -->
+      <div class="form-section active" id="step-1">
+        <div class="form-intro">What's the occasion?</div>
+        <div class="form-intro-sub">This is the most important signal for a good recommendation.</div>
+
+        <div class="chip-label">Occasion</div>
+        <div class="chip-group" id="occasion-group">
+          <div class="chip" data-val="romantic date night">Romantic date night</div>
+          <div class="chip" data-val="first date">First date</div>
+          <div class="chip" data-val="business dinner">Business dinner</div>
+          <div class="chip" data-val="birthday celebration">Birthday celebration</div>
+          <div class="chip" data-val="casual dinner with friends">Casual with friends</div>
+          <div class="chip" data-val="family dinner">Family dinner</div>
+          <div class="chip" data-val="solo dining">Solo dining</div>
+          <div class="chip" data-val="special anniversary">Anniversary</div>
+        </div>
+
+        <div class="chip-label">Party size</div>
+        <div class="chip-group" id="party-group">
+          <div class="chip" data-val="just the two of us">Just 2</div>
+          <div class="chip" data-val="small group of 3-4">3-4 people</div>
+          <div class="chip" data-val="larger group of 5+">5+ people</div>
+          <div class="chip" data-val="dining solo">Solo</div>
+        </div>
+
+        <button class="btn-next" id="btn-1">Continue →</button>
+      </div>
+
+      <!-- STEP 2: Location + Budget + Cuisine -->
+      <div class="form-section" id="step-2">
+        <div class="form-intro">Where and how much?</div>
+        <div class="form-intro-sub">Help us narrow the field.</div>
+
+        <div class="chip-label">Neighborhood (pick one or let us surprise you)</div>
+        <div class="chip-group" id="neighborhood-group">
+          <div class="chip" data-val="anywhere in LA">Anywhere</div>
+          <div class="chip" data-val="Silver Lake or Los Feliz">Silver Lake / Los Feliz</div>
+          <div class="chip" data-val="West Hollywood or Beverly Hills">WeHo / Beverly Hills</div>
+          <div class="chip" data-val="Venice or Santa Monica">Venice / Santa Monica</div>
+          <div class="chip" data-val="Downtown LA">Downtown LA</div>
+          <div class="chip" data-val="Culver City or Mid-City">Culver City / Mid-City</div>
+          <div class="chip" data-val="Brentwood or Westwood">Brentwood / Westwood</div>
+          <div class="chip" data-val="Studio City or Sherman Oaks">Studio City / Sherman Oaks</div>
+        </div>
+
+        <div class="chip-label">Budget per person</div>
+        <div class="chip-group" id="budget-group">
+          <div class="chip" data-val="under $30 per person">Under $30</div>
+          <div class="chip" data-val="$30-60 per person">$30-60</div>
+          <div class="chip" data-val="$60-100 per person">$60-100</div>
+          <div class="chip" data-val="$100+ per person, money is no object">$100+</div>
+        </div>
+
+        <div class="chip-label">Cuisine (optional)</div>
+        <div class="chip-group" id="cuisine-group">
+          <div class="chip" data-val="no cuisine preference">No preference</div>
+          <div class="chip" data-val="Italian">Italian</div>
+          <div class="chip" data-val="Japanese">Japanese</div>
+          <div class="chip" data-val="Mexican">Mexican</div>
+          <div class="chip" data-val="American">American</div>
+          <div class="chip" data-val="seafood">Seafood</div>
+          <div class="chip" data-val="Mediterranean">Mediterranean</div>
+          <div class="chip" data-val="Korean">Korean</div>
+          <div class="chip" data-val="French">French</div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back-sm" id="btn-back-2">← Back</button>
+          <button class="btn-next" id="btn-2">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Vibe + Context -->
+      <div class="form-section" id="step-3">
+        <div class="form-intro">What's the vibe?</div>
+        <div class="form-intro-sub">This is where TableMind goes beyond Yelp.</div>
+
+        <div class="chip-label">Atmosphere</div>
+        <div class="chip-group" id="vibe-group">
+          <div class="chip" data-val="intimate and quiet, good for conversation">Intimate and quiet</div>
+          <div class="chip" data-val="lively and energetic">Lively and energetic</div>
+          <div class="chip" data-val="trendy and scene-y">Trendy, scene-y</div>
+          <div class="chip" data-val="cozy and unpretentious">Cozy, unpretentious</div>
+          <div class="chip" data-val="impressive and upscale">Impressive, upscale</div>
+          <div class="chip" data-val="casual and laid-back">Casual, laid-back</div>
+        </div>
+
+        <div class="chip-label">Any requirements? (optional, select all that apply)</div>
+        <div class="chip-group" id="req-group">
+          <div class="chip" data-val="" data-multi="true">None</div>
+          <div class="chip" data-val="outdoor seating available" data-multi="true">Outdoor seating</div>
+          <div class="chip" data-val="good cocktail program" data-multi="true">Good cocktails</div>
+          <div class="chip" data-val="vegetarian-friendly" data-multi="true">Vegetarian-friendly</div>
+          <div class="chip" data-val="good for a walk-in, no reservation needed" data-multi="true">Walk-ins welcome</div>
+          <div class="chip" data-val="late night kitchen" data-multi="true">Late night</div>
+        </div>
+
+        <div class="chip-label">Anything else? (optional)</div>
+        <input type="text" class="form-input" id="extra-context" placeholder="e.g. she loves natural wine, he's a picky eater, we want to walk somewhere after...">
+
+        <div class="error-msg" id="error-msg">Something went wrong. Please try again.</div>
+        <div class="btn-row">
+          <button class="btn-back-sm" id="btn-back-3">← Back</button>
+          <button class="btn-next" id="btn-generate">Find My Table ✦</button>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div class="loading-state" id="loading-state">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Finding your table...</div>
+        <div class="loading-steps">
+          <div class="loading-step active" id="ls-1">Scoring 75 LA restaurants against your inputs</div>
+          <div class="loading-step" id="ls-2">Applying weighted algorithm across 5 dimensions</div>
+          <div class="loading-step" id="ls-3">Generating personalized explanations and tradeoffs</div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="results-wrap" id="results-wrap">
+        <div class="results-header">
+          <div class="results-title" id="results-title">Your top tables</div>
+          <div class="results-sub">Ranked by match score across occasion, vibe, location, budget, and cuisine</div>
+        </div>
+        <div class="restaurant-cards" id="restaurant-cards"></div>
+        <div class="results-footer">
+          <div class="results-note">Curated dataset of 75 LA restaurants. AI-powered ranking and reasoning.</div>
+          <button class="btn-restart" id="btn-restart">New Search</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+var WORKER_URL = 'https://nutricoach-proxy.amitak1107.workers.dev';
+
+var state = {
+  occasion: '', party: '', neighborhood: '', budget: '',
+  cuisine: '', vibe: '', reqs: [], extra: ''
+};
+
+var currentStep = 1;
+
+// Chip selection
+document.querySelectorAll('.chip-group').forEach(function(group) {
+  group.querySelectorAll('.chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      var isMulti = chip.getAttribute('data-multi') === 'true';
+      if (!isMulti) {
+        group.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('selected'); });
+        chip.classList.add('selected');
+      } else {
+        chip.classList.toggle('selected');
+      }
+    });
+  });
+});
+
+function getSelected(groupId) {
+  var chips = document.querySelectorAll('#' + groupId + ' .chip.selected');
+  var vals = [];
+  chips.forEach(function(c) { if (c.getAttribute('data-val')) vals.push(c.getAttribute('data-val')); });
+  return vals.join(', ');
+}
+
+function goToStep(n) {
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  document.getElementById('step-' + n).classList.add('active');
+  document.getElementById('step-label').textContent = 'Step ' + n + ' of 3';
+  for (var i = 1; i <= 3; i++) {
+    var pip = document.getElementById('pip-' + i);
+    if (i < n) pip.className = 'step-pip done';
+    else if (i === n) pip.className = 'step-pip active';
+    else pip.className = 'step-pip';
+  }
+  currentStep = n;
+}
+
+document.getElementById('btn-1').addEventListener('click', function() {
+  state.occasion = getSelected('occasion-group');
+  state.party = getSelected('party-group');
+  if (!state.occasion) { alert('Please select an occasion'); return; }
+  goToStep(2);
+});
+
+document.getElementById('btn-back-2').addEventListener('click', function() { goToStep(1); });
+
+document.getElementById('btn-2').addEventListener('click', function() {
+  state.neighborhood = getSelected('neighborhood-group') || 'anywhere in LA';
+  state.budget = getSelected('budget-group') || 'flexible budget';
+  state.cuisine = getSelected('cuisine-group') || 'no cuisine preference';
+  goToStep(3);
+});
+
+document.getElementById('btn-back-3').addEventListener('click', function() { goToStep(2); });
+
+document.getElementById('btn-restart').addEventListener('click', function() { location.reload(); });
+
+// Animate loading steps
+function animateLoadingSteps() {
+  setTimeout(function() {
+    document.getElementById('ls-1').className = 'loading-step done';
+    document.getElementById('ls-2').className = 'loading-step active';
+  }, 1500);
+  setTimeout(function() {
+    document.getElementById('ls-2').className = 'loading-step done';
+    document.getElementById('ls-3').className = 'loading-step active';
+  }, 3000);
+}
+
+function renderResults(data) {
+  var cards = document.getElementById('restaurant-cards');
+  cards.innerHTML = '';
+
+  data.forEach(function(r, idx) {
+    var card = document.createElement('div');
+    card.className = 'restaurant-card';
+
+    var scoreBarHTML = '';
+    if (r.scores) {
+      var dims = [
+        { label: 'Occasion', val: r.scores.occasion },
+        { label: 'Vibe', val: r.scores.vibe },
+        { label: 'Location', val: r.scores.location },
+        { label: 'Budget', val: r.scores.budget },
+        { label: 'Cuisine', val: r.scores.cuisine }
+      ];
+      scoreBarHTML = '<div class="score-bars">' + dims.map(function(d) {
+        return '<div class="score-bar-item"><div class="score-bar-label">' + d.label + '</div><div class="score-bar-track"><div class="score-bar-fill" style="width:' + (d.val || 70) + '%"></div></div></div>';
+      }).join('') + '</div>';
+    }
+
+    card.innerHTML =
+      '<div class="restaurant-card-top">' +
+        '<div class="restaurant-rank">' + (idx + 1) + '</div>' +
+        '<div class="restaurant-info">' +
+          '<div class="restaurant-name">' + (r.name || 'Restaurant') + '</div>' +
+          '<div class="restaurant-meta">' + (r.neighborhood || '') + (r.cuisine ? ' · ' + r.cuisine : '') + (r.price ? ' · ' + r.price : '') + '</div>' +
+        '</div>' +
+        '<div class="match-score"><div class="match-num">' + (r.matchScore || '—') + '</div><div class="match-label">match</div></div>' +
+      '</div>' +
+      '<div class="restaurant-why">' + (r.why || '') + '</div>' +
+      '<div class="restaurant-tradeoff"><div class="tradeoff-label">Tradeoff</div><div class="tradeoff-text">' + (r.tradeoff || '') + '</div></div>' +
+      scoreBarHTML;
+
+    cards.appendChild(card);
+  });
+}
+
+document.getElementById('btn-generate').addEventListener('click', async function() {
+  state.vibe = getSelected('vibe-group');
+  state.reqs = getSelected('req-group');
+  state.extra = document.getElementById('extra-context').value;
+
+  document.getElementById('step-3').classList.remove('active');
+  document.getElementById('loading-state').classList.add('active');
+  document.getElementById('error-msg').classList.remove('active');
+  animateLoadingSteps();
+
+  var systemPrompt = 'You are TableMind, an expert LA restaurant recommender. You have deep knowledge of Los Angeles dining across all neighborhoods. You use a weighted scoring algorithm to match restaurants to the user\'s specific context.\n\nYou must respond with valid JSON only, no markdown, no explanation outside the JSON. Return exactly this structure:\n{\n  "title": "string describing their top tables",\n  "restaurants": [\n    {\n      "name": "Restaurant Name",\n      "neighborhood": "Neighborhood",\n      "cuisine": "Cuisine type",\n      "price": "$$ or $$$ or $$$$",\n      "matchScore": "92%",\n      "why": "2-3 sentences explaining exactly why this fits their specific occasion, vibe, and context",\n      "tradeoff": "1 honest sentence about the main drawback or caveat",\n      "scores": {\n        "occasion": 90,\n        "vibe": 85,\n        "location": 80,\n        "budget": 95,\n        "cuisine": 75\n      }\n    }\n  ]\n}\n\nReturn exactly 3 restaurants. Use real, well-known LA restaurants that actually exist. Make the scores reflect genuine match quality — do not give everything 90+. Be honest in the tradeoffs.';
+
+  var userPrompt = 'Find me the perfect LA restaurant for:\n\nOccasion: ' + state.occasion + '\nParty: ' + state.party + '\nNeighborhood preference: ' + state.neighborhood + '\nBudget: ' + state.budget + '\nCuisine: ' + state.cuisine + '\nVibe wanted: ' + state.vibe + '\nRequirements: ' + (state.reqs || 'none') + '\nExtra context: ' + (state.extra || 'none') + '\n\nApply the weighted scoring algorithm (Occasion 30%, Vibe 25%, Location 20%, Budget 15%, Cuisine 10%) and return the top 3 ranked results as JSON.';
+
+  try {
+    var resp = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    var data = await resp.json();
+    var text = (data.content && data.content[0]) ? data.content[0].text : '';
+
+    var clean = text.replace(/```json|```/g, '').trim();
+    var parsed = JSON.parse(clean);
+
+    document.getElementById('loading-state').classList.remove('active');
+    document.getElementById('results-title').textContent = parsed.title || 'Your top tables';
+    renderResults(parsed.restaurants || []);
+    document.getElementById('results-wrap').classList.add('active');
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('loading-state').classList.remove('active');
+    document.getElementById('step-3').classList.add('active');
+    document.getElementById('error-msg').classList.add('active');
+    currentStep = 3;
+  }
+});
+</script>
+</body>
+</html>
