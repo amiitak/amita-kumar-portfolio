@@ -256,7 +256,7 @@
     </div>
   </div>
   <p class="body-text">Most nutrition apps start with what you ate. They log calories, compute macros from a BMI formula, and return a plan that looks the same for everyone at your height and weight. The plan ignores your sleep, your stress, your schedule, and what your body actually looks like.</p>
-  <p class="body-text">The insight behind NutriCoach: personalization has to start with the whole person. Combining a photo (body composition context) with goals and lifestyle signals can produce recommendations that actually fit — and plans that fit get followed.</p>
+  <p class="body-text">The insight behind NutriCoach: personalization has to start with the whole person. Combining a photo (body composition context) with goals and lifestyle signals can produce recommendations that actually fit, and plans that fit get followed.</p>
   <p class="body-text">In short: my mandate was to build a health product that used AI in a meaningfully differentiated way, not just as a wrapper around calorie math.</p>
 </div>
 
@@ -275,7 +275,7 @@
         <div class="chart-wrap">
           <div class="chart-title">App Churn Rate by Input Friction Level</div>
           <canvas id="churnChart" height="200"></canvas>
-          <div class="chart-note">Not actual artifact, generated via UXPilot for privacy reasons</div>
+          <div class="chart-note">Not actual artifact, generated for portfolio purposes</div>
         </div>
       </div>
       <div>
@@ -295,14 +295,14 @@
             </tbody>
           </table>
         </div>
-        <div style="font-size:0.7rem; color:var(--ink-light); margin-top:0.5rem; font-style:italic;">Not actual artifact, generated via UXPilot for privacy reasons</div>
+        <div style="font-size:0.7rem; color:var(--ink-light); margin-top:0.5rem; font-style:italic;">Not actual artifact, generated for portfolio purposes</div>
       </div>
     </div>
     <p class="body-text" style="margin-top:2rem;">Three consistent failure patterns emerged from the research:</p>
     <ul class="bullet-list">
       <li><strong>Calorie counting fatigue.</strong> Manual food logging is the number one reason for churn across all major apps. Users drop off when the product feels like a second job.</li>
       <li><strong>One-size-fits-all outputs.</strong> BMI-based recommendations ignore body composition, muscle mass, and lifestyle context. Users consistently said plans didn't feel built for them.</li>
-      <li><strong>Nutrition and fitness are siloed.</strong> Most apps do food OR fitness — users have to stitch together multiple tools, losing the compounding effect of integrated recommendations.</li>
+      <li><strong>Nutrition and fitness are siloed.</strong> Most apps do food OR fitness. Users have to stitch together multiple tools, losing the compounding effect of integrated recommendations.</li>
     </ul>
   </div>
 </div>
@@ -321,7 +321,7 @@
   <div class="ai-callout-group">
     <div class="ai-callout">
       <div class="ai-callout-label">Model Selection</div>
-      <p class="ai-callout-body">I chose Claude Sonnet for its multimodal capability — vision and text in a single API call — combined with strong instruction-following for structured output. Compared to GPT-4o, Sonnet offered comparable quality at lower cost for this use case, which matters when modeling unit economics at scale.</p>
+      <p class="ai-callout-body">I chose Claude Sonnet for its multimodal capability (vision and text in a single API call) combined with strong instruction-following for structured output. Compared to GPT-4o, Sonnet offered comparable quality at lower cost for this use case, which matters when modeling unit economics at scale.</p>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Data & Input Pipeline</div>
@@ -329,15 +329,15 @@
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Cost Modeling</div>
-      <p class="ai-callout-body">A single NutriCoach generation uses approximately 2,500 input tokens plus ~1,600 image tokens, at Claude Sonnet pricing of ~$3/M tokens. Estimated cost per generation: ~$0.02. At 10K MAU with 2 plan generations per month, that's roughly $400/month — well within MVP budget before introducing a paywall.</p>
+      <p class="ai-callout-body">A single NutriCoach generation uses approximately 2,500 input tokens plus ~1,600 image tokens, at Claude Sonnet pricing of ~$3/M tokens. Estimated cost per generation: ~$0.02. At 10K MAU with 2 plan generations per month, that's roughly $400/month, well within MVP budget before introducing a paywall.</p>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Infrastructure</div>
-      <p class="ai-callout-body">An API key can never be exposed client-side. I built a Cloudflare Worker as a serverless proxy that handles CORS, authenticates with Anthropic, and forwards requests. The free tier handles up to 100K requests per day with zero backend infrastructure — appropriate for an MVP and easy to swap for a Node backend at scale.</p>
+      <p class="ai-callout-body">An API key can never be exposed client-side. I built a Cloudflare Worker as a serverless proxy that handles CORS, authenticates with Anthropic, and forwards requests. The free tier handles up to 100K requests per day with zero backend infrastructure, appropriate for an MVP and easy to swap for a Node backend at scale.</p>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Evals & Output Quality</div>
-      <p class="ai-callout-body">The prompt enforces a structured 4-section output format (Meal Plan, Workout Plan, Macros, Grocery List). The parser validates each section independently — if a section is missing or malformed, the system degrades gracefully rather than failing silently. In production, this structure would feed a scoring rubric measuring output specificity, dietary compliance, and caloric accuracy against targets.</p>
+      <p class="ai-callout-body">The prompt enforces a structured 4-section output format (Meal Plan, Workout Plan, Macros, Grocery List). The parser validates each section independently. If a section is missing or malformed, the system degrades gracefully rather than failing silently. In production, this structure would feed a scoring rubric measuring output specificity, dietary compliance, and caloric accuracy against targets.</p>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">UX & Launch</div>
@@ -357,11 +357,11 @@
     </div>
     <p class="body-text">With those findings in mind, I built a strategy around flipping the input model entirely. The core product decisions:</p>
     <ul class="bullet-list">
-      <li>Use computer vision to extract body composition signals from a user photo — replacing the BMI formula with actual visual context</li>
+      <li>Use Claude Vision to extract body composition signals from a user photo, replacing the BMI formula with actual visual context</li>
       <li>Combine visual signals with structured lifestyle inputs (sleep, stress, activity, dietary restrictions) in a single multimodal API call</li>
-      <li>Enforce a structured 4-section output format to enable section-level validation and tabbed display — a lightweight eval pattern</li>
+      <li>Enforce a structured 4-section output format to enable section-level validation and tabbed display, acting as a lightweight eval pattern</li>
       <li>Route all API calls through a serverless proxy to keep the key secure while maintaining a zero-backend architecture</li>
-      <li>Design the intake as a 3-step form to keep setup under 3 minutes — directly addressing the logging fatigue problem</li>
+      <li>Design the intake as a 3-step form to keep setup under 3 minutes, directly addressing the logging fatigue problem</li>
     </ul>
 
     <div class="flow-wrap">
@@ -687,7 +687,7 @@ function getSection(text, num) {
   }
   var chunk = text.slice(start, end);
   chunk = chunk.replace(/^#+\s*/gm, '');
-  chunk = chunk.replace(/SECTION \d+\s*[-:]?\s*(WEEKLY MEAL PLAN|WORKOUT PLAN|MACRO BREAKDOWN|GROCERY LIST)?:?/gi, '');
+  chunk = chunk.replace(/SECTION \d+\s*[-:–]?\s*(WEEKLY MEAL PLAN|WORKOUT PLAN|MACRO(S| BREAKDOWN)?|GROCERY( LIST)?)?:?/gi, '');
   chunk = chunk.replace(/^-{3,}$/gm, '');
   return chunk.trim();
 }
@@ -712,7 +712,7 @@ async function generatePlan() {
   document.getElementById('step-3-dot').className = 'step-dot done';
 
   var profile = 'Name: ' + name + ', Age: ' + (age || 'not provided') + ', Height: ' + (height || 'not provided') + ', Weight: ' + (weight || 'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes || 'none');
-  var prompt = 'My profile: ' + profile + '\n\nCreate my complete personalized plan with these 4 clearly labeled sections:\n\nSECTION 1 - WEEKLY MEAL PLAN:\nA 7-day meal plan with breakfast, lunch, dinner, and snacks. Be specific with foods and portions.\n\nSECTION 2 - WORKOUT PLAN:\nA weekly workout schedule with specific exercises, sets, reps, and rest periods.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calorie target and macro split (protein, carbs, fats) with explanation.\n\nSECTION 4 - GROCERY LIST:\nWeekly grocery list organized by category.';
+  var prompt = 'My profile: ' + profile + '\n\nCreate my complete personalized plan. You MUST use EXACTLY these section headers with no variation:\n\nSECTION 1 - WEEKLY MEAL PLAN:\nA 7-day meal plan with breakfast, lunch, dinner, and snacks. Be specific with foods and portions.\n\nSECTION 2 - WORKOUT PLAN:\nA weekly workout schedule with specific exercises, sets, reps, and rest periods.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calorie target and macro split (protein, carbs, fats) with explanation.\n\nSECTION 4 - GROCERY LIST:\nWeekly grocery list organized by category. Do not add any text after SECTION 4.';
 
   try {
     var messages = [];
