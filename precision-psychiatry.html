@@ -273,7 +273,7 @@
           </div>
           <div class="ai-callout">
             <div class="ai-callout-label">ML model maturity</div>
-            <div class="ai-callout-body">Graph neural networks and transformer architectures have shown strong performance on brain connectivity data — achieving 65-72% accuracy in predicting SSRI response in recent research, compared to ~50% for clinical judgment alone. Not a silver bullet, but a meaningful signal.</div>
+            <div class="ai-callout-body">Graph neural networks and transformer architectures have shown strong performance on brain connectivity data, achieving 65-72% accuracy in predicting SSRI response in recent research, compared to ~50% for clinical judgment alone. Not a silver bullet, but a meaningful signal.</div>
           </div>
           <div class="ai-callout">
             <div class="ai-callout-label">Regulatory momentum</div>
@@ -293,7 +293,7 @@
     <div class="section-eyebrow">Discovery & Stakeholder Research</div>
     <h2 class="section-h2">Three stakeholders, <em>one system.</em></h2>
   </div>
-  <p class="body-text">A clinical decision support tool sits at the intersection of patients, clinicians, and payers — each with different incentives, constraints, and definitions of success. Getting the product right requires understanding all three.</p>
+  <p class="body-text">A clinical decision support tool sits at the intersection of patients, clinicians, and payers. Each has different incentives, constraints, and definitions of success. Getting the product right requires understanding all three.</p>
   <div class="stakeholder-cards">
     <div class="stakeholder-card">
       <div class="stakeholder-icon">🧠</div>
@@ -343,7 +343,7 @@
       <div class="section-eyebrow">AI Product Design</div>
       <h2 class="section-h2">Designing for <em>high stakes.</em></h2>
     </div>
-    <p class="body-text">This is not a chatbot. The AI design decisions here carry clinical and legal weight. Every choice — from model architecture to output format — needs to be made with that gravity in mind.</p>
+    <p class="body-text">This is not a chatbot. The AI design decisions here carry clinical and legal weight. Every choice, from model architecture to output format, needs to be made with that gravity in mind.</p>
 
     <div class="ai-callout-group">
       <div class="ai-callout">
@@ -356,7 +356,7 @@
       </div>
       <div class="ai-callout warning">
         <div class="ai-callout-label">Bias & fairness: critical risk</div>
-        <div class="ai-callout-body">Neuroimaging datasets are historically skewed toward white, highly educated, Western populations. A model trained on biased data will produce biased treatment recommendations — potentially at the expense of already-underserved mental health populations. Bias auditing across race, gender, age, and socioeconomic status is not optional. It is a launch blocker.</div>
+        <div class="ai-callout-body">Neuroimaging datasets are historically skewed toward white, highly educated, Western populations. A model trained on biased data will produce biased treatment recommendations, potentially at the expense of already-underserved mental health populations. Bias auditing across race, gender, age, and socioeconomic status is not optional. It is a launch blocker.</div>
       </div>
       <div class="ai-callout">
         <div class="ai-callout-label">Explainability requirement</div>
@@ -432,7 +432,7 @@
       <div class="section-eyebrow-light section-eyebrow">Product Vision & PRD</div>
       <h2 class="section-h2 section-h2-light">What we're actually <em>building.</em></h2>
     </div>
-    <p class="body-text body-text-light">The MVP is a clinical decision support module embedded in the psychiatrist's EHR workflow. It surfaces a treatment response probability profile at the moment of prescribing — not a separate app, not a separate login. Here's the core PRD framework.</p>
+    <p class="body-text body-text-light">The MVP is a clinical decision support module embedded in the psychiatrist's EHR workflow. It surfaces a treatment response probability profile at the moment of prescribing. No separate app, no separate login. Here's the core PRD framework.</p>
 
     <div class="prd-grid">
       <div class="prd-box">
@@ -487,7 +487,7 @@
       <div class="risk-label">Bias & Equity</div>
       <div>
         <div class="risk-title">Model underperforms for underrepresented populations</div>
-        <div class="risk-body">Neuroimaging datasets historically skew toward white, educated, Western populations. A model trained on biased data produces biased recommendations — potentially widening the mental health disparities it's meant to address. Mitigation: mandatory demographic performance reporting as a launch condition, diversity requirements built into data partnership agreements with academic medical centers, and a published equity commitment reviewed by an independent ethics board before any commercial deployment.</div>
+        <div class="risk-body">Neuroimaging datasets historically skew toward white, educated, Western populations. A model trained on biased data produces biased recommendations, potentially widening the mental health disparities it is meant to address. Mitigation: mandatory demographic performance reporting as a launch condition, diversity requirements built into data partnership agreements with academic medical centers, and a published equity commitment reviewed by an independent ethics board before any commercial deployment.</div>
       </div>
       <div class="risk-severity critical">Critical</div>
     </div>
@@ -587,7 +587,7 @@
     <div class="section-eyebrow">Evals Framework</div>
     <h2 class="section-h2">Measuring what <em>actually matters.</em></h2>
   </div>
-  <p class="body-text">Evals are to AI products what unit tests are to traditional software — except harder, because LLM outputs are non-deterministic and "correct" is rarely binary. For a high-stakes clinical tool, defining and running the right evals isn't optional. It's the foundation of trust.</p>
+  <p class="body-text">Evals are to AI products what unit tests are to traditional software, except harder, because LLM outputs are non-deterministic and "correct" is rarely binary. For a high-stakes clinical tool, defining and running the right evals isn't optional. It's the foundation of trust.</p>
   <p class="body-text">I'd structure the eval program around the three-step lifecycle: Analyze failure modes qualitatively, Measure them quantitatively, Improve based on evidence. That cycle runs continuously, not just at launch.</p>
 
   <div class="eval-lifecycle">
@@ -604,7 +604,7 @@
     <div class="eval-step improve">
       <div class="eval-step-num">Step 3</div>
       <div class="eval-step-title">Improve</div>
-      <div class="eval-step-body">Make targeted interventions based on measurement data — prompt changes for the LLM summary layer, retraining for the GNN on underrepresented populations, architecture changes for specific failure modes. Then cycle back to Analyze. The loop never stops — it just gets faster as your eval infrastructure matures.</div>
+      <div class="eval-step-body">Make targeted interventions based on measurement data: prompt changes for the LLM summary layer, retraining for the GNN on underrepresented populations, architecture changes for specific failure modes. Then cycle back to Analyze. The loop never stops. It just gets faster as your eval infrastructure matures.</div>
     </div>
   </div>
 
@@ -632,7 +632,7 @@
     </div>
     <div class="eval-metric">
       <div class="eval-metric-name">Clinician override rate</div>
-      <div class="eval-metric-desc">What % of cases does the psychiatrist override the top recommendation? High override rate signals low trust or poor calibration. Zero override rate signals over-reliance — also a problem.</div>
+      <div class="eval-metric-desc">What % of cases does the psychiatrist override the top recommendation? High override rate signals low trust or poor calibration. Zero override rate signals over-reliance, which is also a problem.</div>
       <div class="eval-metric-type human">Human</div>
     </div>
     <div class="eval-metric">
@@ -653,7 +653,7 @@
     </div>
     <p class="body-text body-text-light">I did not build this because I expect to ship a psychiatric AI tool. I built it because the thinking required to do it right is exactly what an AI PM needs in any high-stakes domain.</p>
     <p class="body-text body-text-light">The questions here show up everywhere AI touches consequential decisions: how do you validate a system that influences outcomes you can't easily measure? How do you design for explainability when users need to trust, not just use, the output? How do you move fast without moving recklessly?</p>
-    <p class="body-text body-text-light">These are not engineering questions. They're product questions. The PM's job is to own them explicitly — not hand them off to ethicists or lawyers after the code is written.</p>
+    <p class="body-text body-text-light">These are not engineering questions. They're product questions. The PM's job is to own them explicitly, not hand them off to ethicists or lawyers after the code is written.</p>
   </div>
 </div>
 
