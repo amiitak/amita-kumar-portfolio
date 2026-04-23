@@ -443,7 +443,7 @@
             <div id="upload-placeholder">
               <div class="upload-icon">📸</div>
               <div class="upload-text">Click to upload or drag and drop</div>
-              <div class="upload-sub">JPG, PNG up to 10MB · Full body or upper body works best</div>
+              <div class="upload-sub">JPG, PNG up to 10MB · Full body or upper body photo of yourself works best. Photos of objects or clothing will not give accurate results.</div>
             </div>
             <div id="upload-preview-wrap" style="display:none">
               <img id="upload-preview-img" class="upload-preview" src="" alt="Your photo">
@@ -660,36 +660,22 @@ function getSelected(groupId) {
 }
 
 function getSection(text, num) {
-  var patterns = [
-    'SECTION ' + num + ' - ',
-    'SECTION ' + num + '-',
-    'SECTION ' + num + ':',
-    'SECTION ' + num + '\n',
-    'SECTION ' + num
-  ];
-  var nextPatterns = [
-    'SECTION ' + (num+1) + ' - ',
-    'SECTION ' + (num+1) + '-',
-    'SECTION ' + (num+1) + ':',
-    'SECTION ' + (num+1) + '\n',
-    'SECTION ' + (num+1)
-  ];
-  var start = -1;
-  for (var i = 0; i < patterns.length; i++) {
-    start = text.indexOf(patterns[i]);
-    if (start > -1) break;
-  }
-  if (start === -1) return '';
-  var end = text.length;
-  for (var j = 0; j < nextPatterns.length; j++) {
-    var candidate = text.indexOf(nextPatterns[j], start + 1);
-    if (candidate > -1 && candidate < end) { end = candidate; break; }
-  }
-  var chunk = text.slice(start, end);
-  chunk = chunk.replace(/^#+\s*/gm, '');
-  chunk = chunk.replace(/SECTION \d+\s*[-:–]?\s*(WEEKLY MEAL PLAN|WORKOUT PLAN|MACRO(S| BREAKDOWN)?|GROCERY( LIST)?)?:?/gi, '');
-  chunk = chunk.replace(/^-{3,}$/gm, '');
-  return chunk.trim();
+  // Strip markdown headers and normalize
+  var clean = text.replace(/^#{1,4}\s*/gm, '');
+  // Find start: look for SECTION N (any variation)
+  var startRe = new RegExp('SECTION\\s+' + num + '\\s*[-:–]?[^\\n]*', 'i');
+  var startMatch = startRe.exec(clean);
+  if (!startMatch) return '';
+  var start = startMatch.index + startMatch[0].length;
+  // Find end: look for SECTION N+1
+  var endRe = new RegExp('SECTION\\s+' + (num + 1) + '\\s*[-:–]?', 'i');
+  var endMatch = endRe.exec(clean.slice(start));
+  var end = endMatch ? start + endMatch.index : clean.length;
+  var chunk = clean.slice(start, end);
+  // Clean up dividers and leading/trailing whitespace
+  chunk = chunk.replace(/^[-=]{3,}$/gm, '');
+  chunk = chunk.replace(/^\s+|\s+$/g, '');
+  return chunk;
 }
 
 async function generatePlan() {
@@ -712,7 +698,7 @@ async function generatePlan() {
   document.getElementById('step-3-dot').className = 'step-dot done';
 
   var profile = 'Name: ' + name + ', Age: ' + (age || 'not provided') + ', Height: ' + (height || 'not provided') + ', Weight: ' + (weight || 'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes || 'none');
-  var prompt = 'My profile: ' + profile + '\n\nCreate my complete personalized plan. You MUST use EXACTLY these section headers with no variation:\n\nSECTION 1 - WEEKLY MEAL PLAN:\nA 7-day meal plan with breakfast, lunch, dinner, and snacks. Be specific with foods and portions.\n\nSECTION 2 - WORKOUT PLAN:\nA weekly workout schedule with specific exercises, sets, reps, and rest periods.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calorie target and macro split (protein, carbs, fats) with explanation.\n\nSECTION 4 - GROCERY LIST:\nWeekly grocery list organized by category. Do not add any text after SECTION 4.';
+  var prompt = 'My profile: ' + profile + '\n\nCreate my plan using EXACTLY these 4 section headers. Keep each section brief — this is critical.\n\nSECTION 1 - WEEKLY MEAL PLAN:\n3-day sample plan only (Mon/Wed/Fri). List breakfast, lunch, dinner, snack per day. 2-3 items each meal max.\n\nSECTION 2 - WORKOUT PLAN:\n4-day weekly schedule. List 4 exercises per day with sets and reps only. No descriptions.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calories, protein, carbs, fats in grams. 3-4 sentences max.\n\nSECTION 4 - GROCERY LIST:\nOrganized by: Proteins, Produce, Grains, Dairy/Other. 5-6 items per category. You MUST include this section.';
 
   try {
     var messages = [];
