@@ -473,13 +473,22 @@
         <div class="chip-group" id="cuisine-group">
           <div class="chip" data-val="no cuisine preference">No preference</div>
           <div class="chip" data-val="Italian">Italian</div>
-          <div class="chip" data-val="Japanese">Japanese</div>
-          <div class="chip" data-val="Mexican">Mexican</div>
-          <div class="chip" data-val="American">American</div>
+          <div class="chip" data-val="Japanese or sushi">Japanese / Sushi</div>
+          <div class="chip" data-val="Mexican or tacos">Mexican / Tacos</div>
+          <div class="chip" data-val="American or burgers">American</div>
           <div class="chip" data-val="seafood">Seafood</div>
-          <div class="chip" data-val="Mediterranean">Mediterranean</div>
-          <div class="chip" data-val="Korean">Korean</div>
+          <div class="chip" data-val="Mediterranean or Middle Eastern">Mediterranean</div>
+          <div class="chip" data-val="Korean BBQ or Korean">Korean</div>
           <div class="chip" data-val="French">French</div>
+          <div class="chip" data-val="Chinese or dim sum">Chinese / Dim Sum</div>
+          <div class="chip" data-val="Thai">Thai</div>
+          <div class="chip" data-val="Indian">Indian</div>
+          <div class="chip" data-val="Vietnamese or pho">Vietnamese</div>
+          <div class="chip" data-val="pizza">Pizza</div>
+          <div class="chip" data-val="vegetarian or vegan">Vegetarian / Vegan</div>
+          <div class="chip" data-val="steakhouse">Steakhouse</div>
+          <div class="chip" data-val="brunch or breakfast">Brunch</div>
+          <div class="chip" data-val="ramen or noodles">Ramen / Noodles</div>
         </div>
 
         <div class="btn-row">
@@ -657,7 +666,7 @@ function renderResults(data) {
           '<div class="restaurant-name">' + (r.name || 'Restaurant') + '</div>' +
           '<div class="restaurant-meta">' + (r.neighborhood || '') + (r.cuisine ? ' · ' + r.cuisine : '') + (r.price ? ' · ' + r.price : '') + '</div>' +
         '</div>' +
-        '<div class="match-score"><div class="match-num">' + (r.matchScore || '—') + '</div><div class="match-label">match</div></div>' +
+        '<div class="match-score"><div class="match-num">' + (r.matchScore || 'N/A') + '</div><div class="match-label">match</div></div>' +
       '</div>' +
       '<div class="restaurant-why">' + (r.why || '') + '</div>' +
       '<div class="restaurant-tradeoff"><div class="tradeoff-label">Tradeoff</div><div class="tradeoff-text">' + (r.tradeoff || '') + '</div></div>' +
@@ -677,7 +686,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
   document.getElementById('error-msg').classList.remove('active');
   animateLoadingSteps();
 
-  var systemPrompt = 'You are TableMind, an expert LA restaurant recommender. You have deep knowledge of Los Angeles dining across all neighborhoods. You use a weighted scoring algorithm to match restaurants to the user\'s specific context.\n\nYou must respond with valid JSON only, no markdown, no explanation outside the JSON. Return exactly this structure:\n{\n  "title": "string describing their top tables",\n  "restaurants": [\n    {\n      "name": "Restaurant Name",\n      "neighborhood": "Neighborhood",\n      "cuisine": "Cuisine type",\n      "price": "$$ or $$$ or $$$$",\n      "matchScore": "92%",\n      "why": "2-3 sentences explaining exactly why this fits their specific occasion, vibe, and context",\n      "tradeoff": "1 honest sentence about the main drawback or caveat",\n      "scores": {\n        "occasion": 90,\n        "vibe": 85,\n        "location": 80,\n        "budget": 95,\n        "cuisine": 75\n      }\n    }\n  ]\n}\n\nReturn exactly 3 restaurants. Use real, well-known LA restaurants that actually exist. Make the scores reflect genuine match quality — do not give everything 90+. Be honest in the tradeoffs.';
+  var systemPrompt = 'You are TableMind, a hyper-local LA restaurant recommender. You MUST follow the user inputs strictly. If they say casual and laid-back, do NOT recommend trendy, scene-y, or expensive restaurants. If they say under $30, do NOT recommend $$$+ spots. The vibe and budget inputs are hard constraints, not suggestions.\n\nScoring weights you must apply:\n- Occasion fit: 30% (match the specific occasion type)\n- Vibe match: 25% (if they want quiet and casual, pick quiet casual spots — not loud trendy ones)\n- Location: 20% (prefer their stated neighborhood)\n- Budget: 15% (strictly respect the budget — if under $30, only pick spots where dinner is under $30 per person)\n- Cuisine: 10% (match if stated, otherwise pick best fits)\n\nYou must respond with valid JSON only, no markdown, no explanation outside the JSON. Return exactly this structure:\n{\n  "title": "short description of their top tables",\n  "restaurants": [\n    {\n      "name": "Restaurant Name",\n      "neighborhood": "LA Neighborhood",\n      "cuisine": "Cuisine type",\n      "price": "$ or $$ or $$$ or $$$$",\n      "matchScore": "87%",\n      "why": "2-3 sentences explaining specifically why this fits their stated occasion, vibe, and budget. Reference their actual inputs.",\n      "tradeoff": "1 honest, specific sentence about the main drawback — not a vague hedge",\n      "scores": {\n        "occasion": 85,\n        "vibe": 90,\n        "location": 75,\n        "budget": 95,\n        "cuisine": 70\n      }\n    }\n  ]\n}\n\nReturn exactly 3 restaurants. All must be real LA restaurants that actually exist. Vary the neighborhoods unless user specified one. Do not give everything 90+ scores — be honest. Casual requests should yield casual restaurants, not Michelin spots.';
 
   var userPrompt = 'Find me the perfect LA restaurant for:\n\nOccasion: ' + state.occasion + '\nParty: ' + state.party + '\nNeighborhood preference: ' + state.neighborhood + '\nBudget: ' + state.budget + '\nCuisine: ' + state.cuisine + '\nVibe wanted: ' + state.vibe + '\nRequirements: ' + (state.reqs || 'none') + '\nExtra context: ' + (state.extra || 'none') + '\n\nApply the weighted scoring algorithm (Occasion 30%, Vibe 25%, Location 20%, Budget 15%, Cuisine 10%) and return the top 3 ranked results as JSON.';
 
