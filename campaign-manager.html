@@ -542,11 +542,16 @@ function addLog(text, type) {
 }
 
 function getSection(text, label) {
-  var start = text.indexOf('SECTION: ' + label);
-  if (start === -1) return text;
-  var end = text.indexOf('SECTION:', start + 1);
-  var chunk = (end === -1) ? text.slice(start) : text.slice(start, end);
-  return chunk.replace('SECTION: ' + label, '').trim();
+  var clean = text.replace(/^#{1,4}\s*/gm, '').replace(/\*\*/g, '');
+  var startRe = new RegExp('SECTION:?\\s*' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  var startMatch = startRe.exec(clean);
+  if (!startMatch) return clean;
+  var start = startMatch.index + startMatch[0].length;
+  var endRe = /SECTION:?\s*[A-Za-z& ]+/i;
+  var rest = clean.slice(start);
+  var endMatch = endRe.exec(rest);
+  var end = endMatch ? start + endMatch.index : clean.length;
+  return clean.slice(start, end).trim();
 }
 
 document.getElementById('btn-generate').addEventListener('click', async function() {
@@ -595,7 +600,13 @@ document.getElementById('btn-generate').addEventListener('click', async function
     });
 
     var data = await resp.json();
-    var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
+
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      var apiError = data.error ? (data.error.message || JSON.stringify(data.error)) : 'No content returned from API.';
+      throw new Error(apiError);
+    }
+
+    var fullText = data.content[0].text;
 
     setTimeout(function() {
       var activeLine = document.querySelector('.agent-log-line.active-line');
@@ -618,7 +629,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
     console.error(err);
     var activeLine = document.querySelector('.agent-log-line.active-line');
     if (activeLine) activeLine.className = 'agent-log-line';
-    document.getElementById('error-msg').textContent = 'Something went wrong. Please try again.';
+    document.getElementById('error-msg').textContent = 'Something went wrong: ' + err.message;
     document.getElementById('error-msg').classList.add('active');
     document.getElementById('status-badge').textContent = '● Error';
     document.getElementById('status-badge').className = 'status-badge idle';
