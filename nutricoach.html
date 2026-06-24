@@ -439,7 +439,7 @@
         <div class="form-group">
           <label class="form-label">Upload a photo of yourself <span>(used for body composition context)</span></label>
           <div class="photo-upload-area" id="upload-area">
-            <input type="file" accept="image/*" id="photo-input">
+            <input type="file" accept="image/jpeg,image/png,image/gif,image/webp" id="photo-input">
             <div id="upload-placeholder">
               <div class="upload-icon">📸</div>
               <div class="upload-text">Click to upload or drag and drop</div>
@@ -610,6 +610,14 @@ function showStep(n) {
 document.getElementById('photo-input').addEventListener('change', function(e) {
   var file = e.target.files[0];
   if (!file) return;
+
+  var supportedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (supportedTypes.indexOf(file.type) === -1) {
+    alert('This photo format isn\'t supported (' + (file.type || 'unknown format, likely HEIC') + '). Please upload a JPG, PNG, GIF, or WEBP. If you\'re on iPhone, go to Settings > Camera > Formats and select "Most Compatible" to save photos as JPG, or screenshot the photo and upload the screenshot instead.');
+    e.target.value = '';
+    return;
+  }
+
   photoMimeType = file.type;
   var reader = new FileReader();
   reader.onload = function(ev) {
@@ -698,7 +706,12 @@ async function generatePlan() {
   document.getElementById('step-3-dot').className = 'step-dot done';
 
   var profile = 'Name: ' + name + ', Age: ' + (age || 'not provided') + ', Height: ' + (height || 'not provided') + ', Weight: ' + (weight || 'not provided') + ', Goal: ' + goal + ', Diet: ' + diet + ', Activity: ' + activity + ', Workout days: ' + days + ', Sleep: ' + sleep + ', Stress: ' + stress + ', Notes: ' + (notes || 'none');
-  var prompt = 'My profile: ' + profile + '\n\nCreate my plan using EXACTLY these 4 section headers. Keep each section brief — this is critical.\n\nSECTION 1 - WEEKLY MEAL PLAN:\n3-day sample plan only (Mon/Wed/Fri). List breakfast, lunch, dinner, snack per day. 2-3 items each meal max.\n\nSECTION 2 - WORKOUT PLAN:\n4-day weekly schedule. List 4 exercises per day with sets and reps only. No descriptions.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calories, protein, carbs, fats in grams. 3-4 sentences max.\n\nSECTION 4 - GROCERY LIST:\nOrganized by: Proteins, Produce, Grains, Dairy/Other. 5-6 items per category. You MUST include this section.';
+
+  var photoInstruction = photoBase64
+    ? 'A photo is attached. Before writing the plan, look closely at the photo and assess: approximate body composition (lean, athletic, average, higher body fat), visible muscle development, and posture. State this assessment in one sentence at the very start of your response. Then let that specific assessment drive your calorie target, macro split (more protein and a tighter deficit for someone who already shows muscle definition, a more moderate deficit and higher overall calories for someone who appears to be starting from a higher body fat percentage), and workout intensity. Do not write a generic plan that ignores what is visible in the photo.'
+    : 'No photo was provided. Base the plan on the stated profile only, and note in your first sentence that estimates are less precise without a photo for body composition context.';
+
+  var prompt = photoInstruction + '\n\nMy profile: ' + profile + '\n\nCreate my plan using EXACTLY these 4 section headers. Keep each section brief — this is critical.\n\nSECTION 1 - WEEKLY MEAL PLAN:\n3-day sample plan only (Mon/Wed/Fri). List breakfast, lunch, dinner, snack per day. 2-3 items each meal max.\n\nSECTION 2 - WORKOUT PLAN:\n4-day weekly schedule. List 4 exercises per day with sets and reps only. No descriptions.\n\nSECTION 3 - MACRO BREAKDOWN:\nDaily calories, protein, carbs, fats in grams. Reference the photo assessment explicitly here.\n\nSECTION 4 - GROCERY LIST:\nOrganized by: Proteins, Produce, Grains, Dairy/Other. 5-6 items per category. You MUST include this section.';
 
   try {
     var messages = [];
@@ -728,7 +741,13 @@ async function generatePlan() {
 
     clearTimeout(timeout);
     var data = await resp.json();
-    var fullText = (data.content && data.content[0]) ? data.content[0].text : '';
+
+    if (!data.content || !data.content[0] || !data.content[0].text) {
+      var apiError = data.error ? (data.error.message || JSON.stringify(data.error)) : 'No content returned from API.';
+      throw new Error(apiError);
+    }
+
+    var fullText = data.content[0].text;
 
     document.getElementById('result-meal').textContent = getSection(fullText, 1);
     document.getElementById('result-workout').textContent = getSection(fullText, 2);
@@ -743,6 +762,7 @@ async function generatePlan() {
     console.error(err);
     document.getElementById('loading-state').classList.remove('active');
     document.getElementById('step-3').style.display = 'block';
+    document.getElementById('error-msg').textContent = 'Error: ' + err.message;
     document.getElementById('error-msg').classList.add('active');
     document.getElementById('step-4-dot').className = 'step-dot';
     document.getElementById('step-3-dot').className = 'step-dot active';
