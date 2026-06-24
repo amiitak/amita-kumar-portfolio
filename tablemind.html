@@ -696,7 +696,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000,
+        max_tokens: 3000,
         system: systemPrompt,
         messages: [{ role: 'user', content: userPrompt }]
       })
@@ -717,6 +717,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
     console.error(err);
     document.getElementById('loading-state').classList.remove('active');
     document.getElementById('step-3').classList.add('active');
+    document.getElementById('error-msg').textContent = 'That took a bit too long to generate. Please try again.';
     document.getElementById('error-msg').classList.add('active');
     currentStep = 3;
   }
