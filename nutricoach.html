@@ -241,20 +241,6 @@
     <div class="section-eyebrow">Problem</div>
     <h2 class="section-h2">Generic plans fail <em>real people.</em></h2>
   </div>
-  <div class="stat-cards">
-    <div class="stat-card">
-      <div class="stat-num">73%</div>
-      <div class="stat-label">of dieters abandon generic nutrition plans within 2 weeks</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">$11B</div>
-      <div class="stat-label">digital health coaching market projected by 2027</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">3x</div>
-      <div class="stat-label">better outcomes with personalized vs generic nutrition coaching</div>
-    </div>
-  </div>
   <p class="body-text">Most nutrition apps start with what you ate. They log calories, compute macros from a BMI formula, and return a plan that looks the same for everyone at your height and weight. The plan ignores your sleep, your stress, your schedule, and what your body actually looks like.</p>
   <p class="body-text">The insight behind NutriCoach: personalization has to start with the whole person. Combining a photo (body composition context) with goals and lifestyle signals can produce recommendations that actually fit, and plans that fit get followed.</p>
   <p class="body-text">In short: my mandate was to build a health product that used AI in a meaningfully differentiated way, not just as a wrapper around calorie math.</p>
@@ -286,7 +272,7 @@
               <tr><th>Feature</th><th>Top Apps</th><th>NutriCoach</th></tr>
             </thead>
             <tbody>
-              <tr><td>Body composition input</td><td>❌ None</td><td>✅ Photo + CV</td></tr>
+              <tr><td>Body composition input</td><td>❌ None</td><td>✅ Photo + Multimodal AI</td></tr>
               <tr><td>Integrated meal + workout</td><td>❌ Siloed</td><td>✅ Unified</td></tr>
               <tr><td>Lifestyle context</td><td>⚠️ Basic</td><td>✅ Sleep, stress, schedule</td></tr>
               <tr><td>Manual food logging</td><td>✅ Required</td><td>❌ Not needed</td></tr>
@@ -328,6 +314,10 @@
       <p class="ai-callout-body">The input pipeline conditionally constructs a multimodal message (base64-encoded photo + structured lifestyle context) or falls back to text-only if no photo is provided. This mirrors good production AI design: graceful degradation when optional inputs are absent, consistent output format regardless of input mode.</p>
     </div>
     <div class="ai-callout">
+      <div class="ai-callout-label">Auditable Personalization</div>
+      <p class="ai-callout-body">The prompt explicitly instructs the model to assess body composition, muscle development, and posture from the photo and state that assessment at the start of its response before generating the plan. This makes the personalization auditable rather than a black box, a user or reviewer can check whether the stated visual assessment is actually reflected in the plan's calorie target, protein target, and workout intensity. This was verified by testing with multiple different photos under identical text inputs and confirming the stated assessment and resulting plan differed accordingly.</p>
+    </div>
+    <div class="ai-callout">
       <div class="ai-callout-label">Cost Modeling</div>
       <p class="ai-callout-body">A single NutriCoach generation uses approximately 2,500 input tokens plus ~1,600 image tokens, at Claude Sonnet pricing of ~$3/M tokens. Estimated cost per generation: ~$0.02. At 10K MAU with 2 plan generations per month, that's roughly $400/month, well within MVP budget before introducing a paywall.</p>
     </div>
@@ -337,7 +327,10 @@
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Evals & Output Quality</div>
-      <p class="ai-callout-body">The prompt enforces a structured 4-section output format (Meal Plan, Workout Plan, Macros, Grocery List). The parser validates each section independently. If a section is missing or malformed, the system degrades gracefully rather than failing silently. In production, this structure would feed a scoring rubric measuring output specificity, dietary compliance, and caloric accuracy against targets.</p>
+      <p class="ai-callout-body">I ran 11 test generations against a 5-criterion rubric: structural completeness, caloric accuracy, photo-responsiveness, dietary compliance, and actionability. The test set deliberately varied photo, goal, activity level, dietary restrictions, and input completeness, including edge cases like no photo provided and minimal field completion.</p>
+      <p class="ai-callout-body">Results: structural completeness, caloric accuracy, actionability, and photo-responsiveness passed consistently across all runs, including the no-photo fallback case, which produced a transparently caveated estimate rather than a silent guess or a failure.</p>
+      <p class="ai-callout-body">Dietary compliance surfaced a real bug: two of three restriction-based tests failed. A nut-allergy test included almond butter mislabeled as a "seeds-based alternative," a direct violation. A gluten-free test included unspecified "granola" and "whole grain toast" without confirming the compliant version was used. In both cases, the Grocery List section correctly included the right substitution, but the Meal Plan section did not consistently apply it, a cross-section consistency failure, not a misunderstanding of the restriction itself. This was fixed with an explicit instruction requiring the model to label compliance status on ambiguous ingredients and cross-check meal-plan items against grocery-list substitutions before finalizing output.</p>
+      <p class="ai-callout-body">One additional finding worth noting honestly: when no goal was specified, the model inferred an intended goal directly from the photo's body composition rather than asking for clarification, a deliberate but debatable UX choice worth flagging as a tradeoff, not simply a strength.</p>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">UX & Launch</div>
