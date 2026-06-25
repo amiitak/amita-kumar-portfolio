@@ -107,6 +107,8 @@
     .arch-node-sub { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem; }
     .arch-node.human { background: rgba(192,83,58,0.12); border-color: rgba(192,83,58,0.3); }
     .arch-node.human .arch-node-label { color: #E8917A; }
+    .arch-node.tool { background: rgba(255,193,7,0.08); border-color: rgba(255,193,7,0.25); }
+    .arch-node.tool .arch-node-label { color: #FFC107; }
     .arch-node.output { background: rgba(123,174,90,0.12); border-color: rgba(123,174,90,0.3); }
     .arch-node.output .arch-node-label { color: #7BAE5A; }
     .arch-arrow-down { text-align: center; color: rgba(58,143,196,0.5); font-size: 1rem; margin: -0.25rem 0; }
@@ -341,7 +343,7 @@
   <div class="ai-callout-group">
     <div class="ai-callout">
       <div class="ai-callout-label">Why an agent, not a single prompt</div>
-      <div class="ai-callout-body">A single LLM call would produce unstructured output with no validation layer. An agentic architecture breaks the task into discrete stages (brief parsing, campaign structuring, QA validation, trafficking output) where each stage can be evaluated independently. This mirrors how a human ops team works, and makes the system auditable and debuggable.</div>
+      <div class="ai-callout-body">A single LLM call would produce unstructured output with no validation layer. The live prototype gives Claude five tools and lets it decide which to call and in what order: check_duplicate_campaign (flags overlapping bookings for the same client), check_inventory_feasibility (checks whether budget and targeting are actually supportable), check_brand_safety (a hard stop on policy conflicts), request_clarification (halts and asks a human instead of guessing at missing fields), and finalize_setup (the only path to the human approval gate). request_clarification and finalize_setup are not separate mechanisms bolted onto the loop. They are tools the model itself chooses to call, exactly like the three validation checks. Testing confirmed Claude calls the validation tools in varying order depending on the brief, and only reaches finalize_setup once every check has passed. This mirrors how a human ops team works, and makes the system auditable: every tool call and result is logged and visible before the human approval gate.</div>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Model selection</div>
@@ -353,7 +355,7 @@
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Structured output & evals</div>
-      <div class="ai-callout-body">The prompt enforces a structured 5-section output (Campaign Summary, Targeting Setup, Budget & Pacing, Creative Trafficking, QA Checklist). Each section is parsed and validated independently. The QA Checklist section is itself an eval: the model scores its own output against a standard trafficking checklist, flagging any gaps before the human review.</div>
+      <div class="ai-callout-body">Rather than parsing free text into sections, the agent calls discrete tools (check_duplicate_campaign, check_inventory_feasibility, check_brand_safety) and only reaches finalize_setup once those checks pass. Testing confirmed two specific failure-handling behaviors: the agent correctly calls request_clarification rather than guessing when a brief omits required fields like budget or flight dates, and it enforces a hard retry limit rather than looping indefinitely. In one test run, it retried an inventory check twice with adjusted targeting before escalating to a human rather than continuing to retry.</div>
     </div>
     <div class="ai-callout">
       <div class="ai-callout-label">Cost & infrastructure</div>
@@ -362,6 +364,14 @@
     <div class="ai-callout">
       <div class="ai-callout-label">Risk & guardrails</div>
       <div class="ai-callout-body">The system is explicitly designed to never auto-submit to a DSP. All outputs are read-only proposals until human approval. Brand safety rules are injected as hard constraints in the system prompt. Budget caps are validated against client contract values where available. Any missing required field triggers a QA flag rather than a best-guess fill.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">What I found while building this</div>
+      <div class="ai-callout-body">Real-world testing surfaced a genuine bug, not a hypothetical one. When a brief gave dates without a year (e.g., "11/15 - 12/31"), the agent's date parsing defaulted to the year 1970, which caused check_inventory_feasibility to report valid inventory as infeasible since the requested window never overlapped with any real inventory record. The fix was an explicit instruction anchoring date resolution to the current year whenever a brief omits one. This is the kind of failure mode that only shows up when you actually run a system against real inputs rather than reasoning about it on paper, which is exactly why testing the live agent mattered more than writing the architecture diagram.</div>
+    </div>
+    <div class="ai-callout">
+      <div class="ai-callout-label">Verification, not just design</div>
+      <div class="ai-callout-body">All five tools now have confirmed positive-path test evidence, not just a designed-but-unverified schema. check_duplicate_campaign correctly flagged a true duplicate when tested against a brief matching the mock Acme Retail campaign's client and overlapping dates. check_inventory_feasibility and check_brand_safety were each confirmed returning real conflicts and clean passes across multiple briefs. request_clarification was confirmed halting the loop on a brief missing budget and flight dates. finalize_setup was confirmed only firing once every check passed. The distinction matters: a tool schema that looks correct on paper and a tool confirmed to behave correctly against a real test case are not the same claim, and this case study only makes the second one.</div>
     </div>
   </div>
 </div>
@@ -378,41 +388,50 @@
     <p class="body-text">The strategy centers on one core insight from the discovery: human judgment is required at the approval gate, not throughout the setup process. The agent owns everything before that gate; the human owns everything after.</p>
     <ul class="bullet-list">
       <li><strong>Brief intake.</strong> Free-text brief input that can be pasted directly from an email, a shared doc, or a client conversation. No structured template required on input.</li>
-      <li><strong>Agent parsing.</strong> The model extracts campaign objectives, target audience, geo, devices, budget, flight dates, KPIs, and brand safety requirements from the unstructured brief.</li>
-      <li><strong>Campaign structuring.</strong> The agent builds a complete campaign setup: line item structure, targeting parameters, bid strategy recommendation, budget allocation, and creative specs.</li>
-      <li><strong>Self-QA.</strong> The model runs its output against a standard trafficking checklist and flags any missing fields, conflicts, or anomalies before presenting to the human reviewer.</li>
-      <li><strong>Human approval gate.</strong> The ops manager reviews the structured output across 5 tabbed sections. Any field can be edited before approval. Nothing is submitted to the DSP without explicit sign-off.</li>
+      <li><strong>Agent reasoning loop.</strong> Claude receives the brief along with three tools (check_duplicate_campaign, check_inventory_feasibility, check_brand_safety) and decides which to call and in what order. This is a real multi-turn tool-calling loop, not a scripted sequence. Testing confirmed the agent calls these checks in varying order depending on what the brief actually requires.</li>
+      <li><strong>Conflict resolution or escalation.</strong> If a check returns a partial or infeasible result, the agent can retry with adjusted parameters (e.g., a different targeting segment) up to a bounded limit before escalating, or call request_clarification if required information is missing entirely. It never loops indefinitely and never guesses at missing fields.</li>
+      <li><strong>Hard stop on brand safety.</strong> If check_brand_safety returns any unresolved conflict, the agent is instructed to never call finalize_setup, regardless of how clean every other check is. This is enforced as a rule, not a suggestion.</li>
+      <li><strong>Human approval gate.</strong> Once finalize_setup is called, the ops manager reviews the structured setup across 5 tabbed sections, including the agent's own qa_notes documenting any judgment calls it made. Any field can be edited. Nothing is submitted to the DSP without explicit sign-off.</li>
       <li><strong>Trafficking handoff.</strong> Approved output is formatted as a structured trafficking spec ready for DSP import or manual entry.</li>
     </ul>
 
     <div class="arch-wrap">
-      <div class="arch-title">Agent Architecture — Campaign Setup Pipeline</div>
+      <div class="arch-title">Agent Architecture — Multi-Turn Tool-Calling Loop</div>
       <div class="arch-flow">
         <div class="arch-row">
           <div class="arch-node"><div class="arch-node-label">Input</div><div class="arch-node-name">Campaign Brief</div><div class="arch-node-sub">Free-text, unstructured</div></div>
         </div>
         <div class="arch-arrow-down">↓</div>
         <div class="arch-row">
-          <div class="arch-node"><div class="arch-node-label">Agent · Stage 1</div><div class="arch-node-name">Brief Parser</div><div class="arch-node-sub">Extracts objectives, targeting, budget, dates, KPIs</div></div>
+          <div class="arch-node tool"><div class="arch-node-label">Tool 1 of 5</div><div class="arch-node-name">check_duplicate_campaign</div><div class="arch-node-sub">Flags overlapping bookings for the same client and date range. Confirmed via direct testing: correctly detects a true duplicate against the mock Acme Retail campaign.</div></div>
         </div>
         <div class="arch-arrow-down">↓</div>
         <div class="arch-row">
-          <div class="arch-node"><div class="arch-node-label">Agent · Stage 2</div><div class="arch-node-name">Campaign Builder</div><div class="arch-node-sub">Structures line items, targeting, bid strategy, creative specs</div></div>
+          <div class="arch-node tool"><div class="arch-node-label">Tool 2 of 5</div><div class="arch-node-name">check_inventory_feasibility</div><div class="arch-node-sub">Checks whether requested budget and targeting can actually be supported. Returns feasible, partial, or infeasible.</div></div>
         </div>
         <div class="arch-arrow-down">↓</div>
         <div class="arch-row">
-          <div class="arch-node"><div class="arch-node-label">Agent · Stage 3</div><div class="arch-node-name">QA Validator</div><div class="arch-node-sub">Self-scores output against trafficking checklist, flags gaps</div></div>
+          <div class="arch-node tool"><div class="arch-node-label">Tool 3 of 5</div><div class="arch-node-name">check_brand_safety</div><div class="arch-node-sub">Checks the brief against hard exclusion rules. Any unresolved conflict is a hard stop, never overridden by other passing checks.</div></div>
         </div>
         <div class="arch-arrow-down">↓</div>
         <div class="arch-row">
-          <div class="arch-node human"><div class="arch-node-label">Human Gate</div><div class="arch-node-name">Ops Manager Review</div><div class="arch-node-sub">Reviews, edits, and explicitly approves before any DSP action</div></div>
+          <div class="arch-node tool"><div class="arch-node-label">Claude decides</div><div class="arch-node-name">Call another tool, retry with adjusted parameters, or branch</div><div class="arch-node-sub">The three checks above run in whatever order the brief calls for, not a fixed sequence. Retries are bounded; the agent does not loop indefinitely.</div></div>
+        </div>
+        <div class="arch-arrow-down">↓ branches to one of two tools ↓</div>
+        <div class="arch-row" style="gap: 1rem;">
+          <div class="arch-node tool"><div class="arch-node-label">Tool 4 of 5</div><div class="arch-node-name">request_clarification</div><div class="arch-node-sub">Called when required fields are missing or a conflict can't be reasonably resolved. Halts the loop and surfaces the gap to a human instead of guessing.</div></div>
+          <div class="arch-node tool"><div class="arch-node-label">Tool 5 of 5</div><div class="arch-node-name">finalize_setup</div><div class="arch-node-sub">Called only once every check has passed or been resolved. The only path that reaches the human approval gate below.</div></div>
+        </div>
+        <div class="arch-arrow-down">↓</div>
+        <div class="arch-row">
+          <div class="arch-node human"><div class="arch-node-label">Human Gate</div><div class="arch-node-name">Ops Manager Review</div><div class="arch-node-sub">Reviews, edits, and explicitly approves before any DSP action. Only reached after finalize_setup is called.</div></div>
         </div>
         <div class="arch-arrow-down">↓</div>
         <div class="arch-row">
           <div class="arch-node output"><div class="arch-node-label">Output</div><div class="arch-node-name">Trafficking Spec</div><div class="arch-node-sub">Structured handoff ready for DSP import</div></div>
         </div>
       </div>
-      <div class="arch-note">Not actual artifact, generated for portfolio purposes</div>
+      <div class="arch-note">Not actual artifact, generated for portfolio purposes. All 5 tools, including both true-positive and request_clarification/escalation paths, confirmed by direct testing rather than designed and assumed to work.</div>
     </div>
   </div>
 </div>
@@ -446,7 +465,7 @@
 
         <div class="brief-examples">
           <span style="font-family:'DM Mono',monospace; font-size:0.6rem; color:rgba(255,255,255,0.2); letter-spacing:0.08em; text-transform:uppercase; align-self:center;">Try an example:</span>
-          <div class="brief-example" id="example-1">Retail brand, Q4 awareness</div>
+          <div class="brief-example" id="example-1">Apparel retail, feasible budget</div>
           <div class="brief-example" id="example-2">Auto launch, performance</div>
           <div class="brief-example" id="example-3">CPG retargeting campaign</div>
         </div>
@@ -498,7 +517,7 @@
 var WORKER_URL = 'https://nutricoach-proxy.amitak1107.workers.dev';
 
 var EXAMPLES = {
-  'example-1': "Q4 holiday campaign for a mid-size retail brand (apparel). Target: women 25-44, HHI $75K+, interested in fashion and shopping. Geo: US national. Budget: $180,000 total, flight 11/15 - 12/31. KPIs: awareness, target CPM $12-15. Formats: display 300x250 and 728x90, video 15s pre-roll. Brand safety: no news, no UGC. Frequency cap: 5x per user per week.",
+  'example-1': "Holiday campaign for a mid-size retail brand (apparel). Target: 18-34 urban. Budget: $30,000 total, flight 11/15 - 12/31. KPIs: awareness, target CPM $8-10. Formats: display 300x250 and 728x90, video 15s pre-roll. Frequency cap: 5x per user per week.",
   'example-2': "Auto manufacturer launching a new sedan model. Goal is lead gen and test drive bookings. Target: in-market auto intenders, 30-55, male skew, HHI $80K+. Geo: top 25 DMAs. Budget: $250,000, flight 2 weeks starting next Monday. KPIs: CTR 0.15%+, CPA for test drive form fill under $45. Formats: native, display, pre-roll video 30s. Retargeting pool from manufacturer site visitors.",
   'example-3': "CPG snack brand retargeting campaign. Re-engage site visitors who viewed product pages but didn't purchase. Audience: 1st party pixel data, 30-day lookback. Budget: $40,000 over 30 days. Geo: US. KPIs: ROAS 3.5x, frequency 8-10x per user. Formats: display and social display. Creative: dynamic product ads with discount overlay. Brand safety: standard."
 };
