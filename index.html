@@ -277,10 +277,13 @@
     /* PROJECTS */
     .projects-grid {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
+    }
+    .project-card.span-full {
+      grid-column: 1 / -1;
     }
 
     .project-card {
@@ -627,7 +630,7 @@
         </div>
         <span class="project-link">View Case Study</span>
       </a>
-      <a class="project-card fade-up" href="precision-psychiatry.html" style="transition-delay:0.08s">
+      <a class="project-card fade-up span-full" href="precision-psychiatry.html" style="transition-delay:0.08s">
         <span class="project-num">03</span>
         <div class="project-tag-row"><span class="tag">Concept PRD</span><span class="tag">Mental Health</span></div>
         <h3 class="project-title">Precision Psychiatry PM</h3>
