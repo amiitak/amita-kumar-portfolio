@@ -572,63 +572,85 @@ document.getElementById('btn-generate').addEventListener('click', async function
   document.getElementById('log-lines').innerHTML = '';
 
   addLog('Received campaign brief (' + brief.length + ' chars)', '');
-
-  setTimeout(function() { addLog('Stage 1: Parsing brief — extracting objectives, targeting, budget, flight dates...', 'active-line'); }, 300);
-  setTimeout(function() {
-    document.querySelector('.agent-log-line.active-line').className = 'agent-log-line done-line';
-    addLog('Stage 2: Structuring campaign, building line items, targeting params, bid strategy...', 'active-line');
-  }, 1200);
-  setTimeout(function() {
-    document.querySelector('.agent-log-line.active-line').className = 'agent-log-line done-line';
-    addLog('Stage 3: QA validation, checking output against trafficking checklist...', 'active-line');
-  }, 2200);
-
-  var systemPrompt = 'You are an expert programmatic advertising campaign manager with deep knowledge of DSP workflows, targeting parameters, bid strategies, and trafficking requirements. You receive unstructured campaign briefs and produce structured, validated campaign setups ready for ops review.\n\nAlways respond with exactly these 5 sections, each starting with "SECTION: [name]":\n\nSECTION: Campaign Summary\nSECTION: Targeting Setup\nSECTION: Budget & Pacing\nSECTION: Creative Trafficking\nSECTION: QA Checklist\n\nBe specific, practical, and use real programmatic advertising terminology. Include specific numbers, recommended bid ranges, and flag any missing information from the brief.';
-
-  var prompt = 'Campaign Brief:\n\n' + brief + '\n\nGenerate a complete campaign setup across the 5 sections. For the QA Checklist section, score the setup against standard trafficking requirements and flag any gaps or missing information from the brief.';
+  addLog('Agent is reasoning about which checks to run...', 'active-line');
 
   try {
     var resp = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 3000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: prompt }]
-      })
+      body: JSON.stringify({ mode: 'agent', brief: brief })
     });
 
     var data = await resp.json();
 
-    if (!data.content || !data.content[0] || !data.content[0].text) {
-      var apiError = data.error ? (data.error.message || JSON.stringify(data.error)) : 'No content returned from API.';
-      throw new Error(apiError);
+    if (data.finalAction === 'error') {
+      throw new Error(data.finalResult.error);
     }
 
-    var fullText = data.content[0].text;
+    var activeLine = document.querySelector('.agent-log-line.active-line');
+    if (activeLine) activeLine.className = 'agent-log-line done-line';
 
-    setTimeout(function() {
-      var activeLine = document.querySelector('.agent-log-line.active-line');
-      if (activeLine) activeLine.className = 'agent-log-line done-line';
-      addLog('All stages complete. Awaiting human approval.', 'done-line');
+    (data.activityLog || []).forEach(function(entry) {
+      var summary = '';
+      if (entry.tool === 'check_duplicate_campaign') {
+        summary = entry.result.found
+          ? 'check_duplicate_campaign result: conflict found with existing campaign ' + entry.result.campaign.id
+          : 'check_duplicate_campaign result: no conflict found';
+      } else if (entry.tool === 'check_inventory_feasibility') {
+        summary = 'check_inventory_feasibility result: ' + entry.result.status + ', ' + entry.result.detail;
+      } else if (entry.tool === 'check_brand_safety') {
+        summary = entry.result.conflicts.length
+          ? 'check_brand_safety result: conflicts found, ' + entry.result.conflicts.join(', ')
+          : 'check_brand_safety result: clean, no conflicts';
+      } else if (entry.tool === 'request_clarification') {
+        summary = 'request_clarification: missing ' + entry.result.missing_fields.join(', ');
+      } else if (entry.tool === 'finalize_setup') {
+        summary = 'finalize_setup: setup structured, ready for human approval';
+      } else {
+        summary = entry.tool + ' result: ' + JSON.stringify(entry.result);
+      }
+      addLog('Turn ' + (entry.turn + 1) + ': ' + summary, 'done-line');
+    });
 
-      document.getElementById('result-summary').textContent = getSection(fullText, 'Campaign Summary');
-      document.getElementById('result-targeting').textContent = getSection(fullText, 'Targeting Setup');
-      document.getElementById('result-budget').textContent = getSection(fullText, 'Budget & Pacing');
-      document.getElementById('result-creative').textContent = getSection(fullText, 'Creative Trafficking');
-      document.getElementById('result-qa').textContent = getSection(fullText, 'QA Checklist');
-
-      document.getElementById('status-badge').textContent = '● Awaiting Approval';
-      document.getElementById('status-badge').className = 'status-badge running';
-      document.getElementById('results-section').classList.add('active');
+    if (data.finalAction === 'request_clarification') {
+      addLog('Agent halted: missing required information. Awaiting human input.', 'done-line');
+      document.getElementById('error-msg').textContent = 'Agent needs clarification on: ' + data.finalResult.missing_fields.join(', ');
+      document.getElementById('error-msg').classList.add('active');
+      document.getElementById('status-badge').textContent = '● Needs Input';
+      document.getElementById('status-badge').className = 'status-badge idle';
       document.getElementById('btn-generate').disabled = false;
-    }, 3000);
+      return;
+    }
+
+    if (data.finalAction === 'max_turns_reached') {
+      addLog('Agent reached max turns without finalizing. Flagging for human review.', 'done-line');
+      document.getElementById('error-msg').textContent = 'Agent could not complete setup within its turn limit. This brief likely needs human judgment.';
+      document.getElementById('error-msg').classList.add('active');
+      document.getElementById('status-badge').textContent = '● Needs Review';
+      document.getElementById('status-badge').className = 'status-badge idle';
+      document.getElementById('btn-generate').disabled = false;
+      return;
+    }
+
+    var setup = (data.finalResult && data.finalResult.setup) || {};
+    addLog('All stages complete. Awaiting human approval.', 'done-line');
+
+    document.getElementById('result-summary').textContent = setup.campaign_summary || 'Not provided';
+    document.getElementById('result-targeting').textContent = setup.targeting || 'Not provided';
+    document.getElementById('result-budget').textContent = 'Budget: $' + (setup.budget || 'not specified') +
+      (setup.dates ? '\n\nFlight: ' + setup.dates.start + ' to ' + setup.dates.end : '');
+    document.getElementById('result-creative').textContent = setup.creative_notes || 'Not provided';
+    document.getElementById('result-qa').textContent = setup.qa_notes || 'No caveats noted by the agent.';
+
+    document.getElementById('status-badge').textContent = '● Awaiting Approval';
+    document.getElementById('status-badge').className = 'status-badge running';
+    document.getElementById('results-section').classList.add('active');
+    document.getElementById('btn-generate').disabled = false;
 
   } catch(err) {
     console.error(err);
-    var activeLine = document.querySelector('.agent-log-line.active-line');
-    if (activeLine) activeLine.className = 'agent-log-line';
+    var activeLine2 = document.querySelector('.agent-log-line.active-line');
+    if (activeLine2) activeLine2.className = 'agent-log-line';
     document.getElementById('error-msg').textContent = 'Something went wrong: ' + err.message;
     document.getElementById('error-msg').classList.add('active');
     document.getElementById('status-badge').textContent = '● Error';
@@ -636,6 +658,7 @@ document.getElementById('btn-generate').addEventListener('click', async function
     document.getElementById('btn-generate').disabled = false;
   }
 });
+
 </script>
 </body>
 </html>
